@@ -23,7 +23,7 @@
   <div class="wrap" style="gap:18px">
     <div class="topline"><span class="eyebrow">29 dic 2026 → 8 gen 2027 · in tre</span><span class="me-chip" id="me-chip"></span></div>
     <div style="display:grid;gap:10px">
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="sticker" id="countdown-sticker">Partenza tra — giorni</span><span class="sticker rosa">Guarda questi tossici</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="sticker" id="countdown-sticker">Partenza tra — giorni</span><span class="sticker rosa">Guarda questi tossici</span><button type="button" id="replay" class="btn ghost small" style="color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Rivedi l'intro</button></div>
       <h1 style="font-size:clamp(52px,13vw,112px)">Marocco <em>in tre</em></h1>
       <p class="lead">Tre tossici, uno de Roma, uno de Saluzzo e uno de Palermo, ex Erasmus a San Paolo. Undici giorni in Marocco. Il sito vede tutto, ricorda tutto e ve lo rinfaccia.</p>
     </div>
@@ -111,10 +111,15 @@
 <script src="content.js"></script>
 <script src="common.js"></script>
 <script src="roast.js"></script>
+<script src="intro.js"></script>
 <script>
 (function () {
   const { el, db, icon, eur } = M;
+  const intro = Intro.shouldShow();
+  if (intro) window.INTRO_ACTIVE = true;
   M.start("home");
+  if (intro) Intro.show();
+  document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
 
   // conto alla rovescia: atterraggio nella notte tra 28 e 29 dicembre
   const dep = new Date(2026, 11, 28, 23, 30, 0);

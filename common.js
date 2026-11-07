@@ -248,7 +248,7 @@ window.M = (function () {
     renderMeChip();
     const up = document.getElementById("upgrade");
     if (up && !LIVE) { up.hidden = false; up.innerHTML = "<b>Modalità prova</b>I dati restano solo su questo dispositivo finché il sito non è collegato al database."; }
-    if (!me) setTimeout(askWho, 300);
+    if (!me && !window.INTRO_ACTIVE) setTimeout(askWho, 300);
     if (window.R) R.mountHelp(active || "home");
     // «ultimo avvistamento»: se la colonna manca si ignora in silenzio, senza avviso
     if (me && LIVE) sb.from("persone").update({ visto: new Date().toISOString() }).eq("nome", me).then(() => {}, () => {});
@@ -256,5 +256,5 @@ window.M = (function () {
   function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
 
   return { db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
-    me: () => me, onMe: (f) => meListeners.push(f), askWho, store, isMissing };
+    me: () => me, setMe, onMe: (f) => meListeners.push(f), askWho, store, isMissing };
 })();
