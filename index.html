@@ -59,6 +59,16 @@
     </div>
   </section>
 
+  <section class="sec" aria-labelledby="h-call">
+    <div class="card callbox">
+      <span class="eyebrow" style="color:var(--rosa)">Contatore ufficiale</span>
+      <b class="call-n mono" id="call-n">600.000</b>
+      <h3 id="h-call" style="font-size:22px">chiamate WhatsApp di Davide per organizzare il viaggio</h3>
+      <p class="muted" id="call-last">Il viaggio, intanto, è sempre lo stesso.</p>
+      <button class="btn" type="button" id="call-btn" style="justify-self:start;background:var(--rosa);color:#fff">Davide ha chiamato di nuovo</button>
+    </div>
+  </section>
+
   <section class="sec" aria-labelledby="h-pagella">
     <div class="sec-head"><h2 id="h-pagella">La pagella</h2><p>Titoli assegnati in base a quello che fate sul sito. Si aggiornano da soli, e non si contestano.</p></div>
     <div class="grid g3" id="pagella"></div>
@@ -103,7 +113,7 @@
     </div>
   </section>
 
-  <footer class="foot">Prezzi e tempi sono stime al 7 novembre 2026, da verificare quando prenotate. Serve il passaporto: la carta d'identità non basta.<br><span class="mono">Versione 6 · 7 nov 2026</span></footer>
+  <footer class="foot">Prezzi e tempi sono stime al 7 novembre 2026, da verificare quando prenotate. Serve il passaporto: la carta d'identità non basta.<br><span class="mono">Versione 7 · 7 nov 2026</span></footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -164,7 +174,9 @@
     // match e classifica
     const crew = new Set(pers.map((p) => p.nome));
     const by = {};
-    reaz.forEach((r) => { (by[r.attivita] = by[r.attivita] || { si: [], forse: [], no: [] })[r.voto] && by[r.attivita][r.voto].push(r.nome); });
+    const calls = reaz.filter((r) => String(r.attivita).startsWith("chiama:"));
+    renderCalls(calls);
+    reaz.filter((r) => !String(r.attivita).startsWith("chiama:")).forEach((r) => { (by[r.attivita] = by[r.attivita] || { si: [], forse: [], no: [] })[r.voto] && by[r.attivita][r.voto].push(r.nome); });
     const n = Math.max(crew.size, 1);
     const matchCount = Object.values(by).filter((v) => v.si.length >= Math.min(n, M.GROUP) && v.si.length >= 2).length;
     document.getElementById("k-match").textContent = matchCount;
@@ -192,6 +204,20 @@
       document.getElementById("v-why").textContent = v.why.join(" · ") + ".";
     }
   }
+  function renderCalls(calls) {
+    const n = 600000 + calls.length;
+    document.getElementById("call-n").textContent = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    const last = calls.slice().sort((a, b) => String(b.aggiornato || "").localeCompare(String(a.aggiornato || "")))[0];
+    document.getElementById("call-last").textContent = last ? "Ultima segnalata da " + last.nome + (last.aggiornato ? ", " + M.ago(last.aggiornato) : "") + ". Il viaggio è sempre lo stesso. Porra." : "Il viaggio, intanto, è sempre lo stesso.";
+  }
+  document.getElementById("call-btn").addEventListener("click", async () => {
+    const me = M.me(); if (!me) return M.askWho();
+    try {
+      await db.upsert("reazioni", { nome: me, attivita: "chiama:" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), voto: "si", aggiornato: new Date().toISOString() }, "nome,attivita");
+      M.roast(me === "Davide" ? "chiamata_davide" : "chiamata");
+      load();
+    } catch (e) { M.err(e); }
+  });
   let lastD = {};
   function renderRoast(d) {
     lastD = d;

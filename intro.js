@@ -17,8 +17,8 @@ window.Intro = (function () {
 
   const CAST = [
     ["Alessandro", "Ha fatto il sito. Il viaggio è ancora da organizzare."],
-    ["Augusto", "Rua Augusta sta a San Paolo. Lui sta qua e non ha prenotato niente."],
-    ["Davide", "È convinto che il deserto sia Ibirapuera col chiosco del cocco."]
+    ["Augusto", "Studia economia a Piacenza. Ha già fatto il business plan del tagine: in perdita."],
+    ["Davide", "Ci ha chiamato 600.000 volte su WhatsApp. Ora è pure avvocato: farà causa al cammello."]
   ];
   const STOPS = [["29 · 30 dic", "Fes", "medina, concerie, ci si perde"], ["31 dic · 1 gen", "Marrakech", "Capodanno, poi si contano i danni"], ["2 gen", "Atlante", "2.260 metri e un passeggero che chiede «quanto manca?»"], ["2 · 3 gen", "Dadès e Todra", "gole, kasbah, eco che vi insulta"], ["3 · 4 gen", "Deserto", "dune, moto, tenda sotto zero"], ["5 → 8 gen", "Oceano", "surf, pesce, volo da Agadir la sera"]];
   const TITOLI = ["Il Braccino", "Il Cacasotto", "Lo Scroccone", "Il Tossico Supremo", "Il Desaparecido", "Il Sequestratore", "Il Bogia Nen", "Lo Scansafatiche", "Il Bancomat", "Il Condannato"];
@@ -45,7 +45,7 @@ window.Intro = (function () {
           const txt = E("div"); txt.append(E("b", null, n), E("span", null, line));
           row.append(av, txt); list.appendChild(row);
         });
-        s.append(list, E("p", "in-hand", "Uno de Roma, uno de Saluzzo, uno de Palermo. Indovinate chi è chi. Bedda matri.", 1900));
+        s.append(list, E("p", "in-hand", "Uno de Roma, uno de Saluzzo, uno de Palermo. Tranquilo, suave, bora. Bedda matri.", 1900));
         return s;
       },
       () => {

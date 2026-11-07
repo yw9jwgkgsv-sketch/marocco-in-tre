@@ -10,11 +10,11 @@ window.R = (function () {
   const E = (n) => "€" + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
   /* esclamazioni di tutte le parti */
-  const EXCL = ["Ahó", "Talìa", "Minchia", "Bôja fauss", "Caralho", "Mortacci", "Bedda matri", "Puta merda", "Ma che davero", "Nossa", "Ma la sorca"];
+  const EXCL = ["Ahó", "Talìa", "Minchia", "Bôja fauss", "Caralho", "Porra", "Puta que pariu", "Mortacci", "Bedda matri", "Puta merda", "Ma che davero", "Nossa", "Ma la sorca", "Foda-se"];
   /* «guarda questo tossico», in tutti gli accenti */
-  const TOX = ["Guarda questo tossico.", "Ahó, guarda 'sto tossico.", "Talìa a stu tossico.", "Olha esse tossico.", "Guarda 'l tossic, neh.", "Minchia, che tossico."];
+  const TOX = ["Guarda questo tossico.", "Ahó, guarda 'sto tossico.", "Talìa a stu tossico.", "Olha esse tossico.", "Guarda 'l tossic, neh.", "Minchia, che tossico.", "Olha esse vacilão.", "Que trouxa, mano."];
   /* chiusure */
-  const END = ["Daje.", "Esageruma nen.", "Amunì.", "Valeu.", "Bora.", "Che stai a fa'?", "Chi fa, babbìi?", "Tá de brincadeira?", "Deu ruim.", "Nun ce sta niente da fa'.", "È na camurrìa.", "Neh."];
+  const END = ["Daje.", "Esageruma nen.", "Amunì.", "Valeu.", "Bora.", "Tranquilo.", "Suave.", "Che stai a fa'?", "Chi fa, babbìi?", "Tá de brincadeira?", "Deu ruim.", "Que merda, hein.", "Nun ce sta niente da fa'.", "È na camurrìa.", "Neh.", "Porra, mano."];
 
   function names(d) { return [...new Set(CREW.concat(((d && d.persone) || []).map((p) => p.nome)))]; }
   function fill(t, seed) {
@@ -29,7 +29,7 @@ window.R = (function () {
     const ns = names(d), out = {};
     ns.forEach((n) => (out[n] = { n, prof: null, si: 0, forse: 0, no: 0, folli: 0, voti: 0, presi: 0, fatti: 0, late: [], pagato: 0, saldo: 0, condanne: 0, val: 0, valPct: 0 }));
     (d.persone || []).forEach((p) => { if (out[p.nome]) out[p.nome].prof = p; });
-    (d.reazioni || []).forEach((r) => { const s = out[r.nome]; if (!s) return; s[r.voto] = (s[r.voto] || 0) + 1; s.voti++; if (r.voto === "si" && FOLLIA[r.attivita] >= 4) s.folli++; });
+    (d.reazioni || []).forEach((r) => { const s = out[r.nome]; if (!s || !(r.attivita in FOLLIA)) return; s[r.voto] = (s[r.voto] || 0) + 1; s.voti++; if (r.voto === "si" && FOLLIA[r.attivita] >= 4) s.folli++; });
     const t0 = today();
     (d.todo || []).forEach((t) => {
       const s = out[t.chi]; if (!s) return;
@@ -52,7 +52,7 @@ window.R = (function () {
     const S = stats(d), L = Object.values(S), out = [];
     const add = (tit, s, frase) => s && out.push({ t: tit, n: s.n, f: frase });
     const budg = L.filter((s) => s.prof && s.prof.budget);
-    if (budg.length >= 2) { const s = minBy(budg, (x) => Number(x.prof.budget)); add("Il Braccino", s, "Ahó, " + s.n + " ha messo " + E(s.prof.budget) + " de budget. Co' " + E(s.prof.budget) + " in Marocco ce compri un tappeto e la scusa pe' restà a casa. Guarda questo tossico."); }
+    if (budg.length >= 2) { const s = minBy(budg, (x) => Number(x.prof.budget)); add(s.n === "Augusto" ? "L'Economista Braccino" : "Il Braccino", s, "Ahó, " + s.n + " ha messo " + E(s.prof.budget) + " de budget. Co' " + E(s.prof.budget) + " in Marocco ce compri un tappeto e la scusa pe' restà a casa. Guarda questo tossico."); }
     const cod = maxBy(L, (s) => s.no); if (cod && cod.no >= 3) add("Il Cacasotto", cod, cod.n + " ha detto «Neanche morto» a " + cod.no + " attività. Minchia, ha più paura lui del cammello che il cammello di lui.");
     const ind = maxBy(L, (s) => s.forse); if (ind && ind.forse >= 3) add("L'Indeciso", ind, ind.n + ": " + ind.forse + " volte «Forse». Esageruma nen co' 'ste decisioni, eh. Decidi, tossico.");
     const tox = maxBy(L, (s) => s.folli); if (tox && tox.folli >= 2) add("Il Tossico Supremo", tox, tox.n + " vuole fare " + tox.folli + " cose da follia 4 o 5. Tossico certificato, serve un tutore legale. Caralho.");
@@ -100,13 +100,28 @@ window.R = (function () {
     "{X} alla dogana: «Nothing to declare». Tranne la vergogna. {END}",
     "{X} ha chiesto se nel Sahara fa freddo. Sì, tossico. Sotto zero. Portate il piumino, amunì.",
     "La guida dirà «sette minuti a piedi». {X} capirà «sette chilometri» e avrà ragione lui. {EX}.",
-    "{X} proverà il surf, {Y} lo filmerà, il video girerà nel gruppo per anni. {TOX}"
+    "{X} proverà il surf, {Y} lo filmerà, il video girerà nel gruppo per anni. {TOX}",
+    "Davide ha chiamato il gruppo 600.000 volte su WhatsApp per organizzare questo viaggio. Il viaggio è sempre lo stesso. Porra.",
+    "Davide si è laureato in giurisprudenza da poco. Al primo souk farà ricorso al TAR contro il prezzo delle babbucce.",
+    "Davide leggerà il contratto del noleggio auto 40 volte, troverà la clausola vessatoria e firmerà comunque. Avvocato de che?",
+    "«Obiezione, vostro onore»: Davide al cammello che non parte. Respinta. Caralho.",
+    "Davide ha mandato un vocale di 9 minuti per chiedere se il 29 è martedì. È martedì, dottore.",
+    "Quando il venditore dirà «prezzo speciale per te», Davide chiederà le condizioni generali di contratto. Puta que pariu.",
+    "Augusto studia economia a Piacenza. Ha già fatto il business plan del tagine: margine negativo, ma ottima esperienza.",
+    "Augusto proverà a spiegare domanda e offerta a un venditore del souk. Il venditore gli venderà un tappeto. Suave.",
+    "Augusto calcolerà il ROI del Capodanno a €320. Risultato: «Tranquilo, è un investimento». Non lo è.",
+    "Piacenza sta a Milano come Fes sta a Marrakech: tutti dicono che è vicina, nessuno ci va. Vero, Augusto? Bora.",
+    "Augusto chiederà il cambio euro-dirham a tre banche diverse per guadagnare 40 centesimi. Economista della sorca.",
+    "Davide chiama, Augusto fa i conti, Alessandro fa il sito. Il viaggio, intanto, non lo organizza nessuno. Foda-se.",
+    "Davide ha chiamato anche mentre scrivevamo questa frase. Non rispondete, è una trappola.",
+    "{X}: «tranquilo, suave, bora». Tre parole e ha già perso il passaporto. Porra."
   ];
   function feed(d, n, seed) {
-    const T = titles(d).map((x) => x.f);
+    const seen = new Set(), T = [];
+    titles(d).forEach((x) => { if (!seen.has(x.t)) { seen.add(x.t); T.push(x.f); } });
     const s = seed || today();
     const order = FILL.map((t, i) => [h(s + "o" + i), fill(t, s + i)]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
-    return T.slice(0, Math.max(1, n - 2)).concat(order).slice(0, n);
+    return T.slice(0, 2).concat(order).slice(0, n);
   }
   function random(d) { const all = titles(d).map((x) => x.f).concat(FILL.map((t) => fill(t, String(Math.random())))); return rnd(all); }
 
@@ -155,10 +170,10 @@ window.R = (function () {
 
   /* -------- reazioni alle azioni -------- */
   const REACT = {
-    si: ["Fatto. Poi però ce vieni davvero, tossico.", "Ci sta. Vediamo se lo dici pure il giorno prima.", "Amunì! Anzi, yallah."],
+    si: ["Fatto. Poi però ce vieni davvero, tossico.", "Ci sta. Vediamo se lo dici pure il giorno prima.", "Amunì! Anzi, yallah.", "Bora, caralho!", "Suave. Ci sta."],
     si_folle: ["Follia confermata. Guarda questo tossico.", "Questa te costa un osso. Daje.", "Puta merda, che coraggio. O che incoscienza."],
     forse: ["«Forse». Esageruma nen, eh.", "Un altro forse. Il Marocco non aspetta te, tossico.", "Forse. Come quando dicevi che da San Paolo tornavi presto."],
-    no: ["Cacasotto.", "Neanche morto? Va bene, morirai de noia.", "Minchia, ma quanta paura hai?", "Ma la sorca. Coraggio zero."],
+    no: ["Cacasotto.", "Neanche morto? Va bene, morirai de noia.", "Minchia, ma quanta paura hai?", "Ma la sorca. Coraggio zero.", "Que merda, vacilão.", "Porra, mano, che paura."],
     profilo: ["Profilo salvato. Ora tutti sanno quanto sei braccino.", "Salvato. Il tribunale prende nota.", "Fatto. Valeu."],
     prendo: ["Te la sei presa. Ora se va male è colpa tua.", "Coraggioso. Hai una settimana, poi finisci sul muro della vergogna.", "Presa. Non fa' il Sequestratore."],
     fatto: ["Fatto davvero? Miracolo. Bedda matri.", "Bravo. Ora non te vantà per tre giorni.", "Una in meno. È nóis."],
@@ -166,7 +181,9 @@ window.R = (function () {
     spesa: ["Segnato. Lo Scroccone trema.", "Spesa salvata. Ora qualcuno te deve dei soldi: goditela.", "Fatto. Il Bancomat ringrazia."],
     muro: ["Attaccato al muro. Verrà usato contro de te.", "Fatto. Ora non se cancella dalla memoria.", "Pubblicato. Che vergogna, hein."],
     valigia: ["Spuntato. Un passo più vicino a non dimenticà il passaporto.", "Ok. Il piumino l'hai preso, vero?", "Valigia in crescita. Tossico ma organizzato."],
-    voto: ["Condanna registrata.", "Il tribunale ringrazia. Talìa che giustizia.", "Voto salvato. Nessuna pietà."]
+    voto: ["Condanna registrata.", "Il tribunale ringrazia. Talìa che giustizia.", "Voto salvato. Nessuna pietà.", "Sentenza emessa. Davide farà ricorso, come sempre."],
+    chiamata: ["Registrata. Avvocato, il telefono si spegne anche.", "Un'altra. Porra, Davide.", "Segnata. WhatsApp ringrazia per il traffico.", "+1. Puta que pariu, ancora?"],
+    chiamata_davide: ["Davide, ti segni le chiamate da solo? Obiezione respinta.", "Autodenuncia accolta. Caralho."]
   };
   function react(kind) { return rnd(REACT[kind] || ["Fatto."]); }
 

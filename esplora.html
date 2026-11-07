@@ -154,7 +154,7 @@
 
   async function load() {
     const d = await db.many(["reazioni", "persone"]);
-    S.reaz = d.reazioni; S.crew = d.persone.map((p) => p.nome); R.bar("esplora", d, M.me());
+    S.reaz = d.reazioni.filter((r) => !String(r.attivita).startsWith("chiama:")); S.crew = d.persone.map((p) => p.nome); R.bar("esplora", d, M.me());
     const y = window.scrollY; render(); window.scrollTo(0, y);
   }
   M.onMe(render);

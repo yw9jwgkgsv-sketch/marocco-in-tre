@@ -325,3 +325,7 @@ footer.foot{color:var(--muted);font-size:13px;padding-block:6px 10px}
   .intro *,.intro{animation-duration:.01ms!important;animation-delay:0ms!important}
   .in-seg.on i{animation:none;width:100%}
 }
+
+/* contatore chiamate */
+.callbox{display:grid;gap:6px;border:2px solid var(--rosa);background:var(--rosa-soft)}
+.call-n{font-family:var(--f-display);font-weight:800;font-size:clamp(48px,14vw,84px);line-height:1;color:var(--rosa);letter-spacing:-.02em}

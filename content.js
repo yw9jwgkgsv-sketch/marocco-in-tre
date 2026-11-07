@@ -31,7 +31,7 @@ C.ATT = [
     joke: "Fuochi d'artificio: le stelle. Bagno: una tenda. Ricordi: eterni." },
   { id: "cap-darna", cat: "capodanno", t: "Cena-spettacolo al Comptoir Darna", dove: "Marrakech, Hivernage", quando: "31 dic", prezzo: "€320", durata: "sera", follia: 2, tipo: "classico",
     desc: "3.500 dirham a testa da bere escluso, con musicisti, danzatrici e DJ. Cancellabile con rimborso fino al 24 dicembre.",
-    joke: "Per sentirvi ricchi una sera e poveri per dieci giorni." },
+    joke: "Augusto ha calcolato il ROI di questa cena. Negativo. Ma «tranquilo, è un investimento»." },
   { id: "cap-rooftop", cat: "capodanno", t: "Countdown su un rooftop della medina", dove: "Marrakech, medina", quando: "31 dic", prezzo: "€30–60", durata: "sera", follia: 2, tipo: "locale",
     desc: "Cena su una terrazza con vista sui tetti e sulla Koutoubia, poi taxi verso l'Hivernage. In medina l'alcol si trova poco: chiedete prima di prenotare.",
     joke: "Romantico. Siete in tre. Fate voi." },
@@ -57,7 +57,7 @@ C.ATT = [
     joke: "Foto profilo garantita per i prossimi sei mesi." },
   { id: "moto-noleggio", cat: "moto", t: "Moto a noleggio, da soli", dove: "Marrakech → Atlante", quando: "1–5 gen", prezzo: "€50–90 al giorno", durata: "2–3 giorni", follia: 5, tipo: "esperienza",
     desc: "Himalayan 450 o CRF250L per un anello sull'Atlante. Patente A obbligatoria e nessuno vi viene a prendere se succede qualcosa. Sul passo a gennaio fa molto freddo.",
-    joke: "Libertà totale. Anche di restare a piedi a 2.260 metri." },
+    joke: "Davide leggerà il contratto di noleggio 40 volte. Poi resterà a piedi a 2.260 metri lo stesso." },
 
   // DESERTO
   { id: "des-campo", cat: "deserto", t: "Campo piccolo nelle dune di Merzouga", dove: "Erg Chebbi", quando: "3 gen", prezzo: "€40–100", durata: "1 notte", follia: 3, tipo: "esperienza",
@@ -171,13 +171,13 @@ C.ATT = [
   // SFIDE
   { id: "sfida-souk", cat: "sfide", t: "La sfida del souk", dove: "Fes o Marrakech", quando: "un pomeriggio", prezzo: "il prezzo delle babbucce", durata: "1 ora", follia: 3, tipo: "esperienza",
     desc: "Ognuno compra lo stesso oggetto, per esempio un paio di babbucce, in un negozio diverso. Vince chi paga meno. Regola d'oro: partite da un terzo del primo prezzo.",
-    joke: "Chi perde porta le babbucce del vincitore per tutto il giorno dopo." },
+    joke: "Davide proverà a vincere citando il codice civile. Augusto con la curva di domanda. Vincerà il venditore. Porra." },
   { id: "sfida-noapp", cat: "sfide", t: "La medina senza Google Maps", dove: "Fes", quando: "29 dic", prezzo: "gratis", durata: "1–2 ore", follia: 4, tipo: "esperienza",
     desc: "Ognuno da solo raggiunge un punto deciso prima, per esempio Bab Boujloud, senza guardare il telefono. Fissate un orario limite e tenete il telefono acceso in tasca.",
     joke: "Se dopo due ore qualcuno non torna, ha vinto la medina." },
   { id: "sfida-darija", cat: "sfide", t: "Una giornata solo in darija", dove: "ovunque", quando: "un giorno a scelta", prezzo: "un tè a testa", durata: "1 giorno", follia: 2, tipo: "esperienza",
     desc: "Per un giorno si ordina e si saluta solo con le frasi della pagina Kit. Chi parla italiano o inglese con un locale offre il tè a tutti.",
-    joke: "Shukran, wakha, bezzaf. Con tre parole si sopravvive." },
+    joke: "Shukran, wakha, bezzaf. Chi dice «bora» o «suave» paga il tè. Sì, parlo con voi." },
   { id: "sfida-foto", cat: "sfide", t: "La foto ricreata", dove: "Fes e Taghazout", quando: "29 dic e 8 gen", prezzo: "gratis", durata: "2 minuti", follia: 1, tipo: "esperienza",
     desc: "Una foto di gruppo il primo giorno a Fes, rifatta identica l'ultimo giorno sull'oceano.",
     joke: "Prima: freschi. Dopo: bruciati dal sole, stanchi, felici." },
@@ -275,6 +275,9 @@ C.RUOLI = ["Autista ufficiale", "Cassiere", "Negoziatore del souk", "Navigatore"
 
 C.SONDAGGI = [
   { id: "tossico", q: "Chi è il più tossico della crew?" },
+  { id: "whatsapp", q: "Chi chiama il gruppo più volte su WhatsApp?" },
+  { id: "causa", q: "Chi farà causa a un venditore del souk?" },
+  { id: "businessplan", q: "Chi fa il business plan anche per un tè?" },
   { id: "sorca", q: "Chi dice «la sorca» più volte in un giorno?" },
   { id: "minchia", q: "Chi dice «minchia» davanti a una guida?" },
   { id: "portoghese", q: "Chi tratterà nel souk in portoghese?" },
