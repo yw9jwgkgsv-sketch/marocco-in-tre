@@ -26,6 +26,7 @@
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
   <section class="sec" aria-label="Scenario">
     <div class="tabs" role="tablist" id="tabs"></div>
@@ -56,6 +57,7 @@
 <script src="config.js"></script>
 <script src="content.js"></script>
 <script src="common.js"></script>
+<script src="roast.js"></script>
 <script>
 (function () {
   const { el, db, eur } = M;
@@ -118,19 +120,19 @@
             x.ore ? el("span", { class: "badge drive", text: "guida circa " + (x.ore < 1 ? Math.round(x.ore * 60) + " min" : String(x.ore).replace(".", ",") + " ore") }) : el("span", { class: "badge", text: "niente volante" }),
             el("span", { class: "badge", text: "dormi: " + x.dorme })),
           x.att && x.att.length ? el("div", { class: "chips" }, x.att.filter((id) => ATT[id]).map((id) => el("a", { class: "mini", href: "esplora.html#" + id, style: "--cat:" + C.CATS[ATT[id].cat].colore }, ATT[id].t))) : null,
-          el("p", { class: "risk" }, "Rischio del giorno: " + x.rischio))));
+          el("p", { class: "risk" }, "Rischio del giorno per " + R.fill("{X}", d.d + scen) + ": " + x.rischio.charAt(0).toLowerCase() + x.rischio.slice(1)))));
     });
     drawMap();
   }
 
   async function verdict() {
     try {
-      const pers = await db.list("persone"); const v = M.decide(pers);
+      const pers = await db.list("persone"); const v = M.decide(pers); R.bar("giro", { persone: pers }, M.me());
       document.getElementById("s-verdict").textContent = v.pick ? "Il verdetto della crew, per ora: " + v.pick + " · " + C.SCEN[v.pick].nome + "." : "La crew non ha ancora votato lo scenario.";
       if (v.pick && !M.store.get("marocco_scen")) select(v.pick);
     } catch (e) {}
   }
-  render(); verdict();
+  render(); R.bar("giro", {}, M.me()); verdict();
 })();
 </script>
 </body>

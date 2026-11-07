@@ -1,6 +1,8 @@
 /* Contenuti del sito. Prezzi e tempi sono stime al 7 novembre 2026, da verificare quando prenotate. */
 window.C = {};
 
+C.CREW = ["Alessandro", "Augusto", "Davide"];
+
 C.CATS = {
   capodanno: { nome: "Capodanno", colore: "var(--c-capodanno)" },
   moto:      { nome: "Moto e motori", colore: "var(--c-moto)" },
@@ -213,10 +215,10 @@ C.ROUTES = {
 };
 
 C.SCEN = {
-  A: { nome: "Auto e riad", costo: 1500, sub: "Massima libertà: valli, dune vere, due posti per il surf. Tanta guida dal 2 al 5.", joke: "Serve un autista con nervi saldi e due passeggeri che stanno zitti." },
-  B: { nome: "Auto e moto", costo: 2000, sub: "Tour in moto dal 3 al 5 con notte in bivacco. Serve almeno uno con patente A ed esperienza.", joke: "Il viaggio che racconterete. Anche i lividi." },
-  C: { nome: "Treno e tour", costo: 1300, sub: "Nessuno guida: treno, tour organizzato nel deserto, surf camp.", joke: "Comodo. Il minibus con altri dodici turisti è incluso." },
-  D: { nome: "Zaino in spalla", costo: 950, sub: "Bus, ostelli, campo standard, due notti in bus.", joke: "Si risparmia tutto, tranne la dignità." }
+  A: { nome: "Auto e riad", costo: 1500, sub: "Massima libertà: valli, dune vere, due posti per il surf. Tanta guida dal 2 al 5.", joke: "Serve un autista con i nervi saldi e due passeggeri che tengono la bocca chiusa. Auguri." },
+  B: { nome: "Auto e moto", costo: 2000, sub: "Tour in moto dal 3 al 5 con notte in bivacco. Serve almeno uno con patente A ed esperienza.", joke: "Il viaggio che racconterete ai nipoti. Lividi compresi, tossici." },
+  C: { nome: "Treno e tour", costo: 1300, sub: "Nessuno guida: treno, tour organizzato nel deserto, surf camp.", joke: "Comodo come un pensionato in gita. Il minibus con dodici tedeschi è incluso." },
+  D: { nome: "Zaino in spalla", costo: 950, sub: "Bus, ostelli, campo standard, due notti in bus.", joke: "Si risparmia tutto, tranne la dignità. Come in Erasmus, ma senza la scusa dei vent'anni." }
 };
 
 /* Giorno per giorno. ore = ore di guida stimate. att = id delle attività consigliate. */
@@ -272,40 +274,44 @@ C.dayFor = function (day, scen) {
 C.RUOLI = ["Autista ufficiale", "Cassiere", "Negoziatore del souk", "Navigatore", "DJ di bordo", "Fotografo", "Responsabile sveglie", "Quello che si perde"];
 
 C.SONDAGGI = [
+  { id: "tossico", q: "Chi è il più tossico della crew?" },
+  { id: "sorca", q: "Chi dice «la sorca» più volte in un giorno?" },
+  { id: "salluzzo", q: "Chi dirà «Salluzzo Palermo» davanti a una guida?" },
+  { id: "portoghese", q: "Chi tratterà nel souk in portoghese?" },
+  { id: "saudade", q: "Chi ha ancora saudade di San Paolo?" },
   { id: "souk", q: "Chi si fa fregare per primo nel souk?" },
   { id: "moto", q: "Chi cade per primo dalla moto?" },
   { id: "capodanno", q: "Chi dorme prima di mezzanotte a Capodanno?" },
   { id: "medina", q: "Chi si perde nella medina di Fes?" },
-  { id: "freddo", q: "Chi si lamenta per primo del freddo nel deserto?" },
+  { id: "rimorchio", q: "Chi ci prova con una turista e torna a mani vuote?" },
+  { id: "freddo", q: "Chi piange per il freddo nel deserto?" },
   { id: "surf", q: "Chi sta in piedi sulla tavola per primo?" },
-  { id: "valigia", q: "Chi torna con più roba inutile in valigia?" },
-  { id: "cammello", q: "Chi fa amicizia con il cammello?" },
   { id: "soldi", q: "Chi finisce i soldi per primo?" },
-  { id: "foto", q: "Chi fa più foto di sé stesso?" }
+  { id: "foto", q: "Chi fa più foto a sé stesso?" }
 ];
 
 C.DARIJA = [
-  { it: "Ciao", dj: "Salam", pr: "sa-LÀM", uso: "Ovunque. Risposta: «Salam» o «Alaikum salam»." },
-  { it: "Grazie", dj: "Shukran", pr: "SHUK-ran", uso: "La parola più utile del viaggio." },
-  { it: "No, grazie", dj: "La, shukran", pr: "là SHUK-ran", uso: "La direte duemila volte nei souk. Sorridendo." },
-  { it: "Quanto costa?", dj: "Bshhal?", pr: "b-SHHAL", uso: "Prima di toccare qualsiasi cosa." },
-  { it: "Troppo caro", dj: "Ghali bezzaf", pr: "GHA-li bez-ZAF", uso: "Subito dopo «Bshhal?». Sempre." },
-  { it: "Molto, troppo", dj: "Bezzaf", pr: "bez-ZAF", uso: "Funziona per i prezzi, il cibo e le emozioni." },
-  { it: "Un po'", dj: "Shwiya", pr: "SHWI-ya", uso: "«Shwiya shwiya»: piano piano, con calma." },
-  { it: "Ok, d'accordo", dj: "Wakha", pr: "WA-kha", uso: "Quando avete chiuso una trattativa." },
-  { it: "Sì / No", dj: "Iyyeh / La", pr: "IY-yeh / là", uso: "Basi." },
-  { it: "Per favore", dj: "Afak", pr: "AA-fak", uso: "In fondo a ogni richiesta." },
-  { it: "Il conto, per favore", dj: "L-hsab, afak", pr: "l-HSAB AA-fak", uso: "Al ristorante." },
-  { it: "Scusa, permesso", dj: "Smahli", pr: "SMAH-li", uso: "Nei vicoli stretti della medina." },
-  { it: "Nessun problema", dj: "Mashi mushkil", pr: "MA-shi mush-KIL", uso: "La risposta a quasi tutto, in Marocco." },
-  { it: "Basta, finito", dj: "Safi", pr: "SA-fi", uso: "Quando il venditore insiste. O quando siete pieni." },
-  { it: "Dov'è...?", dj: "Fin kayn...?", pr: "fin KAYN", uso: "Più il posto. Poi seguite il dito." },
-  { it: "Andiamo", dj: "Yallah", pr: "YAL-lah", uso: "Per far partire il gruppo la mattina." },
-  { it: "Bello", dj: "Zwin", pr: "ZWIN", uso: "Per i posti, le cose e le persone." },
-  { it: "Buono (da mangiare)", dj: "Bnin", pr: "b-NIN", uso: "Al cuoco del tagine. Lo farete felice." },
-  { it: "Tè", dj: "Atay", pr: "a-TAY", uso: "Con o senza zucchero: «bla sukkar» è senza." },
-  { it: "Arrivederci", dj: "Bslama", pr: "b-SLA-ma", uso: "Uscendo dai negozi senza aver comprato niente." },
-  { it: "Se Dio vuole", dj: "Inshallah", pr: "in-SHAL-lah", uso: "Significa «forse». A volte «mai»." }
+  { it: "Ciao", dj: "Salam", br: "E aí", pr: "sa-LÀM", uso: "Ovunque. Risposta: «Salam» o «Alaikum salam»." },
+  { it: "Grazie", dj: "Shukran", br: "Valeu", pr: "SHUK-ran", uso: "La parola più utile del viaggio." },
+  { it: "No, grazie", dj: "La, shukran", br: "Não, valeu", pr: "là SHUK-ran", uso: "La direte duemila volte nei souk. Sorridendo." },
+  { it: "Quanto costa?", dj: "Bshhal?", br: "Quanto custa?", pr: "b-SHHAL", uso: "Prima di toccare qualsiasi cosa." },
+  { it: "Troppo caro", dj: "Ghali bezzaf", br: "Tá caro pra caralho", pr: "GHA-li bez-ZAF", uso: "Subito dopo «Bshhal?». Sempre." },
+  { it: "Molto, troppo", dj: "Bezzaf", br: "Pra caramba", pr: "bez-ZAF", uso: "Funziona per i prezzi, il cibo e le emozioni." },
+  { it: "Un po'", dj: "Shwiya", br: "Um pouquinho", pr: "SHWI-ya", uso: "«Shwiya shwiya»: piano piano, con calma." },
+  { it: "Ok, d'accordo", dj: "Wakha", br: "Fechou", pr: "WA-kha", uso: "Quando avete chiuso una trattativa." },
+  { it: "Sì / No", dj: "Iyyeh / La", br: "Sim / Não", pr: "IY-yeh / là", uso: "Basi." },
+  { it: "Per favore", dj: "Afak", br: "Por favor", pr: "AA-fak", uso: "In fondo a ogni richiesta." },
+  { it: "Il conto, per favore", dj: "L-hsab, afak", br: "A conta, por favor", pr: "l-HSAB AA-fak", uso: "Al ristorante." },
+  { it: "Scusa, permesso", dj: "Smahli", br: "Com licença", pr: "SMAH-li", uso: "Nei vicoli stretti della medina." },
+  { it: "Nessun problema", dj: "Mashi mushkil", br: "De boa", pr: "MA-shi mush-KIL", uso: "La risposta a quasi tutto, in Marocco." },
+  { it: "Basta, finito", dj: "Safi", br: "Chega", pr: "SA-fi", uso: "Quando il venditore insiste. O quando siete pieni." },
+  { it: "Dov'è...?", dj: "Fin kayn...?", br: "Cadê...?", pr: "fin KAYN", uso: "Più il posto. Poi seguite il dito." },
+  { it: "Andiamo", dj: "Yallah", br: "Bora", pr: "YAL-lah", uso: "Per far partire il gruppo la mattina." },
+  { it: "Bello", dj: "Zwin", br: "Massa", pr: "ZWIN", uso: "Per i posti, le cose e le persone." },
+  { it: "Buono (da mangiare)", dj: "Bnin", br: "Delícia", pr: "b-NIN", uso: "Al cuoco del tagine. Lo farete felice." },
+  { it: "Tè", dj: "Atay", br: "Chá", pr: "a-TAY", uso: "Con o senza zucchero: «bla sukkar» è senza." },
+  { it: "Arrivederci", dj: "Bslama", br: "Falou", pr: "b-SLA-ma", uso: "Uscendo dai negozi senza aver comprato niente." },
+  { it: "Se Dio vuole", dj: "Inshallah", br: "Se Deus quiser", pr: "in-SHAL-lah", uso: "Significa «forse». A volte «mai»." }
 ];
 
 /* Prezzi indicativi in dirham, stime da verificare */

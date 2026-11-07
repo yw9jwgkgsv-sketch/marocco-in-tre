@@ -29,6 +29,7 @@
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per votare le attività: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
   <section class="sec" aria-label="Filtri" style="gap:10px">
     <div class="hscroll" id="cats" role="group" aria-label="Categorie"></div>
@@ -60,6 +61,7 @@
 <script src="config.js"></script>
 <script src="content.js"></script>
 <script src="common.js"></script>
+<script src="roast.js"></script>
 <script>
 (function () {
   const { el, db, icon } = M;
@@ -93,7 +95,7 @@
     const mine = S.reaz.find((r) => r.nome === me && r.attivita === id);
     try {
       if (mine && mine.voto === voto) await db.remove("reazioni", { nome: me, attivita: id });
-      else await db.upsert("reazioni", { nome: me, attivita: id, voto }, "nome,attivita");
+      else { await db.upsert("reazioni", { nome: me, attivita: id, voto }, "nome,attivita"); const a = C.ATT.find((x) => x.id === id); M.roast(voto === "si" && a && a.follia >= 4 ? "si_folle" : voto); }
       await load();
     } catch (e) { M.err(e); }
   }
@@ -152,7 +154,7 @@
 
   async function load() {
     const d = await db.many(["reazioni", "persone"]);
-    S.reaz = d.reazioni; S.crew = d.persone.map((p) => p.nome);
+    S.reaz = d.reazioni; S.crew = d.persone.map((p) => p.nome); R.bar("esplora", d, M.me());
     const y = window.scrollY; render(); window.scrollTo(0, y);
   }
   M.onMe(render);

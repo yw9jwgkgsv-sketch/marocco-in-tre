@@ -19,12 +19,13 @@
   <div class="wrap">
     <div class="topline"><span class="eyebrow">La crew</span><span class="me-chip" id="me-chip"></span></div>
     <h1>La <em>crew</em></h1>
-    <p class="lead">Tre persone, tre budget, un solo scenario. E un tribunale per stabilire chi farà la figura peggiore.</p>
+    <p class="lead">Alessandro, Augusto e Davide. Tre budget, un solo scenario, e un tribunale per stabilire chi è il più tossico. Ex Erasmus a San Paolo, ora tocca al Marocco: Deus nos ajude.</p>
   </div>
 </header>
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per soprannomi, ruoli e tribunale: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
   <section class="sec" aria-labelledby="h-chi">
     <div class="sec-head"><h2 id="h-chi">Chi siamo</h2></div>
@@ -82,6 +83,7 @@
 <script src="config.js"></script>
 <script src="content.js"></script>
 <script src="common.js"></script>
+<script src="roast.js"></script>
 <script>
 (function () {
   const { el, db, eur } = M;
@@ -136,7 +138,7 @@
 
   function renderTrib() {
     const box = document.getElementById("trib"); box.textContent = "";
-    const names = [...new Set(S.pers.map((p) => p.nome).concat(M.me() ? [M.me()] : []))].sort();
+    const names = [...new Set(C.CREW.concat(S.pers.map((p) => p.nome)).concat(M.me() ? [M.me()] : []))].sort();
     if (names.length < 2) { box.appendChild(el("p", { class: "empty", text: "Il tribunale si apre quando nella crew ci sono almeno due persone." })); return; }
     C.SONDAGGI.forEach((s) => {
       const votes = S.sond.filter((v) => v.domanda === s.id);
@@ -159,7 +161,7 @@
     const me = M.me(); if (!me) return M.askWho();
     try {
       if (mine && mine.scelta === scelta) await db.remove("sondaggi", { nome: me, domanda: id });
-      else await db.upsert("sondaggi", { nome: me, domanda: id, scelta }, "nome,domanda");
+      else { await db.upsert("sondaggi", { nome: me, domanda: id, scelta }, "nome,domanda"); M.roast("voto"); }
       await load();
     } catch (e) { M.err(e); }
   }
@@ -172,7 +174,7 @@
       soprannome: document.getElementById("p-sopr").value.trim() || null, ruolo: document.getElementById("p-ruolo").value || null, superpotere: document.getElementById("p-super").value.trim() || null,
       aggiornato: new Date().toISOString() };
     const btn = document.getElementById("p-save"); btn.disabled = true; document.getElementById("p-msg").textContent = "Salvataggio…";
-    try { await db.upsert("persone", row, "nome"); await load(); document.getElementById("p-msg").textContent = "Salvato. Ora lo vedono anche gli altri."; M.toast("Profilo salvato"); }
+    try { await db.upsert("persone", row, "nome"); await load(); document.getElementById("p-msg").textContent = "Salvato. Ora lo vedono anche gli altri."; M.roast("profilo"); }
     catch (er) { document.getElementById("p-msg").textContent = "Non salvato. Controlla la connessione e riprova."; console.error(er); }
     btn.disabled = false;
   });
@@ -180,7 +182,7 @@
   async function load() {
     const d = await db.many(["persone", "sondaggi"]);
     S.pers = d.persone; S.sond = d.sondaggi;
-    fill(); renderProfiles(); renderVerdict(); renderTrib();
+    fill(); renderProfiles(); renderVerdict(); renderTrib(); R.bar("crew", d, M.me());
   }
   M.onMe(() => { fill(); renderProfiles(); renderTrib(); });
   load();

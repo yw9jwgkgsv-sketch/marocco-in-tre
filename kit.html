@@ -25,6 +25,7 @@
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per la valigia condivisa: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
   <nav class="hscroll" aria-label="Sezioni del kit">
     <a class="chip" href="#valigia">Valigia</a><a class="chip" href="#darija">Darija</a><a class="chip" href="#quiz">Quiz</a><a class="chip" href="#prezzi">Prezzi giusti</a><a class="chip" href="#cambio">Cambio</a><a class="chip" href="#meteo">Meteo</a><a class="chip" href="#info">Info utili</a>
@@ -37,7 +38,7 @@
   </section>
 
   <section class="sec" id="darija" aria-labelledby="h-dj">
-    <div class="sec-head"><h2 id="h-dj">Darija da sopravvivenza</h2><p>Il dialetto marocchino. Tre parole dette bene valgono più di un inglese perfetto.</p></div>
+    <div class="sec-head"><h2 id="h-dj">Darija da sopravvivenza</h2><p>Il dialetto marocchino, con la traduzione per chi pensa ancora in paulista. Tre parole dette bene valgono più di un inglese perfetto.</p></div>
     <div class="grid g3" id="dj"></div>
   </section>
 
@@ -92,6 +93,7 @@
 <script src="config.js"></script>
 <script src="content.js"></script>
 <script src="common.js"></script>
+<script src="roast.js"></script>
 <script>
 (function () {
   const { el, db } = M;
@@ -102,7 +104,7 @@
   async function toggle(item, on) {
     const me = M.me(); if (!me) return M.askWho();
     try {
-      if (on) await db.upsert("valigia", { nome: me, item, fatto: true }, "nome,item");
+      if (on) { await db.upsert("valigia", { nome: me, item, fatto: true }, "nome,item"); M.roast("valigia"); }
       else await db.remove("valigia", { nome: me, item });
       await load();
     } catch (e) { M.err(e); }
@@ -110,7 +112,7 @@
 
   function renderVal() {
     const me = M.me();
-    const names = [...new Set(S.pers.map((p) => p.nome).concat(me ? [me] : []))].sort();
+    const names = [...new Set(C.CREW.concat(S.pers.map((p) => p.nome)).concat(me ? [me] : []))].sort();
     const crew = document.getElementById("val-crew"); crew.textContent = "";
     names.forEach((n) => {
       const done = S.val.filter((v) => v.nome === n && v.fatto && ALL.includes(v.item)).length;
@@ -138,6 +140,7 @@
     el("span", { class: "muted", style: "font-size:13px", text: f.it }),
     el("b", { style: "font-family:var(--f-display);font-size:24px", text: f.dj }),
     el("span", { class: "mono muted", style: "font-size:12.5px", text: f.pr }),
+    el("span", { style: "font-size:13px;font-weight:600;color:var(--verde)", text: "A San Paolo: " + f.br }),
     el("span", { class: "hand", style: "color:var(--rosa);font-size:19px", text: f.uso }))));
 
   // quiz
@@ -174,7 +177,7 @@
 
   async function load() {
     const d = await db.many(["valigia", "persone"]);
-    S.val = d.valigia; S.pers = d.persone; renderVal();
+    S.val = d.valigia; S.pers = d.persone; renderVal(); R.bar("kit", d, M.me());
   }
   M.onMe(renderVal);
   renderVal(); load();

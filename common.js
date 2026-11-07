@@ -177,14 +177,16 @@ window.M = (function () {
   async function askWho() {
     let names = [];
     try { names = (await db.list("persone")).map((p) => p.nome); } catch (e) {}
+    names = [...new Set((window.C && C.CREW ? C.CREW : []).concat(names))];
     const ov = el("div", { class: "overlay", role: "dialog", "aria-modal": "true", "aria-labelledby": "who-h" });
-    const input = el("input", { type: "text", id: "who-name", maxlength: "30", autocomplete: "given-name", required: true, value: me });
+    const input = el("input", { type: "text", id: "who-name", maxlength: "30", autocomplete: "given-name", value: me });
     const form = el("form", { class: "card" },
       el("span", { class: "sticker" }, "Controllo passaporti"),
       el("h2", { id: "who-h", text: "Chi sei?" }),
-      el("p", { class: "muted", text: names.length ? "Tocca il tuo nome, oppure scrivilo se sei nuovo. Questo telefono se lo ricorda." : "Scrivi il tuo nome. Questo telefono se lo ricorda." }),
+      el("p", { class: "muted", text: "Tocca il tuo nome. Questo telefono se lo ricorda. Se fai il furbo e ti spacci per un altro, il sito se ne accorge." }),
       names.length ? el("div", { class: "chips" }, names.map((n) => el("button", { type: "button", class: "chip", onclick: () => { setMe(n); ov.remove(); } }, avatar(n), n))) : null,
-      el("div", { class: "field" }, el("label", { for: "who-name", text: "Il tuo nome" }), input),
+      el("details", null, el("summary", { class: "muted", style: "cursor:pointer;font-size:14px", text: "Non sono nessuno dei tre" }),
+        el("div", { class: "field", style: "margin-top:8px" }, el("label", { for: "who-name", text: "Il tuo nome" }), input)),
       el("button", { class: "btn", type: "submit" }, "Entra")
     );
     form.addEventListener("submit", (e) => { e.preventDefault(); if (input.value.trim()) { setMe(input.value); ov.remove(); } });
@@ -240,8 +242,11 @@ window.M = (function () {
     const up = document.getElementById("upgrade");
     if (up && !LIVE) { up.hidden = false; up.innerHTML = "<b>Modalità prova</b>I dati restano solo su questo dispositivo finché il sito non è collegato al database."; }
     if (!me) setTimeout(askWho, 300);
+    if (window.R) R.mountSalluzzo(active || "home");
+    if (me && LIVE) db.update("persone", { nome: me }, { visto: new Date().toISOString() }).catch(() => {});
   }
+  function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
 
-  return { db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, err, icon, nav, start, decide, GROUP,
+  return { db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
     me: () => me, onMe: (f) => meListeners.push(f), askWho, store, isMissing };
 })();

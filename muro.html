@@ -25,6 +25,7 @@
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per scrivere sul muro: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
   <form class="card" id="f-post" style="display:grid;gap:10px">
     <div class="chips" id="prompts"></div>
@@ -42,10 +43,11 @@
 <script src="config.js"></script>
 <script src="content.js"></script>
 <script src="common.js"></script>
+<script src="roast.js"></script>
 <script>
 (function () {
   const { el, db } = M;
-  M.start("");
+  M.start("muro");
   const S = { muro: [], who: "tutti" };
   const txt = document.getElementById("p-txt");
   const PROMPTS = ["Frase celebre: ", "Voto tagine: ", "Idea: ", "Confessione: ", "Promessa che non manterrò: "];
@@ -57,7 +59,7 @@
   document.getElementById("f-post").addEventListener("submit", async (e) => {
     e.preventDefault(); const me = M.me(); if (!me) return M.askWho();
     const t = txt.value.trim(); if (!t) return;
-    try { await db.insert("muro", { nome: me, testo: t.slice(0, 280) }); txt.value = ""; upd(); M.toast("Attaccato al muro"); await load(); } catch (er) { M.err(er); }
+    try { await db.insert("muro", { nome: me, testo: t.slice(0, 280) }); txt.value = ""; upd(); M.roast("muro"); await load(); } catch (er) { M.err(er); }
   });
 
   function render() {
@@ -78,7 +80,7 @@
     });
   }
 
-  async function load() { const d = await db.many(["muro"]); S.muro = d.muro; render(); }
+  async function load() { const d = await db.many(["muro", "persone"]); S.muro = d.muro; render(); R.bar("muro", d, M.me()); }
   M.onMe(render);
   load();
   db.subscribe(["muro"], load);

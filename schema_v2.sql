@@ -11,6 +11,7 @@ alter table public.persone add column if not exists soprannome text;
 alter table public.persone add column if not exists ruolo text;
 alter table public.persone add column if not exists superpotere text;
 alter table public.spese add column if not exists categoria text;
+alter table public.persone add column if not exists visto timestamptz;
 
 -- tabelle nuove
 create table if not exists public.reazioni (

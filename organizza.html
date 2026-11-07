@@ -19,12 +19,13 @@
   <div class="wrap">
     <div class="topline"><span class="eyebrow">Organizza</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Chi fa <em>cosa</em></h1>
-    <p class="lead">Chi prenota cosa e chi ha pagato cosa. È tutto scritto, quindi niente scuse.</p>
+    <p class="lead">Chi prenota cosa e chi ha pagato cosa. È tutto scritto, quindi niente scuse e niente «ma io pensavo lo facesse Augusto».</p>
   </div>
 </header>
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
   <div class="tabs" role="tablist">
     <button type="button" role="tab" id="tab-pren" aria-selected="true" aria-controls="pane-pren">Prenotazioni</button>
@@ -96,11 +97,12 @@
 <script src="config.js"></script>
 <script src="content.js"></script>
 <script src="common.js"></script>
+<script src="roast.js"></script>
 <script>
 (function () {
   const { el, db, eur, eur2 } = M;
   M.start("organizza");
-  const S = { todo: [], spese: [], pers: [] };
+  const S = { todo: [], spese: [], pers: [], d: null };
   const CATS = ["Volo", "Alloggio", "Auto e benzina", "Attività", "Cibo", "Serata", "Altro"];
   const ecat = document.getElementById("e-cat"); CATS.forEach((c) => ecat.appendChild(el("option", { value: c, text: c })));
 
@@ -110,13 +112,13 @@
     document.getElementById("tab-pren").setAttribute("aria-selected", String(!p));
     document.getElementById("tab-cassa").setAttribute("aria-selected", String(p));
     document.getElementById("pane-pren").hidden = p; document.getElementById("pane-cassa").hidden = !p;
-    history.replaceState(null, "", p ? "#cassa" : "#");
+    history.replaceState(null, "", p ? "#cassa" : "#"); if (S.d) R.bar(p ? "cassa" : "organizza", S.d, M.me());
   }
   document.getElementById("tab-pren").onclick = () => tab("pren");
   document.getElementById("tab-cassa").onclick = () => tab("cassa");
   if (location.hash === "#cassa") tab("cassa");
 
-  const people = () => [...new Set(S.pers.map((p) => p.nome).concat(S.spese.map((s) => s.pagato_da)).concat(M.me() ? [M.me()] : []))].filter(Boolean).sort();
+  const people = () => [...new Set(C.CREW.concat(S.pers.map((p) => p.nome)).concat(S.pers.map((p) => p.nome).concat(S.spese.map((s) => s.pagato_da)).concat(M.me() ? [M.me()] : []))].filter(Boolean).sort();
 
   async function act(fn) { try { await fn(); await load(); } catch (e) { M.err(e); } }
 
@@ -127,10 +129,10 @@
     const acts = [];
     if (t.fatto) acts.push(el("button", { type: "button", class: "btn ghost small", onclick: () => act(() => db.update("todo", { id: t.id }, { fatto: false })) }, "Riapri"));
     else {
-      if (!t.chi) acts.push(el("button", { type: "button", class: "btn small", onclick: () => { if (!me) return M.askWho(); act(() => db.update("todo", { id: t.id }, { chi: me })); } }, "Me ne occupo io"));
-      else if (t.chi === me) acts.push(el("button", { type: "button", class: "btn ghost small", onclick: () => act(() => db.update("todo", { id: t.id }, { chi: null })) }, "Lascia"));
-      else acts.push(el("button", { type: "button", class: "btn ghost small", onclick: () => { if (!me) return M.askWho(); act(() => db.update("todo", { id: t.id }, { chi: me })); } }, "Lo prendo io"));
-      acts.push(el("button", { type: "button", class: "btn yellow small", onclick: () => act(() => db.update("todo", { id: t.id }, { fatto: true, chi: t.chi || me || null })) }, "Fatto"));
+      if (!t.chi) acts.push(el("button", { type: "button", class: "btn small", onclick: () => { if (!me) return M.askWho(); act(() => db.update("todo", { id: t.id }, { chi: me })).then(() => M.roast("prendo")); } }, "Me ne occupo io"));
+      else if (t.chi === me) acts.push(el("button", { type: "button", class: "btn ghost small", onclick: () => act(() => db.update("todo", { id: t.id }, { chi: null })).then(() => M.roast("lascia")) }, "Lascia"));
+      else acts.push(el("button", { type: "button", class: "btn ghost small", onclick: () => { if (!me) return M.askWho(); act(() => db.update("todo", { id: t.id }, { chi: me })).then(() => M.roast("prendo")); } }, "Lo prendo io"));
+      acts.push(el("button", { type: "button", class: "btn yellow small", onclick: () => act(() => db.update("todo", { id: t.id }, { fatto: true, chi: t.chi || me || null })).then(() => M.roast("fatto")) }, "Fatto"));
     }
     const del = el("button", { type: "button", class: "btn danger small" }, "Elimina");
     del.onclick = () => { if (del.dataset.armed) return act(() => db.remove("todo", { id: t.id })); del.dataset.armed = "1"; del.textContent = "Sicuro?"; setTimeout(() => { delete del.dataset.armed; del.textContent = "Elimina"; }, 3500); };
@@ -239,12 +241,12 @@
     e.preventDefault(); if (!M.me()) return M.askWho();
     const d = document.getElementById("e-desc").value.trim(), a = Number(document.getElementById("e-amt").value), w = document.getElementById("e-who").value || M.me();
     if (!d || !(a > 0)) return;
-    act(async () => { await db.insert("spese", { descrizione: d.slice(0, 80), importo: Math.round(a * 100) / 100, pagato_da: w, categoria: document.getElementById("e-cat").value }); document.getElementById("e-desc").value = ""; document.getElementById("e-amt").value = ""; M.toast("Spesa segnata"); });
+    act(async () => { await db.insert("spese", { descrizione: d.slice(0, 80), importo: Math.round(a * 100) / 100, pagato_da: w, categoria: document.getElementById("e-cat").value }); document.getElementById("e-desc").value = ""; document.getElementById("e-amt").value = ""; M.roast("spesa"); });
   });
 
   async function load() {
     const d = await db.many(["todo", "spese", "persone"]);
-    S.todo = d.todo; S.spese = d.spese; S.pers = d.persone;
+    S.todo = d.todo; S.spese = d.spese; S.pers = d.persone; S.d = d; R.bar(location.hash === "#cassa" ? "cassa" : "organizza", d, M.me());
     renderTodo(); renderCassa();
   }
   M.onMe(() => { renderTodo(); renderCassa(); });

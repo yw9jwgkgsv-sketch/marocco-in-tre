@@ -48,6 +48,7 @@
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run. Un minuto.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
   <section class="sec" aria-labelledby="h-stato">
     <div class="sec-head"><h2 id="h-stato">Stato della missione</h2><span class="hand muted" id="stato-joke"></span></div>
@@ -95,6 +96,7 @@
 <script src="config.js"></script>
 <script src="content.js"></script>
 <script src="common.js"></script>
+<script src="roast.js"></script>
 <script>
 (function () {
   const { el, db, icon, eur } = M;
