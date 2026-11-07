@@ -114,7 +114,22 @@ window.R = (function () {
     "Augusto chiederà il cambio euro-dirham a tre banche diverse per guadagnare 40 centesimi. Economista della sorca.",
     "Davide chiama, Augusto fa i conti, Alessandro fa il sito. Il viaggio, intanto, non lo organizza nessuno. Foda-se.",
     "Davide ha chiamato anche mentre scrivevamo questa frase. Non rispondete, è una trappola.",
-    "{X}: «tranquilo, suave, bora». Tre parole e ha già perso il passaporto. Porra."
+    "{X}: «tranquilo, suave, bora». Tre parole e ha già perso il passaporto. Porra.",
+    "Il saluzzese chiede se il tagine è buono come la bagna cauda. No, e mo' magna.",
+    "Er palermitano ha detto «amunì» alle 9. Alle 11 stava ancora a fa' colazione.",
+    "Il palermitano corregge il cameriere: «arancina, non arancino». A Fes. Il cameriere annuisce per paura.",
+    "Er romano s'è preso tre prenotazioni e nun n'ha chiusa una. Daje, eh, co' calma.",
+    "Il saluzzese nel souk: «Esageruma nen» sul prezzo. Il venditore non capisce, ma abbassa lo stesso.",
+    "Er palermitano nel deserto: «Minchia, ma unni è u mari?». A 400 chilometri, picciotto.",
+    "Er romano al Jardin Majorelle: «Bello, eh. Ma Villa Borghese...». Nessuno gliel'ha chiesto.",
+    "Il saluzzese è bogia nen: resta fermo pure in cima alla duna mentre gli altri scendono col sandboard.",
+    "Il saluzzese, falso e cortese: «Che buono il tagine!». Poi in camera: «La polenta era un'altra cosa».",
+    "Er palermitano al primo caffè marocchino: «Chistu non è café». Per una volta ha ragione.",
+    "Er romano trova tranquillo il traffico di Marrakech: «'Sto Raccordo è niente». Poi un motorino gli passa sui piedi.",
+    "Tramonto nel deserto. Er romano: «Daje, bello». Il saluzzese: «Esageruma nen». Er palermitano: «Minchia». Poesia.",
+    "Er palermitano dice «talìa» a ogni cammello. I cammelli, a loro volta, talìano lui. Male.",
+    "Il saluzzese ha portato la giacca a vento da montagna. Per una volta, il più furbo della crew.",
+    "Er romano parla col venditore come al mercato di Porta Portese. Il venditore è più romano de lui."
   ];
   function feed(d, n, seed) {
     const seen = new Set(), T = [];
