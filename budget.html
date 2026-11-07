@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Budget · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Budget</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Per una volta <em>siamo seri</em></h1>
+    <span class="sticker ">Niente battute. Quasi.</span>
+    <p class="lead">Quanto costa davvero, a testa e andata esclusa. Accendi e spegni le cose: il totale si aggiorna.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+  <section class="sec bud-total" aria-live="polite">
+    <span class="eyebrow" style="color:var(--muted)">Il tuo conto, a testa</span>
+    <b class="bud-n mono" id="tot">—</b>
+    <span class="muted" id="tot3"></span>
+    <div class="bud-bar" id="bar" aria-hidden="true"></div>
+    <div class="bud-leg" id="leg"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-fissi">
+    <div class="sec-head"><h2 id="h-fissi">Questi li spendi di sicuro</h2><span class="mono" id="fissi-tot"></span></div>
+    <ul class="list" id="fissi"></ul>
+  </section>
+
+  <section class="sec" aria-labelledby="h-scelte">
+    <div class="sec-head"><h2 id="h-scelte">Questi dipendono da voi</h2><span class="mono" id="scelte-tot"></span></div>
+    <div class="grid" id="scelte" style="gap:12px"></div>
+    <div class="card" style="display:grid;gap:8px">
+      <label for="shop" class="row-between"><b>Souvenir e souk</b><span class="mono" id="shop-v"></span></label>
+      <input type="range" id="shop" style="width:100%">
+    </div>
+  </section>
+
+  <p class="muted" style="font-size:13px">Stime al 7 novembre 2026, da verificare quando prenotate. Il volo di andata è escluso perché è già pagato.</p>
+
+  <a class="nextlink" href="organizza.html">Ora prenditi una prenotazione →</a>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, eur } = M;
+  M.start("budget");
+  const B = C.BUDGET, KEY = "marocco_budget_v1";
+  let st = {};
+  try { st = JSON.parse(M.store.get(KEY) || "{}"); } catch (e) { st = {}; }
+  B.scelte.forEach((s) => { if (s.tipo === "uno" && st[s.id] === undefined) st[s.id] = s.def; if (s.tipo === "piu" && !Array.isArray(st[s.id])) st[s.id] = []; });
+  if (st.shop === undefined) st.shop = B.shopping.def;
+  const save = () => M.store.set(KEY, JSON.stringify(st));
+  const fissiTot = B.fissi.reduce((a, f) => a + f.e, 0);
+
+  const fl = document.getElementById("fissi");
+  B.fissi.forEach((f) => fl.appendChild(el("li", { class: "bud-li" }, el("div", { style: "min-width:0" }, el("b", { text: f.t }), el("div", { class: "muted", style: "font-size:13px", text: f.nota })), el("b", { class: "mono", text: eur(f.e) }))));
+  document.getElementById("fissi-tot").textContent = eur(fissiTot);
+
+  const box = document.getElementById("scelte");
+  B.scelte.forEach((s) => {
+    const card = el("fieldset", { class: "card bud-opt" }, el("legend", { text: s.t }));
+    s.opz.forEach((o, i) => {
+      const id = "o-" + s.id + "-" + i;
+      const inp = el("input", { type: s.tipo === "uno" ? "radio" : "checkbox", name: s.id, id, value: String(i) });
+      if (s.tipo === "uno" ? st[s.id] === i : st[s.id].includes(i)) inp.checked = true;
+      inp.addEventListener("change", () => {
+        if (s.tipo === "uno") st[s.id] = i; else st[s.id] = [...card.querySelectorAll("input:checked")].map((x) => Number(x.value));
+        save(); calc();
+      });
+      card.appendChild(el("label", { class: "bud-choice", for: id }, inp, el("span", { text: o.t }), el("b", { class: "mono", text: o.e ? "+" + eur(o.e) : "€0" })));
+    });
+    box.appendChild(card);
+  });
+  const shop = document.getElementById("shop");
+  shop.min = B.shopping.min; shop.max = B.shopping.max; shop.step = B.shopping.step; shop.value = st.shop;
+  shop.addEventListener("input", () => { st.shop = Number(shop.value); save(); calc(); });
+
+  const COL = { fissi: "var(--blu)", capodanno: "var(--c-capodanno)", moto: "var(--c-moto)", surf: "var(--c-oceano)", campo: "var(--c-deserto)", extra: "var(--c-montagna)", shop: "var(--c-cibo)" };
+  function calc() {
+    const parts = [["Sicuri", fissiTot, COL.fissi]];
+    let sc = 0;
+    B.scelte.forEach((s) => {
+      const v = s.tipo === "uno" ? s.opz[st[s.id]].e : st[s.id].reduce((a, i) => a + s.opz[i].e, 0);
+      sc += v; if (v) parts.push([s.t, v, COL[s.id]]);
+    });
+    sc += st.shop; if (st.shop) parts.push(["Souk", st.shop, COL.shop]);
+    const tot = fissiTot + sc;
+    document.getElementById("tot").textContent = eur(tot);
+    document.getElementById("tot3").textContent = "In tre: " + eur(tot * 3) + " · al giorno: circa " + eur(tot / 11) + " a testa";
+    document.getElementById("scelte-tot").textContent = "+" + eur(sc);
+    document.getElementById("shop-v").textContent = eur(st.shop);
+    const bar = document.getElementById("bar"); bar.textContent = "";
+    const leg = document.getElementById("leg"); leg.textContent = "";
+    parts.forEach(([l, v, c]) => { bar.appendChild(el("i", { style: "flex:" + v + ";background:" + c, title: l + " " + eur(v) })); leg.appendChild(el("span", null, el("i", { style: "background:" + c }), l + " " + eur(v))); });
+    document.getElementById("roast").hidden = false;
+    R.bar("budget", { persone: [], budgetTot: tot, moto: st.moto, capodanno: st.capodanno }, M.me());
+  }
+  calc();
+})();
+</script>
+</body>
+</html>

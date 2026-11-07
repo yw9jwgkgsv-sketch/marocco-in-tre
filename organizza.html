@@ -19,7 +19,8 @@
   <div class="wrap">
     <div class="topline"><span class="eyebrow">Organizza</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Chi fa <em>cosa</em></h1>
-    <p class="lead">Chi prenota cosa e chi ha pagato cosa. È tutto scritto, quindi niente scuse e niente «ma io pensavo lo facesse Augusto».</p>
+    <span class="sticker">Per non restare a terra l'8 gennaio</span>
+    <p class="lead">Prenditi una prenotazione con «Me ne occupo io». Nella Cassa segna cosa paghi.</p>
   </div>
 </header>
 
@@ -58,11 +59,9 @@
 
   <div id="pane-cassa" role="tabpanel" aria-labelledby="tab-cassa" hidden style="display:grid;gap:24px">
     <section class="sec">
-      <div class="grid g4">
+      <div class="grid g2">
         <div class="kpi"><b id="c-tot">€0</b><span>spesi in totale</span></div>
         <div class="kpi"><b id="c-testa">€0</b><span>a testa finora</span></div>
-        <div class="kpi"><b id="c-scen">—</b><span id="c-scen-l">stima dello scenario</span></div>
-        <div class="kpi"><b id="c-left">—</b><span>restano a testa</span></div>
       </div>
     </section>
     <form class="card" id="f-exp" style="display:grid;gap:10px">
@@ -91,6 +90,7 @@
       <ul class="list" id="exp"><li class="empty">Nessuna spesa ancora.</li></ul>
     </section>
   </div>
+  <a class="nextlink" href="kit.html">Ora prepara la valigia →</a>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -188,12 +188,6 @@
     const n = Math.max(ppl.length, 1), share = total / n;
     document.getElementById("c-tot").textContent = eur(total);
     document.getElementById("c-testa").textContent = eur(share);
-    const v = M.decide(S.pers);
-    if (v.pick) {
-      const c = C.SCEN[v.pick].costo;
-      document.getElementById("c-scen").textContent = eur(c); document.getElementById("c-scen-l").textContent = "stima scenario " + v.pick;
-      document.getElementById("c-left").textContent = eur(Math.max(0, c - share));
-    }
 
     const bal = {}; ppl.forEach((p) => (bal[p] = -share));
     S.spese.forEach((s) => { bal[s.pagato_da] = (s.pagato_da in bal ? bal[s.pagato_da] : -share) + (Number(s.importo) || 0); });

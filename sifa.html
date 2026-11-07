@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Si fa · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Si fa</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Cosa <em>si fa</em></h1>
+    <span class="sticker ">Per non discutere tre ore al bar</span>
+    <p class="lead">Tre 🔥 = si fa. Uno 💀 = bocciata. Funziona così, punto.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+  <div class="grid g3" id="sum"></div>
+  <section class="sec" aria-labelledby="h-si"><div class="sec-head"><h2 id="h-si">Si fa</h2></div><div class="grid" id="l-si" style="gap:8px"></div></section>
+  <section class="sec" aria-labelledby="h-quasi"><div class="sec-head"><h2 id="h-quasi">Manca uno</h2><p>Due hanno detto 🔥. Il terzo deve decidersi.</p></div><div class="grid" id="l-quasi" style="gap:8px"></div></section>
+  <section class="sec" aria-labelledby="h-no"><div class="sec-head"><h2 id="h-no">Bocciate</h2></div><div class="grid" id="l-no" style="gap:8px"></div></section>
+
+  <a class="nextlink" href="budget.html">Ora guarda quanto costa →</a>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("sifa");
+  const CREW = C.CREW;
+  let reaz = [], todo = [];
+  function row(a, extra, kind) {
+    return el("div", { class: "sf-row " + kind, style: "--cat:" + C.CATS[a.cat].colore },
+      el("span", { class: "sf-dot" }),
+      el("div", { style: "min-width:0;display:grid;gap:2px" }, el("b", { text: a.t }), el("span", { class: "muted", style: "font-size:13px", text: a.quando + " · " + a.prezzo })),
+      extra);
+  }
+  function render() {
+    const by = {};
+    reaz.forEach((r) => { const o = (by[r.attivita] = by[r.attivita] || { si: [], forse: [], no: [] }); if (o[r.voto]) o[r.voto].push(r.nome); });
+    const si = [], quasi = [], no = []; let aperte = 0;
+    C.ATT.forEach((a) => {
+      const v = by[a.id] || { si: [], forse: [], no: [] };
+      if (v.no.length) no.push([a, v]);
+      else if (CREW.every((n) => v.si.includes(n))) si.push([a, v]);
+      else if (v.si.length === 2) quasi.push([a, v]);
+      else aperte++;
+    });
+    const sum = document.getElementById("sum"); sum.textContent = "";
+    [[si.length, "si fanno", "var(--verde)"], [quasi.length, "manca uno", "var(--giallo)"], [aperte, "ancora da votare", "var(--muted)"]].forEach(([n, l, c]) =>
+      sum.appendChild(el("a", { class: "kpi", href: l === "ancora da votare" ? "vota.html" : "#h-" + (l === "si fanno" ? "si" : "quasi"), style: "text-decoration:none;color:inherit;border-left:5px solid " + c }, el("b", { text: String(n) }), el("span", { text: l }))));
+
+    const L1 = document.getElementById("l-si"); L1.textContent = "";
+    if (!si.length) L1.appendChild(el("p", { class: "empty", text: "Ancora niente. Tre persone, nessuna cosa in comune. Bel gruppo." }));
+    si.forEach(([a]) => {
+      const inList = todo.some((t) => String(t.titolo).includes(a.t));
+      const b = el("button", { type: "button", class: "btn small" + (inList ? " ghost" : ""), disabled: inList || null }, inList ? "In prenotazioni" : "Prenota");
+      b.onclick = async () => { try { await db.insert("todo", { titolo: "Prenotare: " + a.t, entro: null, ordine: 500, fatto: false, chi: null }); todo.push({ titolo: "Prenotare: " + a.t }); M.toast("Aggiunta alle prenotazioni. Ora qualcuno se la prenda."); render(); } catch (e) { M.err(e); } };
+      L1.appendChild(row(a, b, "ok"));
+    });
+
+    const L2 = document.getElementById("l-quasi"); L2.textContent = "";
+    if (!quasi.length) L2.appendChild(el("p", { class: "empty", text: "Niente in sospeso." }));
+    quasi.forEach(([a, v]) => {
+      const manca = CREW.find((n) => !v.si.includes(n));
+      const forse = v.forse.includes(manca);
+      L2.appendChild(row(a, el("span", { class: "sf-who" }, M.avatar(manca), el("span", { text: forse ? manca + " ha detto «forse». Convincetelo." : manca + " non ha votato. Sbloccala, tossico." })), "mid"));
+    });
+
+    const L3 = document.getElementById("l-no"); L3.textContent = "";
+    if (!no.length) L3.appendChild(el("p", { class: "empty", text: "Nessuna bocciata. Siete più coraggiosi del previsto. O non avete votato." }));
+    no.forEach(([a, v]) => L3.appendChild(row(a, el("span", { class: "sf-who" }, el("span", { class: "avs" }, v.no.map((n) => M.avatar(n))), el("span", { text: "Bocciata da " + v.no.join(" e ") + ". Cacasotto." })), "ko")));
+  }
+  async function load() {
+    const d = await db.many(["reazioni", "todo", "persone"]);
+    reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":")); todo = d.todo;
+    R.bar("sifa", d, M.me()); render();
+  }
+  render(); load(); db.subscribe(["reazioni", "todo"], load);
+})();
+</script>
+</body>
+</html>

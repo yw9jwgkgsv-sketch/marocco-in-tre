@@ -63,8 +63,8 @@ window.R = (function () {
     const pag = maxBy(L, (s) => s.pagato); if (pag && pag.pagato > 0) add("Il Bancomat", pag, pag.n + " ha già tirato fuori " + E(pag.pagato) + ". È il nostro Itaú personale. Bedda matri, che generosità.");
     const scr = minBy(L, (s) => s.saldo); if (scr && scr.saldo < -5) add("Lo Scroccone", scr, scr.n + " deve " + E(-scr.saldo) + " al gruppo. Valeu, mano, ma paga. Mortacci.");
     const col = maxBy(L, (s) => s.condanne); if (col && col.condanne >= 2) add("Il Condannato", col, "Il tribunale ha condannato " + col.n + " " + col.condanne + " volte. Il popolo ha parlato. Talìa a stu tossico.");
-    L.filter((s) => !s.prof && CREW.includes(s.n)).forEach((s) => add("Lo Scansafatiche", s, s.n + " nun ha manco compilato il profilo. Tossico e pure pigro."));
-    const valOk = L.filter((s) => s.prof);
+    L.filter((s) => !s.voti && CREW.includes(s.n)).forEach((s) => add("Lo Scansafatiche", s, s.n + " nun ha votato manco un'attività. Tossico e pure pigro."));
+    const valOk = L.filter((s) => s.voti);
     if (valOk.length >= 2) { const v = minBy(valOk, (s) => s.valPct); if (v && v.valPct < 50) add("Lo Svaligiato", v, v.n + ": valigia al " + v.valPct + "%. Parte co' un costume e la speranza. Nossa."); }
     return out;
   }
@@ -138,7 +138,14 @@ window.R = (function () {
     "{X}: «Bora, una bomba e poi Jemaa el-Fnaa». La bomba era un msemen col miele. Fidatevi.",
     "Promemoria del sito: in Marocco la legge sulle canne non scherza. {X}, il sito non viene a prenderti in caserma. Caralho.",
     "{X} torna dal deserto e dice «ho visto cose». Erano le stelle, tossico. Erano solo le stelle.",
-    "Il tribunale non ha ancora votato chi torna più rilassato del cammello, ma il favorito è {X}. {END}"
+    "Il tribunale non ha ancora votato chi torna più rilassato del cammello, ma il favorito è {X}. {END}",
+    "Tre single, undici giorni. L'unica che vi guarda negli occhi è la cammella. {END}",
+    "{X} ha scaricato Tinder in Marocco. Unico match: la guida del deserto, 54 anni, baffi. Suave.",
+    "Probabilità che {X} rimorchi a Capodanno: come trovare la neve a Taghazout. {EX}.",
+    "{X} dice «stasera è la volta buona». Lo dice dal 2019. Tossico.",
+    "Al surf camp {X} si presenterà come «surfista». Dopo tre minuti in acqua, nessuna gli crederà più.",
+    "{X} prova l'approccio in portoghese: «oi, tudo bem?». Lei è di Bergamo. Porra.",
+    "Il registro dei due di picche è aperto. {X} ha già chiesto se si possono cancellare. No."
   ];
   function feed(d, n, seed) {
     const seen = new Set(), T = [];
@@ -188,6 +195,19 @@ window.R = (function () {
       const silent = CREW.find((n) => !w[n]);
       if (silent) return silent + " non ha mai scritto sul muro. Osserva, giudica, tace. Falso e cortese. Inquietante.";
     }
+    if (page === "vota" && m) {
+      if (!m.voti) return "Ahó " + me + ", zero voti. Trascina 'sta carta, non ti morde. " + pick(END, seed);
+      if (m.no >= 5 && m.no > m.si) return me + ": già " + m.no + " volte «Neanche morto». Sei venuto in Marocco pe' dormì? Cacasotto.";
+      return me + ", sei a " + m.voti + " su " + C.ATT.length + ". " + pick(["Daje che ce la fai.", "Bora, mancano poche carte. Più o meno.", "Il cammello vota più veloce de te."], seed);
+    }
+    if (page === "sifa") return pick(["Tre 🔥 e si fa. Se una cosa sta in «Manca uno», andate a rompere le palle a chi manca.", "Questa pagina dice cosa si fa davvero. Il resto sono chiacchiere da vocale de Davide.", "Quello che sta in «Si fa» va prenotato. Non domani, oggi. Porra."], seed);
+    if (page === "budget") {
+      if (d.moto === 3) return "Per una volta siamo seri: il tour in moto è la voce più grossa. Ne vale la pena, ma decidetelo a voce. Davide, senza chiamare.";
+      if (d.capodanno === 3) return "La cena-spettacolo da €320 da sola vale tre giorni di viaggio. Siete sicuri? Seriamente.";
+      return "Per una volta siamo seri. I numeri sono stime: quelli veri li vedete quando prenotate.";
+    }
+    if (page === "cuori") return pick(["Tre single in Marocco. L'unica che vi guarda negli occhi è la cammella.", "Le statistiche sono chiare: tornerete single, ma abbronzati.", "Probabilità di rimorchiare nel deserto: zero. Probabilità di innamorarsi del cammello: alta.", "Tinder in Marocco: unico match, la guida del deserto, 54 anni, baffi. Suave."], seed);
+    if (page === "tribunale") return fill("Il tribunale è aperto. Le quote danno colpevole {X} su tutto. {END}", seed);
     if (page === "giro") return fill("Il giro è deciso. Resta da capire chi lo rovinerà per primo: le quote danno favorito {X}. {END}", seed);
     return fill(pick(FILL, seed), seed);
   }
@@ -219,7 +239,12 @@ window.R = (function () {
     crew: "Compila il tuo profilo: budget, patente, fuoristrada e scenario preferito. Lo scenario del viaggio si decide da solo. Più sotto c'è il tribunale: si vota chi è più probabile che faccia una figura di merda.",
     organizza: "Prenotazioni: premi Me ne occupo io su quello che prenoti tu, e Fatto quando hai finito. Cassa: segna quello che paghi per tutti, il sito calcola chi deve dare soldi a chi.",
     kit: "La valigia la spunti tu e gli altri vedono a che punto sei. Sotto ci sono le frasi in darija, i prezzi giusti per trattare e il convertitore euro-dirham.",
-    muro: "Scrivi quello che vuoi: frasi celebri, voti ai tagine, figure di merda. Lo vedono tutti."
+    muro: "Scrivi quello che vuoi: frasi celebri, voti ai tagine, figure di merda. Lo vedono tutti.",
+    vota: "Ti esce una carta alla volta. Premi 🔥 se ci stai, 🤔 se forse, 💀 se neanche morto. Oppure trascina la carta. Quando tutti e tre dite 🔥, esce MATCH e si fa.",
+    sifa: "Qui vedi il risultato dei voti. «Si fa»: tutti e tre 🔥, si prenota. «Manca uno»: due 🔥, il terzo deve decidere. «Bocciate»: qualcuno ha detto 💀.",
+    budget: "Sopra c'è il totale a testa. Le spese sicure sono già dentro. Sotto accendi e spegni le cose che volete fare: il totale cambia da solo.",
+    cuori: "Il registro: premi il tasto quando prendi un due di picche. Sotto: dove forse sì e dove sicuramente no.",
+    tribunale: "Per ogni domanda tocca il nome del colpevole. Chi prende più voti si becca l'adesivo."
   };
   function mountHelp(page) {
     if (document.getElementById("nocapito")) return;
@@ -236,7 +261,8 @@ window.R = (function () {
       ok.addEventListener("click", () => ov.remove()); ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
       card.append(st, h2, p, br, ok); ov.appendChild(card); document.body.appendChild(ov); ok.focus();
     });
-    document.body.appendChild(b);
+    const top = document.querySelector(".pagehead .topline");
+    if (top) { b.classList.add("in-top"); top.appendChild(b); } else document.body.appendChild(b);
   }
 
   /* -------- la barra «il sito dice» -------- */

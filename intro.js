@@ -1,7 +1,7 @@
 /* L'introduzione a storie: breve, va avanti da sola, ogni schermata col suo colore. Si rivede dalla Home. */
 window.Intro = (function () {
   "use strict";
-  const KEY = "marocco_intro_v3";
+  const KEY = "marocco_intro_v4";
   const store = {
     get() { try { return localStorage.getItem(KEY); } catch (e) { return "1"; } },
     set() { try { localStorage.setItem(KEY, "1"); } catch (e) {} }
@@ -53,11 +53,11 @@ window.Intro = (function () {
       s.appendChild(list);
       return s;
     } },
-    { bg: "#D6345A", make: simple({ eye: "Esplora", title: "Per non passare 11 giorni in riad.", line: "Su ogni idea premi uno dei tre.", mock: votes, joke: "Tre 🔥 sulla stessa idea? Si fa." }) },
-    { bg: "#0B7A5C", make: simple({ eye: "Crew", title: "Per non decidere coi vocali di Davide.", line: "Metti budget e scenario preferito. Il sito sceglie da solo.", joke: "E c'è il tribunale: chi è il più tossico?" }) },
-    { bg: "#0F6FB8", make: simple({ eye: "Il giro", title: "Per non perdervi.", line: "Mappa e giorno per giorno: dove dormite, quanto guidate.", joke: "Più il rischio del giorno, con nome e cognome." }) },
+    { bg: "#D6345A", make: simple({ eye: "Vota", title: "Per non passare 11 giorni in riad.", line: "Una carta alla volta: scegli, o trascinala.", mock: votes, joke: "Tre 🔥 sulla stessa? MATCH, e si fa." }) },
+    { bg: "#0B7A5C", make: simple({ eye: "Si fa", title: "Per non discutere tre ore al bar.", line: "Si fa, manca uno, bocciate. Si capisce al volo.", joke: "«Manca uno»? Andate a rompergli le palle." }) },
+    { bg: "#0F6FB8", make: simple({ eye: "Budget", title: "Per una volta siamo seri.", line: "Quanto spendete davvero. Accendete e spegnete le cose, il conto si aggiorna.", joke: "Il tour in moto costa. Decidetelo a voce." }) },
     { bg: "#B35A00", make: simple({ eye: "Organizza", title: "Per non restare a terra l'8 gennaio.", line: "Prenditi una prenotazione. Segna cosa paghi: i conti li fa il sito.", joke: "Chi è in ritardo finisce sul muro della vergogna." }) },
-    { bg: "#B23A12", make: simple({ eye: "Kit", title: "Per non fare figure de merda.", line: "Valigia, frasi in darija, prezzi giusti nel souk.", joke: "«La, shukran»: no, grazie. La direte duemila volte." }) },
+    { bg: "#B23A12", make: simple({ eye: "Cuori solitari", title: "Tre single, zero speranze.", line: "Dove forse sì, dove sicuramente no, e il registro dei due di picche.", joke: "L'unica che vi guarda negli occhi è la cammella." }) },
     { bg: "#141A4D", make: simple({ eye: "La pagella", title: "Il sito vede tutto.", line: "Da quello che fate, o non fate, escono i titoli.", mock: titles, joke: "Usatelo, o vi insulta. Anzi, vi insulta lo stesso." }) },
     { bg: "#2438C6", last: true, make: (done) => {
       const s = E("div", "in-slide");
@@ -77,11 +77,11 @@ window.Intro = (function () {
     } }
   ];
 
-  const NEXT = { Alessandro: "Ora compila il profilo. Poi, magari, prenota il volo.", Augusto: "Ora compila il profilo. Suave, ma oggi.", Davide: "Ora compila il profilo. Senza chiamare nessuno." };
+  const NEXT = { Alessandro: "Ora vota le carte. Poi, magari, prenota il volo.", Augusto: "Ora vota le carte. Suave, ma oggi.", Davide: "Ora vota le carte. Senza chiamare nessuno." };
   function finale(slide, n, done) {
     slide.textContent = "";
-    slide.append(E("h2", "in-big", "Daje, " + n + ".", 0), E("p", "in-sub", NEXT[n] || "Ora compila il profilo, tossico.", 200));
-    const go = E("a", "btn yellow in-anim in-cta", "Compila il profilo", 400); go.href = "crew.html";
+    slide.append(E("h2", "in-big", "Daje, " + n + ".", 0), E("p", "in-sub", NEXT[n] || "Ora vota le carte, tossico.", 200));
+    const go = E("a", "btn yellow in-anim in-cta", "Inizia a votare", 400); go.href = "vota.html";
     go.addEventListener("click", () => store.set());
     const stay = E("button", "in-other", "Resto in Home", 600); stay.type = "button";
     stay.addEventListener("click", (e) => { e.stopPropagation(); done(); });

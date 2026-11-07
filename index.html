@@ -47,7 +47,7 @@
   </section>
 
   <section class="sec" aria-label="Pagine">
-    <div class="grid g2" id="tiles"></div>
+    <div class="grid g2 tiles" id="tiles"></div>
   </section>
 
   <section class="sec" aria-labelledby="h-call">
@@ -64,7 +64,7 @@
     <div class="grid g3" id="pagella"></div>
   </section>
 
-  <footer class="foot">Prezzi e tempi sono stime al 7 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br><span class="mono">Versione 9 · 7 nov 2026</span></footer>
+  <footer class="foot">Prezzi e tempi sono stime al 7 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br><span class="mono">Versione 10 · 7 nov 2026</span></footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -88,12 +88,14 @@
 
   /* le pagine, ognuna con il suo «per non...» */
   const TILES = [
-    ["esplora.html", "esplora", "Esplora", "Per non passare 11 giorni in riad", "var(--c-moto)"],
-    ["crew.html", "crew", "Crew", "Per non decidere coi vocali di Davide", "var(--c-capodanno)"],
+    ["vota.html", "vota", "Vota", "Per non passare 11 giorni in riad", "var(--c-moto)"],
+    ["sifa.html", "sifa", "Si fa", "Per non discutere tre ore al bar", "var(--c-montagna)"],
+    ["budget.html", "budget", "Budget", "Per una volta siamo seri", "var(--c-citta)"],
     ["organizza.html", "organizza", "Organizza", "Per non restare a terra", "var(--c-deserto)"],
+    ["cuori.html", "muro", "Cuori solitari", "Per non tornare single. Tornerete single.", "var(--c-capodanno)"],
+    ["tribunale.html", "crew", "Tribunale", "Per stabilire chi è il più tossico", "var(--c-cibo)"],
     ["giro.html", "giro", "Il giro", "Per non perdervi", "var(--c-oceano)"],
-    ["kit.html", "kit", "Kit", "Per non fare figure de merda", "var(--c-montagna)"],
-    ["muro.html", "muro", "Muro", "Per non dimenticarle, le figure de merda", "var(--c-cibo)"]
+    ["kit.html", "kit", "Kit", "Per non fare figure de merda", "var(--c-sfide)"]
   ];
   const tiles = document.getElementById("tiles");
   TILES.forEach(([href, ic, t, sub, col]) => tiles.appendChild(el("a", { class: "tile", href, style: "--cat:" + col }, icon(ic), el("b", { text: t }), el("span", { text: sub }))));
@@ -107,14 +109,12 @@
       document.getElementById("todo-count").textContent = "";
       return;
     }
-    const prof = d.persone.find((p) => p.nome === me);
-    const voti = d.reazioni.filter((r) => r.nome === me && !String(r.attivita).startsWith("chiama:")).length;
+    const voti = d.reazioni.filter((r) => r.nome === me && !String(r.attivita).includes(":")).length;
     const presa = d.todo.some((t) => t.chi === me);
     const nItems = C.VALIGIA.reduce((a, g) => a + g.items.length, 0);
     const val = Math.round((d.valigia.filter((v) => v.nome === me && v.fatto).length / nItems) * 100);
     const S = [
-      { ok: !!(prof && prof.budget && prof.scenario), t: "Compila il profilo", s: "Per non far decidere tutto a Davide.", href: "crew.html#f-prof" },
-      { ok: voti >= 20, t: "Vota le attività", s: voti ? "Ne hai votate " + voti + " su " + C.ATT.length + ". Arriva almeno a 20." : "Per non passare 11 giorni in riad.", href: "esplora.html" },
+      { ok: voti >= C.ATT.length, t: "Vota le carte", s: voti ? "Sei a " + voti + " su " + C.ATT.length + ". Finiscile." : "Per non passare 11 giorni in riad.", href: "vota.html" },
       { ok: presa, t: "Prenditi una prenotazione", s: "Per non restare a terra l'8 gennaio.", href: "organizza.html" },
       { ok: val >= 80, t: "Fai la valigia", s: val ? "Sei al " + val + "%." : "Per non partire in ciabatte.", href: "kit.html#valigia" }
     ];

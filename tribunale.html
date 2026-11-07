@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Il tribunale · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Il tribunale</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Il <em>tribunale</em></h1>
+    <span class="sticker ">Per stabilire chi è il più tossico</span>
+    <p class="lead">Tocca il nome del colpevole. Tocca di nuovo per ritirare il voto. Nessuna pietà.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+  <div class="grid g2" id="trib"></div>
+
+  <a class="nextlink" href="muro.html">Ora scrivi qualcosa sul muro →</a>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("tribunale");
+  let sond = [];
+  async function cast(id, scelta, mine) {
+    const me = M.me(); if (!me) return M.askWho();
+    try {
+      if (mine && mine.scelta === scelta) await db.remove("sondaggi", { nome: me, domanda: id });
+      else { await db.upsert("sondaggi", { nome: me, domanda: id, scelta }, "nome,domanda"); M.roast("voto"); }
+      await load();
+    } catch (e) { M.err(e); }
+  }
+  function render() {
+    const box = document.getElementById("trib"); box.textContent = "";
+    const names = C.CREW;
+    C.SONDAGGI.forEach((s) => {
+      const votes = sond.filter((v) => v.domanda === s.id);
+      const mine = votes.find((v) => v.nome === M.me());
+      const counts = {}; names.forEach((n) => (counts[n] = 0)); votes.forEach((v) => { if (v.scelta in counts) counts[v.scelta]++; });
+      const max = Math.max(0, ...Object.values(counts));
+      const leaders = max > 0 ? names.filter((n) => counts[n] === max) : [];
+      box.appendChild(el("article", { class: "card", style: "display:grid;gap:10px" },
+        el("h3", { style: "font-size:20px", text: s.q }),
+        el("div", { class: "chips" }, names.map((n) => el("button", { type: "button", class: "chip", "aria-pressed": String(!!mine && mine.scelta === n), onclick: () => cast(s.id, n, mine) }, M.avatar(n), n))),
+        votes.length ? el("div", { style: "display:grid;gap:6px" }, names.map((n) => el("div", { style: "display:grid;grid-template-columns:90px 1fr 20px;gap:8px;align-items:center;font-size:13px" },
+          el("span", { text: n }), el("div", { class: "bar" }, el("i", { style: "width:" + (counts[n] / votes.length) * 100 + "%;background:" + M.colorFor(n) })), el("span", { class: "mono", text: String(counts[n]) })))) : null,
+        leaders.length === 1 && votes.length >= 2 ? el("span", { class: "sticker rosa", style: "font-size:20px", text: "Colpevole: " + leaders[0] }) : null));
+    });
+  }
+  async function load() { const d = await db.many(["sondaggi", "persone"]); sond = d.sondaggi; render(); R.bar("tribunale", d, M.me()); }
+  render(); load(); db.subscribe(["sondaggi"], load);
+})();
+</script>
+</body>
+</html>

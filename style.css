@@ -391,3 +391,80 @@ footer.foot{color:var(--muted);font-size:13px;padding-block:6px 10px}
 .step.ok .step-n{background:var(--verde);color:#fff}
 .tile{min-height:120px}
 .tile b{font-size:22px}
+
+/* ---------- Vota: carte ---------- */
+.deck-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.deck{position:relative;min-height:440px;display:grid}
+.vcard{grid-area:1/1;background:var(--surface);border-radius:24px;overflow:hidden;box-shadow:0 12px 32px rgba(18,22,51,.16);border:1px solid var(--line);display:grid;grid-template-rows:auto 1fr;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .28s ease, opacity .28s ease;position:relative;cursor:grab;will-change:transform}
+.vcard.ghost{transform:scale(.95) translateY(12px);opacity:.6;pointer-events:none}
+.vcard-top{background:var(--cat);color:#fff;padding:18px;display:grid;gap:12px;position:relative;min-height:170px;align-content:space-between}
+.vcard-top::after{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 64 64'%3E%3Cpath d='M32 6l7.5 18.5L58 32l-18.5 7.5L32 58l-7.5-18.5L6 32l18.5-7.5z' fill='none' stroke='%23ffffff' stroke-opacity='.16' stroke-width='2'/%3E%3C/svg%3E");pointer-events:none}
+@media (prefers-color-scheme: dark){ .vcard-top{color:#0C0F22} .vcard-top::after{filter:invert(1)} }
+.vcard-top .row{display:flex;justify-content:space-between;align-items:start;position:relative;z-index:1}
+.vcard-top .cat{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.vcard-top .ic{width:46px;height:46px}
+.vcard-top h2{font-size:clamp(28px,7.5vw,38px);font-weight:800;position:relative;z-index:1}
+.vcard-top .follia{position:relative;z-index:1}
+.vcard-body{padding:16px 18px 18px;display:grid;gap:10px;align-content:start}
+.vcard-body details summary{cursor:pointer;font-weight:700;color:var(--blu);font-size:14px}
+.who-said{font-size:13.5px;font-weight:600;color:var(--muted)}
+.stamp{position:absolute;top:22px;font-family:var(--f-display);font-weight:800;font-size:26px;padding:4px 10px;border:4px solid;border-radius:10px;opacity:0;transition:opacity .15s;z-index:3;pointer-events:none;background:rgba(255,255,255,.9)}
+.s-si{left:18px;color:var(--verde);transform:rotate(-14deg)}
+.s-no{right:18px;color:var(--danger);transform:rotate(14deg)}
+.s-forse{left:50%;top:40%;transform:translate(-50%,0) rotate(-4deg);color:#8A5A00}
+.vcard.show-si .s-si,.vcard.show-no .s-no,.vcard.show-forse .s-forse{opacity:1}
+.vbtns{display:grid;grid-template-columns:1fr .8fr 1fr;gap:10px}
+.vbtn{display:grid;justify-items:center;gap:2px;border:0;border-radius:18px;padding:12px 6px;font-weight:800;font-size:14px;cursor:pointer;box-shadow:var(--shadow)}
+.vbtn span{font-size:30px;line-height:1}
+.vbtn.si{background:var(--verde);color:#fff}
+.vbtn.no{background:var(--danger);color:#fff}
+.vbtn.forse{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.vbtn:active{transform:scale(.96)}
+.done-card{display:grid;gap:12px;justify-items:start;padding:26px}
+.done-card h3{font-size:28px}
+.matchov{background:rgba(10,13,40,.75)}
+.match-card{text-align:center;justify-items:center;gap:14px!important;animation:in-pop .5s cubic-bezier(.3,1.6,.5,1) both}
+.match-big{font-family:var(--f-display);font-weight:800;font-size:64px;line-height:1;color:var(--rosa);transform:rotate(-4deg)}
+.match-card h2{font-size:26px}
+
+/* ---------- Si fa ---------- */
+.sf-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.sf-row .sf-dot{width:12px;height:38px;border-radius:6px;background:var(--cat)}
+.sf-row.ok{border-color:var(--verde);background:var(--verde-soft)}
+.sf-row.ko{opacity:.8}
+.sf-who{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;max-width:52%;text-align:right;justify-content:end}
+@media (max-width:520px){ .sf-row{grid-template-columns:auto 1fr} .sf-row>:last-child{grid-column:1/-1;max-width:none;justify-content:start;text-align:left} }
+
+/* ---------- Budget ---------- */
+.bud-total{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);gap:6px;position:sticky;top:8px;z-index:4}
+.bud-n{font-family:var(--f-display);font-weight:800;font-size:clamp(48px,13vw,76px);line-height:1}
+.bud-bar{display:flex;height:14px;border-radius:999px;overflow:hidden;gap:2px;margin-top:6px}
+.bud-bar i{display:block;min-width:4px}
+.bud-leg{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;color:var(--muted)}
+.bud-leg span{display:inline-flex;align-items:center;gap:5px}
+.bud-leg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.bud-li{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.bud-opt{border:1px solid var(--line);margin:0;display:grid;gap:6px}
+.bud-opt legend{font-family:var(--f-display);font-weight:800;font-size:20px;padding:0 4px}
+.bud-choice{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);cursor:pointer}
+.bud-choice input{width:20px;height:20px;accent-color:var(--blu)}
+.bud-choice:has(input:checked){border-color:var(--blu);background:var(--blu-soft)}
+
+/* ---------- Cuori ---------- */
+.picche{display:grid;gap:12px;border:2px solid var(--rosa);background:var(--rosa-soft)}
+.cuore{display:grid;gap:8px}
+.cuore.no{background:var(--surface-2)}
+.serio{display:grid;gap:8px;border-left:5px solid var(--blu)}
+
+/* ---------- prossima pagina ---------- */
+.nextlink{display:flex;justify-content:center;align-items:center;padding:16px;border-radius:16px;background:var(--blu);color:var(--blu-ink);font-weight:800;font-size:16px;text-decoration:none;box-shadow:var(--shadow)}
+.pagehead .sticker{margin-top:2px}
+.tiles .tile{min-height:110px}
+
+.salluzzo.in-top{position:static;transform:none;box-shadow:none;padding:5px 10px;font-size:11.5px;order:3}
+.pagehead .topline{gap:8px}
+.deck{min-height:0}
+.vcard-top{min-height:128px;padding:16px}
+.vcard-body{padding:12px 16px 14px;gap:8px}
+.vbtn{padding:10px 6px}
+.vbtn span{font-size:26px}

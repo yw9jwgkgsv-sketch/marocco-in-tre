@@ -20,7 +20,8 @@
   <div class="wrap">
     <div class="topline"><span class="eyebrow">Il giro</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Il <em>giro</em></h1>
-    <p class="lead">Dal 29 dicembre all'8 gennaio, scenario per scenario. Scegli uno scenario e guarda come cambiano i giorni.</p>
+    <span class="sticker">Per non perdervi</span>
+    <p class="lead">Dove siete ogni giorno, dove dormite e quanto si guida.</p>
   </div>
 </header>
 
@@ -28,16 +29,6 @@
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
   <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
-  <section class="sec" aria-label="Scenario">
-    <div class="tabs" role="tablist" id="tabs"></div>
-    <div class="card" style="display:grid;gap:8px">
-      <div class="row-between" style="flex-wrap:wrap"><h2 id="s-title" style="font-size:28px"></h2><span class="sticker" id="s-cost"></span></div>
-      <p id="s-sub"></p>
-      <p class="hand" style="color:var(--rosa)" id="s-joke"></p>
-      <div class="badges" id="s-badges"></div>
-      <p class="muted" style="font-size:13px" id="s-verdict"></p>
-    </div>
-  </section>
 
   <section class="sec" aria-labelledby="h-map">
     <div class="sec-head"><h2 id="h-map">La mappa</h2><p>Le linee collegano le tappe nell'ordine del giro: sono indicative, non la strada.</p></div>
@@ -49,6 +40,7 @@
     <div class="grid" id="days" style="gap:14px"></div>
   </section>
 
+  <a class="nextlink" href="kit.html">Ora prepara la valigia →</a>
   <footer class="foot">Ore di guida stimate, da controllare su Maps. Prezzi a testa, stime al 7 novembre 2026.</footer>
 </main>
 
@@ -63,17 +55,8 @@
   const { el, db, eur } = M;
   M.start("giro");
   const ATT = {}; C.ATT.forEach((a) => (ATT[a.id] = a));
-  let scen = M.store.get("marocco_scen") || "A";
+  let scen = "A";
   let map = null, layer = null;
-
-  const tabs = document.getElementById("tabs");
-  Object.keys(C.SCEN).forEach((k) => tabs.appendChild(el("button", { type: "button", role: "tab", "data-k": k, "aria-selected": String(k === scen), onclick: () => select(k) }, k + " · " + C.SCEN[k].nome)));
-
-  function select(k) {
-    scen = k; M.store.set("marocco_scen", k);
-    [...tabs.children].forEach((b) => b.setAttribute("aria-selected", String(b.dataset.k === k)));
-    render();
-  }
 
   function drawMap() {
     if (!window.L) { document.getElementById("map").textContent = "La mappa non si è caricata. Controlla la connessione."; return; }
@@ -98,15 +81,6 @@
   }
 
   function render() {
-    const s = C.SCEN[scen];
-    document.getElementById("s-title").textContent = scen + " · " + s.nome;
-    document.getElementById("s-cost").textContent = "circa " + eur(s.costo) + " a testa";
-    document.getElementById("s-sub").textContent = s.sub;
-    document.getElementById("s-joke").textContent = s.joke;
-    let ore = 0; C.DAYS.forEach((d) => (ore += C.dayFor(d, scen).ore || 0));
-    const nTappe = new Set(C.ROUTES[scen]).size;
-    const b = document.getElementById("s-badges"); b.textContent = "";
-    b.append(el("span", { class: "badge drive", text: "circa " + Math.round(ore) + " ore di guida" }), el("span", { class: "badge", text: nTappe + " tappe" }), el("span", { class: "badge", text: "11 giorni" }));
 
     const box = document.getElementById("days"); box.textContent = "";
     C.DAYS.forEach((d) => {
@@ -125,14 +99,7 @@
     drawMap();
   }
 
-  async function verdict() {
-    try {
-      const pers = await db.list("persone"); const v = M.decide(pers); R.bar("giro", { persone: pers }, M.me());
-      document.getElementById("s-verdict").textContent = v.pick ? "Il verdetto della crew, per ora: " + v.pick + " · " + C.SCEN[v.pick].nome + "." : "La crew non ha ancora votato lo scenario.";
-      if (v.pick && !M.store.get("marocco_scen")) select(v.pick);
-    } catch (e) {}
-  }
-  render(); R.bar("giro", {}, M.me()); verdict();
+  render(); R.bar("giro", {}, M.me());
 })();
 </script>
 </body>

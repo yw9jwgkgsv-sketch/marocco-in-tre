@@ -379,3 +379,32 @@ C.SEED_TODO = [
   ["Surf camp e alloggi sulla costa", "2026-12-10"],
   ["Assicurazione di viaggio che copra moto e fuoristrada", "2026-12-10"]
 ];
+
+/* ---------- Budget: per una volta siamo seri ---------- */
+/* Stime a testa al 7 novembre 2026, andata esclusa (già pagata). */
+C.BUDGET = {
+  fissi: [
+    { t: "Volo di ritorno Agadir → Italia", e: 130, nota: "8 gennaio sera, low cost. Sale ogni settimana che aspettate." },
+    { t: "Auto per 10 giorni, divisa per tre", e: 190, nota: "Dacia con assicurazione completa e riconsegna ad Agadir." },
+    { t: "Benzina e autostrade", e: 60, nota: "Circa 2.000 km in tre." },
+    { t: "Dormire: 8 notti normali", e: 165, nota: "Riad e kasbah semplici in tripla, circa €20 a testa a notte." },
+    { t: "Dormire: notti del 31 e del 1° a Marrakech", e: 90, nota: "A Capodanno i prezzi raddoppiano." },
+    { t: "Campo nel deserto, 1 notte", e: 45, nota: "Standard, con cena e colazione." },
+    { t: "Mangiare per 11 giorni", e: 200, nota: "Tagine a €6–10, pesce sull'oceano a €15." },
+    { t: "Varie", e: 50, nota: "SIM, mance, parcheggi, ingressi." },
+    { t: "Assicurazione di viaggio", e: 30, nota: "Che copra moto e fuoristrada." }
+  ],
+  scelte: [
+    { id: "capodanno", t: "Capodanno", tipo: "uno", def: 1, opz: [
+      { t: "Niente di speciale", e: 0 }, { t: "Club all'Hivernage", e: 110 }, { t: "Festa nel deserto di Agafay", e: 180 }, { t: "Cena-spettacolo al Comptoir Darna", e: 320 } ] },
+    { id: "moto", t: "Moto e motori", tipo: "uno", def: 1, opz: [
+      { t: "Niente", e: 0 }, { t: "Quad o buggy, un paio d'ore", e: 45 }, { t: "Enduro con guida, mezza giornata", e: 90 }, { t: "Tour privato di 3 giorni con bivacco", e: 650 } ] },
+    { id: "surf", t: "Surf", tipo: "uno", def: 1, opz: [
+      { t: "Niente, guardo", e: 0 }, { t: "Due lezioni con tavola e muta", e: 60 }, { t: "Surf camp per 3 giorni", e: 150 } ] },
+    { id: "campo", t: "Notte nel deserto", tipo: "uno", def: 0, opz: [
+      { t: "Campo standard, già nel conto", e: 0 }, { t: "Campo di lusso, con bagno e riscaldamento", e: 80 } ] },
+    { id: "extra", t: "Extra", tipo: "piu", opz: [
+      { t: "Hammam con kessa", e: 12 }, { t: "Jardin Majorelle", e: 17 }, { t: "Corso di cucina", e: 40 }, { t: "Arrampicata nel Todra", e: 55 }, { t: "Guida ufficiale a Fes", e: 12 } ] }
+  ],
+  shopping: { min: 0, max: 300, step: 10, def: 60 }
+};
