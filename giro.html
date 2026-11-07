@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Il giro · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Il giro</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Il <em>giro</em></h1>
+    <p class="lead">Dal 29 dicembre all'8 gennaio, scenario per scenario. Scegli uno scenario e guarda come cambiano i giorni.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+
+  <section class="sec" aria-label="Scenario">
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="card" style="display:grid;gap:8px">
+      <div class="row-between" style="flex-wrap:wrap"><h2 id="s-title" style="font-size:28px"></h2><span class="sticker" id="s-cost"></span></div>
+      <p id="s-sub"></p>
+      <p class="hand" style="color:var(--rosa)" id="s-joke"></p>
+      <div class="badges" id="s-badges"></div>
+      <p class="muted" style="font-size:13px" id="s-verdict"></p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-map">
+    <div class="sec-head"><h2 id="h-map">La mappa</h2><p>Le linee collegano le tappe nell'ordine del giro: sono indicative, non la strada.</p></div>
+    <div id="map" role="img" aria-label="Mappa del percorso"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-days">
+    <div class="sec-head"><h2 id="h-days">Giorno per giorno</h2></div>
+    <div class="grid" id="days" style="gap:14px"></div>
+  </section>
+
+  <footer class="foot">Ore di guida stimate, da controllare su Maps. Prezzi a testa, stime al 7 novembre 2026.</footer>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  const { el, db, eur } = M;
+  M.start("giro");
+  const ATT = {}; C.ATT.forEach((a) => (ATT[a.id] = a));
+  let scen = M.store.get("marocco_scen") || "A";
+  let map = null, layer = null;
+
+  const tabs = document.getElementById("tabs");
+  Object.keys(C.SCEN).forEach((k) => tabs.appendChild(el("button", { type: "button", role: "tab", "data-k": k, "aria-selected": String(k === scen), onclick: () => select(k) }, k + " · " + C.SCEN[k].nome)));
+
+  function select(k) {
+    scen = k; M.store.set("marocco_scen", k);
+    [...tabs.children].forEach((b) => b.setAttribute("aria-selected", String(b.dataset.k === k)));
+    render();
+  }
+
+  function drawMap() {
+    if (!window.L) { document.getElementById("map").textContent = "La mappa non si è caricata. Controlla la connessione."; return; }
+    if (!map) {
+      map = L.map("map", { scrollWheelZoom: false, attributionControl: true });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(map);
+    }
+    if (layer) layer.remove();
+    layer = L.layerGroup().addTo(map);
+    const route = C.ROUTES[scen];
+    const pts = route.map((k) => [C.STOPS[k].lat, C.STOPS[k].lng]);
+    L.polyline(pts, { color: "#2438C6", weight: 4, opacity: .85, dashArray: "8 8" }).addTo(layer);
+    const seen = {};
+    route.forEach((k, i) => {
+      if (seen[k]) return; seen[k] = true;
+      const s = C.STOPS[k];
+      const first = i === 0, last = i === route.length - 1;
+      L.circleMarker([s.lat, s.lng], { radius: first || last ? 9 : 7, color: "#1A2272", weight: 3, fillColor: first || last ? "#E04C66" : "#F5B31B", fillOpacity: 1 })
+        .bindTooltip(s.n, { direction: "top", offset: [0, -6] }).addTo(layer);
+    });
+    map.fitBounds(L.latLngBounds(pts).pad(0.08));
+  }
+
+  function render() {
+    const s = C.SCEN[scen];
+    document.getElementById("s-title").textContent = scen + " · " + s.nome;
+    document.getElementById("s-cost").textContent = "circa " + eur(s.costo) + " a testa";
+    document.getElementById("s-sub").textContent = s.sub;
+    document.getElementById("s-joke").textContent = s.joke;
+    let ore = 0; C.DAYS.forEach((d) => (ore += C.dayFor(d, scen).ore || 0));
+    const nTappe = new Set(C.ROUTES[scen]).size;
+    const b = document.getElementById("s-badges"); b.textContent = "";
+    b.append(el("span", { class: "badge drive", text: "circa " + Math.round(ore) + " ore di guida" }), el("span", { class: "badge", text: nTappe + " tappe" }), el("span", { class: "badge", text: "11 giorni" }));
+
+    const box = document.getElementById("days"); box.textContent = "";
+    C.DAYS.forEach((d) => {
+      const x = C.dayFor(d, scen);
+      const [wd, num] = d.lab.split(" ");
+      box.appendChild(el("article", { class: "card day" },
+        el("div", { class: "date" }, el("span", { text: wd }), el("b", { text: num }), el("span", { text: d.lab.split(" ")[2] })),
+        el("div", { class: "body" },
+          el("h3", { text: x.t }),
+          el("div", { class: "badges" },
+            x.ore ? el("span", { class: "badge drive", text: "guida circa " + (x.ore < 1 ? Math.round(x.ore * 60) + " min" : String(x.ore).replace(".", ",") + " ore") }) : el("span", { class: "badge", text: "niente volante" }),
+            el("span", { class: "badge", text: "dormi: " + x.dorme })),
+          x.att && x.att.length ? el("div", { class: "chips" }, x.att.filter((id) => ATT[id]).map((id) => el("a", { class: "mini", href: "esplora.html#" + id, style: "--cat:" + C.CATS[ATT[id].cat].colore }, ATT[id].t))) : null,
+          el("p", { class: "risk" }, "Rischio del giorno: " + x.rischio))));
+    });
+    drawMap();
+  }
+
+  async function verdict() {
+    try {
+      const pers = await db.list("persone"); const v = M.decide(pers);
+      document.getElementById("s-verdict").textContent = v.pick ? "Il verdetto della crew, per ora: " + v.pick + " · " + C.SCEN[v.pick].nome + "." : "La crew non ha ancora votato lo scenario.";
+      if (v.pick && !M.store.get("marocco_scen")) select(v.pick);
+    } catch (e) {}
+  }
+  render(); verdict();
+})();
+</script>
+</body>
+</html>

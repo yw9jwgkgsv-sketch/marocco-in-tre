@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Organizza · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Organizza</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Chi fa <em>cosa</em></h1>
+    <p class="lead">Chi prenota cosa e chi ha pagato cosa. È tutto scritto, quindi niente scuse.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" id="tab-pren" aria-selected="true" aria-controls="pane-pren">Prenotazioni</button>
+    <button type="button" role="tab" id="tab-cassa" aria-selected="false" aria-controls="pane-cassa">Cassa comune</button>
+  </div>
+
+  <div id="pane-pren" role="tabpanel" aria-labelledby="tab-pren" style="display:grid;gap:24px">
+    <section class="sec">
+      <div class="card" style="display:grid;gap:8px">
+        <div class="row-between"><b id="p-label">—</b><span class="mono muted" id="p-pct"></span></div>
+        <div class="bar"><i id="p-bar" style="width:0%;background:var(--verde)"></i></div>
+        <p class="hand" style="color:var(--rosa)" id="p-joke"></p>
+      </div>
+      <div class="card" id="shame" hidden style="display:grid;gap:8px;border-color:var(--rosa);background:var(--rosa-soft)">
+        <span class="eyebrow" style="color:var(--rosa)">Muro della vergogna</span>
+        <ul class="list" id="shame-list" style="background:transparent;border:0"></ul>
+      </div>
+    </section>
+    <div class="kan">
+      <section><h3>Da prendere <span id="n-free"></span></h3><div class="grid" id="col-free" style="gap:8px"></div></section>
+      <section><h3>Qualcuno ci pensa <span id="n-taken"></span></h3><div class="grid" id="col-taken" style="gap:8px"></div></section>
+      <section><h3>Fatto <span id="n-done"></span></h3><div class="grid" id="col-done" style="gap:8px"></div></section>
+    </div>
+    <form class="card" id="f-todo" style="display:grid;gap:10px">
+      <b>Aggiungi una cosa da prenotare</b>
+      <div class="grid g2" style="gap:8px"><input id="t-new" type="text" maxlength="120" placeholder="Biglietti per il Jardin Majorelle" aria-label="Cosa"><input id="t-date" type="date" aria-label="Entro quando"></div>
+      <button class="btn ghost" type="submit" style="justify-self:start">Aggiungi</button>
+    </form>
+  </div>
+
+  <div id="pane-cassa" role="tabpanel" aria-labelledby="tab-cassa" hidden style="display:grid;gap:24px">
+    <section class="sec">
+      <div class="grid g4">
+        <div class="kpi"><b id="c-tot">€0</b><span>spesi in totale</span></div>
+        <div class="kpi"><b id="c-testa">€0</b><span>a testa finora</span></div>
+        <div class="kpi"><b id="c-scen">—</b><span id="c-scen-l">stima dello scenario</span></div>
+        <div class="kpi"><b id="c-left">—</b><span>restano a testa</span></div>
+      </div>
+    </section>
+    <form class="card" id="f-exp" style="display:grid;gap:10px">
+      <b>Segna una spesa fatta per il gruppo</b>
+      <div class="grid g4" style="gap:8px;align-items:end">
+        <div class="field"><label for="e-desc">Cosa</label><input id="e-desc" type="text" maxlength="80" placeholder="Volo di ritorno" required></div>
+        <div class="field"><label for="e-amt">Euro</label><input id="e-amt" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="450" required></div>
+        <div class="field"><label for="e-who">Pagato da</label><select id="e-who"></select></div>
+        <div class="field"><label for="e-cat">Tipo</label><select id="e-cat"></select></div>
+      </div>
+      <button class="btn" type="submit" style="justify-self:start">Segna</button>
+    </form>
+    <div class="grid g2">
+      <section class="card" style="display:grid;gap:10px;align-content:start">
+        <h3 style="font-size:22px">Chi paga chi</h3>
+        <div id="settle" style="display:grid;gap:8px"><p class="empty">Compare con la prima spesa.</p></div>
+        <div id="bal" style="display:grid;gap:6px"></div>
+      </section>
+      <section class="card" style="display:grid;gap:10px;align-content:start">
+        <h3 style="font-size:22px">Dove vanno i soldi</h3>
+        <div id="bycat" style="display:grid;gap:8px"><p class="empty">Ancora niente.</p></div>
+      </section>
+    </div>
+    <section class="sec">
+      <h3 style="font-size:22px">Tutte le spese</h3>
+      <ul class="list" id="exp"><li class="empty">Nessuna spesa ancora.</li></ul>
+    </section>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  const { el, db, eur, eur2 } = M;
+  M.start("organizza");
+  const S = { todo: [], spese: [], pers: [] };
+  const CATS = ["Volo", "Alloggio", "Auto e benzina", "Attività", "Cibo", "Serata", "Altro"];
+  const ecat = document.getElementById("e-cat"); CATS.forEach((c) => ecat.appendChild(el("option", { value: c, text: c })));
+
+  // tabs
+  function tab(which) {
+    const p = which === "cassa";
+    document.getElementById("tab-pren").setAttribute("aria-selected", String(!p));
+    document.getElementById("tab-cassa").setAttribute("aria-selected", String(p));
+    document.getElementById("pane-pren").hidden = p; document.getElementById("pane-cassa").hidden = !p;
+    history.replaceState(null, "", p ? "#cassa" : "#");
+  }
+  document.getElementById("tab-pren").onclick = () => tab("pren");
+  document.getElementById("tab-cassa").onclick = () => tab("cassa");
+  if (location.hash === "#cassa") tab("cassa");
+
+  const people = () => [...new Set(S.pers.map((p) => p.nome).concat(S.spese.map((s) => s.pagato_da)).concat(M.me() ? [M.me()] : []))].filter(Boolean).sort();
+
+  async function act(fn) { try { await fn(); await load(); } catch (e) { M.err(e); } }
+
+  function taskCard(t) {
+    const today = M.todayStr();
+    const late = !t.fatto && t.entro && String(t.entro).slice(0, 10) < today;
+    const me = M.me();
+    const acts = [];
+    if (t.fatto) acts.push(el("button", { type: "button", class: "btn ghost small", onclick: () => act(() => db.update("todo", { id: t.id }, { fatto: false })) }, "Riapri"));
+    else {
+      if (!t.chi) acts.push(el("button", { type: "button", class: "btn small", onclick: () => { if (!me) return M.askWho(); act(() => db.update("todo", { id: t.id }, { chi: me })); } }, "Me ne occupo io"));
+      else if (t.chi === me) acts.push(el("button", { type: "button", class: "btn ghost small", onclick: () => act(() => db.update("todo", { id: t.id }, { chi: null })) }, "Lascia"));
+      else acts.push(el("button", { type: "button", class: "btn ghost small", onclick: () => { if (!me) return M.askWho(); act(() => db.update("todo", { id: t.id }, { chi: me })); } }, "Lo prendo io"));
+      acts.push(el("button", { type: "button", class: "btn yellow small", onclick: () => act(() => db.update("todo", { id: t.id }, { fatto: true, chi: t.chi || me || null })) }, "Fatto"));
+    }
+    const del = el("button", { type: "button", class: "btn danger small" }, "Elimina");
+    del.onclick = () => { if (del.dataset.armed) return act(() => db.remove("todo", { id: t.id })); del.dataset.armed = "1"; del.textContent = "Sicuro?"; setTimeout(() => { delete del.dataset.armed; del.textContent = "Elimina"; }, 3500); };
+    acts.push(del);
+    return el("div", { class: "task" + (t.fatto ? " done" : "") },
+      el("div", { class: "t", text: t.titolo }),
+      el("div", { class: "sub" },
+        t.entro ? el("span", { class: "mono" + (late ? " late" : ""), text: late ? "in ritardo di " + M.daysBetween(String(t.entro).slice(0, 10), today) + " gg" : "entro " + M.fmtDate(t.entro) }) : null,
+        t.chi ? el("span", { style: "display:inline-flex;gap:6px;align-items:center" }, M.avatar(t.chi, ""), t.chi) : null),
+      el("div", { class: "acts" }, acts));
+  }
+
+  function renderTodo() {
+    const key = (t) => String(t.entro || "9999").slice(0, 10);
+    const sorted = S.todo.slice().sort((a, b) => key(a).localeCompare(key(b)) || ((a.ordine || 0) - (b.ordine || 0)));
+    const free = sorted.filter((t) => !t.fatto && !t.chi), taken = sorted.filter((t) => !t.fatto && t.chi), done = sorted.filter((t) => t.fatto);
+    [["col-free", free, "n-free", "Tutto preso. Miracolo."], ["col-taken", taken, "n-taken", "Nessuno ci sta pensando."], ["col-done", done, "n-done", "Ancora niente. Si parte tra poco."]].forEach(([id, arr, nid, emptyTxt]) => {
+      const c = document.getElementById(id); c.textContent = ""; document.getElementById(nid).textContent = arr.length;
+      if (!arr.length) c.appendChild(el("p", { class: "empty", text: emptyTxt }));
+      arr.forEach((t) => c.appendChild(taskCard(t)));
+    });
+    const pct = S.todo.length ? Math.round((done.length / S.todo.length) * 100) : 0;
+    document.getElementById("p-label").textContent = done.length + " su " + S.todo.length + " prenotazioni fatte";
+    document.getElementById("p-pct").textContent = pct + "%";
+    document.getElementById("p-bar").style.width = pct + "%";
+    document.getElementById("p-joke").textContent = pct === 0 ? "Zero per cento. Il Marocco aspetta, i prezzi no." : pct < 50 ? "Si comincia. Qualcuno sta lavorando per tutti." : pct < 100 ? "Ci siamo quasi. Non mollate adesso." : "Tutto prenotato. Ora resta solo fare la valigia.";
+    const today = M.todayStr();
+    const late = S.todo.filter((t) => !t.fatto && t.entro && String(t.entro).slice(0, 10) < today);
+    const sh = document.getElementById("shame"); sh.hidden = !late.length;
+    const sl = document.getElementById("shame-list"); sl.textContent = "";
+    late.forEach((t) => sl.appendChild(el("li", { style: "padding:6px 0;border:0" }, el("b", { text: t.titolo }), " · ", el("span", { class: "mono", text: M.daysBetween(String(t.entro).slice(0, 10), today) + " giorni di ritardo" }), " · ", t.chi ? "colpa di " + t.chi : "colpa di tutti")));
+  }
+
+  function transfers(bal) {
+    const deb = [], cred = [];
+    Object.keys(bal).forEach((n) => { const v = Math.round(bal[n] * 100) / 100; if (v < -0.005) deb.push([n, -v]); else if (v > 0.005) cred.push([n, v]); });
+    deb.sort((a, b) => b[1] - a[1]); cred.sort((a, b) => b[1] - a[1]);
+    const out = []; let i = 0, j = 0;
+    while (i < deb.length && j < cred.length) {
+      const x = Math.min(deb[i][1], cred[j][1]); out.push([deb[i][0], cred[j][0], x]);
+      deb[i][1] -= x; cred[j][1] -= x; if (deb[i][1] < 0.005) i++; if (cred[j][1] < 0.005) j++;
+    }
+    return out;
+  }
+
+  function renderCassa() {
+    const ppl = people();
+    const sel = document.getElementById("e-who"); const cur = sel.value; sel.textContent = "";
+    ppl.forEach((n) => sel.appendChild(el("option", { value: n, text: n + (n === M.me() ? " (tu)" : "") })));
+    if (cur && ppl.includes(cur)) sel.value = cur; else if (M.me()) sel.value = M.me();
+
+    const total = S.spese.reduce((t, s) => t + (Number(s.importo) || 0), 0);
+    const n = Math.max(ppl.length, 1), share = total / n;
+    document.getElementById("c-tot").textContent = eur(total);
+    document.getElementById("c-testa").textContent = eur(share);
+    const v = M.decide(S.pers);
+    if (v.pick) {
+      const c = C.SCEN[v.pick].costo;
+      document.getElementById("c-scen").textContent = eur(c); document.getElementById("c-scen-l").textContent = "stima scenario " + v.pick;
+      document.getElementById("c-left").textContent = eur(Math.max(0, c - share));
+    }
+
+    const bal = {}; ppl.forEach((p) => (bal[p] = -share));
+    S.spese.forEach((s) => { bal[s.pagato_da] = (s.pagato_da in bal ? bal[s.pagato_da] : -share) + (Number(s.importo) || 0); });
+    const st = document.getElementById("settle"); st.textContent = "";
+    const tr = transfers(bal);
+    if (!S.spese.length) st.appendChild(el("p", { class: "empty", text: "Compare con la prima spesa." }));
+    else if (!tr.length) st.appendChild(el("p", { class: "hand", style: "color:var(--verde)", text: "Tutti in pari. Godetevelo, durerà poco." }));
+    tr.forEach(([a, b, x]) => st.appendChild(el("div", { class: "row-between", style: "background:var(--surface-2);padding:10px 12px;border-radius:12px" },
+      el("span", { style: "display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap" }, M.avatar(a), el("b", { text: a }), "dà a", M.avatar(b), el("b", { text: b })),
+      el("b", { class: "mono", text: eur2(x) }))));
+    const bb = document.getElementById("bal"); bb.textContent = "";
+    if (S.spese.length) ppl.forEach((p) => {
+      const val = bal[p] || 0;
+      bb.appendChild(el("div", { class: "row-between", style: "font-size:13.5px" }, el("span", { text: p + (p === M.me() ? " (tu)" : "") }),
+        el("span", { class: "mono", style: "color:" + (val >= 0 ? "var(--verde)" : "var(--danger)"), text: Math.abs(val) < 0.005 ? "in pari" : val > 0 ? "deve ricevere " + eur2(val) : "deve dare " + eur2(-val) })));
+    });
+
+    const bc = document.getElementById("bycat"); bc.textContent = "";
+    const per = {}; S.spese.forEach((s) => { const c = s.categoria || "Altro"; per[c] = (per[c] || 0) + (Number(s.importo) || 0); });
+    const cats = Object.keys(per).sort((a, b) => per[b] - per[a]);
+    if (!cats.length) bc.appendChild(el("p", { class: "empty", text: "Ancora niente." }));
+    const COL = ["var(--c-oceano)", "var(--c-montagna)", "var(--c-deserto)", "var(--c-moto)", "var(--c-cibo)", "var(--c-capodanno)", "var(--c-citta)"];
+    cats.forEach((c, i) => bc.appendChild(el("div", { style: "display:grid;gap:4px" },
+      el("div", { class: "row-between", style: "font-size:13.5px" }, el("b", { text: c }), el("span", { class: "mono", text: eur2(per[c]) })),
+      el("div", { class: "bar" }, el("i", { style: "width:" + (per[c] / total) * 100 + "%;background:" + COL[i % COL.length] })))));
+
+    const ul = document.getElementById("exp"); ul.textContent = "";
+    const items = S.spese.slice().sort((a, b) => String(b.creato || "").localeCompare(String(a.creato || "")));
+    if (!items.length) ul.appendChild(el("li", { class: "empty", text: "Nessuna spesa ancora." }));
+    items.forEach((s) => {
+      const del = el("button", { type: "button", class: "btn danger small" }, "Elimina");
+      del.onclick = () => { if (del.dataset.armed) return act(() => db.remove("spese", { id: s.id })); del.dataset.armed = "1"; del.textContent = "Sicuro?"; setTimeout(() => { delete del.dataset.armed; del.textContent = "Elimina"; }, 3500); };
+      ul.appendChild(el("li", { style: "display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center" },
+        M.avatar(s.pagato_da),
+        el("div", { style: "min-width:0" }, el("div", { text: s.descrizione }), el("div", { class: "muted", style: "font-size:12.5px", text: (s.categoria || "Altro") + " · pagato da " + s.pagato_da + (s.creato ? " · " + M.ago(s.creato) : "") })),
+        el("b", { class: "mono", text: eur2(Number(s.importo) || 0) }), del));
+    });
+  }
+
+  document.getElementById("f-todo").addEventListener("submit", (e) => {
+    e.preventDefault(); const t = document.getElementById("t-new").value.trim(); if (!t) return;
+    act(async () => { await db.insert("todo", { titolo: t.slice(0, 120), entro: document.getElementById("t-date").value || null, ordine: 1000 + (Date.now() % 100000), fatto: false, chi: null }); document.getElementById("t-new").value = ""; document.getElementById("t-date").value = ""; M.toast("Aggiunta"); });
+  });
+  document.getElementById("f-exp").addEventListener("submit", (e) => {
+    e.preventDefault(); if (!M.me()) return M.askWho();
+    const d = document.getElementById("e-desc").value.trim(), a = Number(document.getElementById("e-amt").value), w = document.getElementById("e-who").value || M.me();
+    if (!d || !(a > 0)) return;
+    act(async () => { await db.insert("spese", { descrizione: d.slice(0, 80), importo: Math.round(a * 100) / 100, pagato_da: w, categoria: document.getElementById("e-cat").value }); document.getElementById("e-desc").value = ""; document.getElementById("e-amt").value = ""; M.toast("Spesa segnata"); });
+  });
+
+  async function load() {
+    const d = await db.many(["todo", "spese", "persone"]);
+    S.todo = d.todo; S.spese = d.spese; S.pers = d.persone;
+    renderTodo(); renderCassa();
+  }
+  M.onMe(() => { renderTodo(); renderCassa(); });
+  load();
+  db.subscribe(["todo", "spese", "persone"], load);
+})();
+</script>
+</body>
+</html>

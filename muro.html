@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Il muro · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Il muro</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Il <em>muro</em></h1>
+    <p class="lead">Frasi celebri, voti ai tagine, idee alle tre di notte. Quello che si scrive qui resta qui, e verrà usato contro di voi.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per scrivere sul muro: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+
+  <form class="card" id="f-post" style="display:grid;gap:10px">
+    <div class="chips" id="prompts"></div>
+    <div class="field"><label for="p-txt">Cosa vuoi attaccare al muro?</label><textarea id="p-txt" maxlength="280" placeholder="«Tanto la moto la so guidare» — detto il 2 gennaio, ore 18"></textarea></div>
+    <div class="row-between"><span class="muted mono" id="p-len" style="font-size:12.5px">0/280</span><button class="btn" type="submit">Attacca al muro</button></div>
+  </form>
+
+  <section class="sec" aria-label="Messaggi">
+    <div class="chips" role="group" aria-label="Filtra" id="filters"></div>
+    <div class="grid g2" id="wall"><p class="empty">Il muro è vuoto. Qualcuno deve pur iniziare.</p></div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("");
+  const S = { muro: [], who: "tutti" };
+  const txt = document.getElementById("p-txt");
+  const PROMPTS = ["Frase celebre: ", "Voto tagine: ", "Idea: ", "Confessione: ", "Promessa che non manterrò: "];
+  const pb = document.getElementById("prompts");
+  PROMPTS.forEach((p) => pb.appendChild(el("button", { type: "button", class: "chip", onclick: () => { txt.value = p + txt.value.replace(/^[^:]{0,30}: /, ""); txt.focus(); upd(); } }, p.replace(": ", ""))));
+  function upd() { document.getElementById("p-len").textContent = txt.value.length + "/280"; }
+  txt.addEventListener("input", upd);
+
+  document.getElementById("f-post").addEventListener("submit", async (e) => {
+    e.preventDefault(); const me = M.me(); if (!me) return M.askWho();
+    const t = txt.value.trim(); if (!t) return;
+    try { await db.insert("muro", { nome: me, testo: t.slice(0, 280) }); txt.value = ""; upd(); M.toast("Attaccato al muro"); await load(); } catch (er) { M.err(er); }
+  });
+
+  function render() {
+    const names = [...new Set(S.muro.map((p) => p.nome))].sort();
+    const fb = document.getElementById("filters"); fb.textContent = "";
+    ["tutti"].concat(names).forEach((n) => fb.appendChild(el("button", { type: "button", class: "chip", "aria-pressed": String(S.who === n), onclick: () => { S.who = n; render(); } }, n === "tutti" ? "Tutti" : n)));
+    const wall = document.getElementById("wall"); wall.textContent = "";
+    const posts = S.muro.filter((p) => S.who === "tutti" || p.nome === S.who).sort((a, b) => String(b.creato).localeCompare(String(a.creato)));
+    if (!posts.length) wall.appendChild(el("p", { class: "empty", text: "Il muro è vuoto. Qualcuno deve pur iniziare." }));
+    posts.forEach((p) => {
+      let del = null;
+      if (p.nome === M.me()) {
+        del = el("button", { type: "button", class: "btn danger small", style: "justify-self:start" }, "Stacca");
+        del.onclick = async () => { if (!del.dataset.armed) { del.dataset.armed = "1"; del.textContent = "Sicuro?"; setTimeout(() => { delete del.dataset.armed; del.textContent = "Stacca"; }, 3500); return; } try { await db.remove("muro", { id: p.id }); await load(); } catch (e) { M.err(e); } };
+      }
+      wall.appendChild(el("article", { class: "post postit" }, M.avatar(p.nome),
+        el("div", { style: "min-width:0;display:grid;gap:6px" }, el("div", { class: "txt", style: "font-size:16px", text: p.testo }), el("div", { class: "when", text: p.nome + " · " + M.ago(p.creato) }), del)));
+    });
+  }
+
+  async function load() { const d = await db.many(["muro"]); S.muro = d.muro; render(); }
+  M.onMe(render);
+  load();
+  db.subscribe(["muro"], load);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Il kit · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Il kit</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Il <em>kit</em></h1>
+    <p class="lead">Tutto quello che serve per non fare figuracce. O almeno per farne meno.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per la valigia condivisa: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+
+  <nav class="hscroll" aria-label="Sezioni del kit">
+    <a class="chip" href="#valigia">Valigia</a><a class="chip" href="#darija">Darija</a><a class="chip" href="#quiz">Quiz</a><a class="chip" href="#prezzi">Prezzi giusti</a><a class="chip" href="#cambio">Cambio</a><a class="chip" href="#meteo">Meteo</a><a class="chip" href="#info">Info utili</a>
+  </nav>
+
+  <section class="sec" id="valigia" aria-labelledby="h-val">
+    <div class="sec-head"><h2 id="h-val">La valigia</h2><p>Ognuno spunta la sua. Gli altri vedono a che punto sei, quindi niente bugie.</p></div>
+    <div class="grid g3" id="val-crew"></div>
+    <div class="grid g2" id="val-list"></div>
+  </section>
+
+  <section class="sec" id="darija" aria-labelledby="h-dj">
+    <div class="sec-head"><h2 id="h-dj">Darija da sopravvivenza</h2><p>Il dialetto marocchino. Tre parole dette bene valgono più di un inglese perfetto.</p></div>
+    <div class="grid g3" id="dj"></div>
+  </section>
+
+  <section class="sec" id="quiz" aria-labelledby="h-quiz">
+    <div class="sec-head"><h2 id="h-quiz">Mettiti alla prova</h2></div>
+    <div class="card" style="display:grid;gap:12px;text-align:center;justify-items:center;padding:26px 16px">
+      <span class="eyebrow" style="color:var(--muted)">Come si dice</span>
+      <h3 id="qz-it" style="font-size:34px">—</h3>
+      <p id="qz-ans" class="hand" style="font-size:34px;color:var(--blu);min-height:1.2em"></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+        <button class="btn" type="button" id="qz-show">Fammi vedere</button>
+        <button class="btn ghost" type="button" id="qz-next">Un'altra</button>
+      </div>
+      <p class="muted mono" id="qz-score" style="font-size:13px"></p>
+    </div>
+  </section>
+
+  <section class="sec" id="prezzi" aria-labelledby="h-pr">
+    <div class="sec-head"><h2 id="h-pr">Prezzi giusti</h2><p>In dirham, stime da verificare. Se il primo prezzo è il doppio, siete nel posto giusto per trattare.</p></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Cosa</th><th>Prezzo giusto</th><th>Nota</th></tr></thead><tbody id="pr"></tbody></table></div>
+  </section>
+
+  <section class="sec" id="cambio" aria-labelledby="h-cb">
+    <div class="sec-head"><h2 id="h-cb">Cambio</h2><p>Il cambio è una stima: correggilo con quello del giorno e resta salvato su questo telefono.</p></div>
+    <div class="card grid g3" style="align-items:end">
+      <div class="field"><label for="cb-eur">Euro</label><input id="cb-eur" type="number" inputmode="decimal" min="0" step="0.5" value="10"></div>
+      <div class="field"><label for="cb-mad">Dirham</label><input id="cb-mad" type="number" inputmode="decimal" min="0" step="1"></div>
+      <div class="field"><label for="cb-rate">1 euro =</label><input id="cb-rate" type="number" inputmode="decimal" min="1" step="0.01" value="10.8"></div>
+    </div>
+    <div class="chips" id="cb-quick"></div>
+  </section>
+
+  <section class="sec" id="meteo" aria-labelledby="h-me">
+    <div class="sec-head"><h2 id="h-me">Che tempo fa a fine dicembre</h2><p>Gradi, medie stimate. Controllate le previsioni una settimana prima.</p></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Dove</th><th>Giorno</th><th>Notte</th><th>Da sapere</th></tr></thead><tbody id="mt"></tbody></table></div>
+  </section>
+
+  <section class="sec" id="info" aria-labelledby="h-in">
+    <div class="sec-head"><h2 id="h-in">Info utili</h2></div>
+    <div class="grid g2" id="inf"></div>
+    <div class="card" style="display:grid;gap:10px">
+      <b>Numeri di emergenza in Marocco</b>
+      <div class="grid g3" id="num"></div>
+      <p class="muted" style="font-size:13px">Prima di partire registrate il viaggio su <a href="https://www.dovesiamonelmondo.it/" target="_blank" rel="noopener">Dove siamo nel mondo</a> e controllate gli avvisi su <a href="https://www.viaggiaresicuri.it/" target="_blank" rel="noopener">Viaggiare Sicuri</a>.</p>
+    </div>
+  </section>
+
+  <footer class="foot">Prezzi, cambio e meteo sono stime al 7 novembre 2026.</footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("kit");
+  const ALL = []; C.VALIGIA.forEach((g) => g.items.forEach((i) => ALL.push(i)));
+  const S = { val: [], pers: [] };
+
+  async function toggle(item, on) {
+    const me = M.me(); if (!me) return M.askWho();
+    try {
+      if (on) await db.upsert("valigia", { nome: me, item, fatto: true }, "nome,item");
+      else await db.remove("valigia", { nome: me, item });
+      await load();
+    } catch (e) { M.err(e); }
+  }
+
+  function renderVal() {
+    const me = M.me();
+    const names = [...new Set(S.pers.map((p) => p.nome).concat(me ? [me] : []))].sort();
+    const crew = document.getElementById("val-crew"); crew.textContent = "";
+    names.forEach((n) => {
+      const done = S.val.filter((v) => v.nome === n && v.fatto && ALL.includes(v.item)).length;
+      const pct = Math.round((done / ALL.length) * 100);
+      crew.appendChild(el("div", { class: "kpi", style: "gap:8px" },
+        el("div", { style: "display:flex;gap:8px;align-items:center" }, M.avatar(n), el("b", { style: "font-size:20px", text: n + (n === me ? " (tu)" : "") })),
+        el("div", { class: "bar" }, el("i", { style: "width:" + pct + "%;background:" + M.colorFor(n) })),
+        el("span", { text: done + " su " + ALL.length + (pct === 100 ? " · pronto" : pct === 0 ? " · non ha neanche aperto l'armadio" : "") })));
+    });
+    const mine = new Set(S.val.filter((v) => v.nome === me && v.fatto).map((v) => v.item));
+    const list = document.getElementById("val-list"); list.textContent = "";
+    C.VALIGIA.forEach((g) => list.appendChild(el("div", { class: "card", style: "display:grid;gap:8px" },
+      el("b", { style: "font-family:var(--f-display);font-size:19px", text: g.g }),
+      g.items.map((it, i) => {
+        const id = "v-" + g.g.replace(/\W/g, "") + i;
+        const cb = el("input", { type: "checkbox", id, checked: mine.has(it) || null, style: "width:20px;height:20px;accent-color:var(--verde);flex:none" });
+        cb.addEventListener("change", () => toggle(it, cb.checked));
+        return el("label", { for: id, style: "display:flex;gap:10px;align-items:center;cursor:pointer;" + (mine.has(it) ? "color:var(--muted);text-decoration:line-through" : "") }, cb, it);
+      }))));
+  }
+
+  // darija
+  const dj = document.getElementById("dj");
+  C.DARIJA.forEach((f) => dj.appendChild(el("div", { class: "card", style: "display:grid;gap:4px" },
+    el("span", { class: "muted", style: "font-size:13px", text: f.it }),
+    el("b", { style: "font-family:var(--f-display);font-size:24px", text: f.dj }),
+    el("span", { class: "mono muted", style: "font-size:12.5px", text: f.pr }),
+    el("span", { class: "hand", style: "color:var(--rosa);font-size:19px", text: f.uso }))));
+
+  // quiz
+  let cur = null, seen = 0, known = 0;
+  function next() { cur = C.DARIJA[Math.floor(Math.random() * C.DARIJA.length)]; document.getElementById("qz-it").textContent = "«" + cur.it + "»"; document.getElementById("qz-ans").textContent = ""; document.getElementById("qz-show").disabled = false; }
+  document.getElementById("qz-show").onclick = () => { document.getElementById("qz-ans").textContent = cur.dj; seen++; document.getElementById("qz-show").disabled = true; document.getElementById("qz-score").textContent = seen + (seen === 1 ? " parola vista" : " parole viste") + " in questa sessione"; };
+  document.getElementById("qz-next").onclick = next;
+  next();
+
+  // prezzi, meteo, info
+  const pr = document.getElementById("pr");
+  C.PREZZI.forEach((p) => pr.appendChild(el("tr", null, el("td", { text: p.cosa }), el("td", { class: "num", text: p.giusto + " MAD" }), el("td", { class: "muted", text: p.nota }))));
+  const mt = document.getElementById("mt");
+  C.METEO.forEach((m) => mt.appendChild(el("tr", null, el("td", null, el("b", { text: m.dove })), el("td", { class: "num", text: m.giorno }), el("td", { class: "num", text: m.notte }), el("td", { class: "muted", text: m.nota }))));
+  const inf = document.getElementById("inf");
+  C.INFO.forEach((i) => inf.appendChild(el("div", { class: "card", style: "display:grid;gap:4px" }, el("b", { style: "font-family:var(--f-display);font-size:19px", text: i.t }), el("p", { text: i.x }))));
+  const num = document.getElementById("num");
+  C.NUMERI.forEach((n) => num.appendChild(el("div", { class: "kpi" }, el("b", { text: n.n }), el("span", { text: n.cosa }))));
+
+  // cambio
+  const fE = document.getElementById("cb-eur"), fM = document.getElementById("cb-mad"), fR = document.getElementById("cb-rate");
+  const saved = Number(M.store.get("marocco_rate")); if (saved > 1) fR.value = saved;
+  const rate = () => Number(fR.value) || 10.8;
+  const fmt = (n) => (Math.round(n * 100) / 100).toString().replace(".", ",");
+  function fromE() { fM.value = Math.round((Number(fE.value) || 0) * rate()); }
+  function fromM() { fE.value = Math.round(((Number(fM.value) || 0) / rate()) * 100) / 100; }
+  fE.addEventListener("input", fromE); fM.addEventListener("input", fromM);
+  fR.addEventListener("input", () => { M.store.set("marocco_rate", fR.value); fromE(); renderQuick(); });
+  function renderQuick() {
+    const q = document.getElementById("cb-quick"); q.textContent = "";
+    [10, 20, 50, 100, 200, 500].forEach((m) => q.appendChild(el("span", { class: "chip", style: "cursor:default" }, el("span", { class: "mono", text: m + " MAD = €" + fmt(m / rate()) }))));
+  }
+  fromE(); renderQuick();
+
+  async function load() {
+    const d = await db.many(["valigia", "persone"]);
+    S.val = d.valigia; S.pers = d.persone; renderVal();
+  }
+  M.onMe(renderVal);
+  renderVal(); load();
+  db.subscribe(["valigia", "persone"], load);
+})();
+</script>
+</body>
+</html>
