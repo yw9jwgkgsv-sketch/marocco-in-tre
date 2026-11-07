@@ -250,7 +250,8 @@ window.M = (function () {
     if (up && !LIVE) { up.hidden = false; up.innerHTML = "<b>Modalità prova</b>I dati restano solo su questo dispositivo finché il sito non è collegato al database."; }
     if (!me) setTimeout(askWho, 300);
     if (window.R) R.mountHelp(active || "home");
-    if (me && LIVE) db.update("persone", { nome: me }, { visto: new Date().toISOString() }).catch(() => {});
+    // «ultimo avvistamento»: se la colonna manca si ignora in silenzio, senza avviso
+    if (me && LIVE) sb.from("persone").update({ visto: new Date().toISOString() }).eq("nome", me).then(() => {}, () => {});
   }
   function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
 
