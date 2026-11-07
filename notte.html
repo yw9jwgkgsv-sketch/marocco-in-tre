@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>La notte · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">La notte</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>La <em>notte</em></h1>
+    <span class="sticker ">Dove si fa serata. E dove forse c'è la sorca.</span>
+    <p class="lead">Locali, feste e ostelli veri, città per città, nell'ordine del giro.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+  <section class="sec" aria-labelledby="h-meter">
+    <div class="sec-head"><h2 id="h-meter">Probabilità di serata</h2><p>Calcolate scientificamente. Più o meno.</p></div>
+    <div class="meter" id="meter"></div>
+  </section>
+
+  <div class="hscroll" role="tablist" aria-label="Città" id="cities"></div>
+  <section class="sec" id="city" aria-live="polite"></section>
+
+  <section class="sec" aria-labelledby="h-reg">
+    <div class="card picche">
+      <span class="eyebrow" style="color:var(--rosa)">Registro ufficiale</span>
+      <h2 id="h-reg" style="font-size:26px">Due di picche presi finora</h2>
+      <div class="grid g3" id="picche"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" type="button" id="b-picche" style="background:var(--rosa);color:#fff">Ho preso un due di picche</button>
+        <button class="btn ghost" type="button" id="b-num">Ho rimediato un numero</button>
+      </div>
+      <p class="hand" style="color:var(--rosa)" id="re"></p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-no">
+    <div class="sec-head"><h2 id="h-no">Dove sicuramente no</h2></div>
+    <div class="grid g2" id="mai"></div>
+  </section>
+
+  <section class="sec">
+    <div class="card serio">
+      <span class="eyebrow" style="color:var(--blu)">Due regole serie</span>
+      <h3 style="font-size:22px">Per non finire nei guai</h3>
+      <p>Con le ragazze marocchine niente approcci insistenti e niente foto senza chiedere: è un paese conservatore e un no detto male diventa un problema con la famiglia o con la polizia. Le effusioni in pubblico non si fanno, nemmeno con una turista.</p>
+      <p>Nei club di Marrakech c'è dress code: niente scarpe da trekking. E il taxi per tornare da Agadir va fissato prima, perché la notte i bus non ci sono.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h3 style="font-size:18px">Fonti</h3>
+    <ul class="muted" style="font-size:13px;margin:0;padding-left:18px">
+      <li><a href="https://alotea.com/marrakech/guides/best-nightclubs-marrakech">Club di Marrakech, Alotea</a></li>
+      <li><a href="https://bestpartyhostels.pages.dev/africa-and-middle-east/africa-middle-east/morocco/marrakech">Ostelli di Marrakech</a> e <a href="https://bestpartyhostels.pages.dev/africa-and-middle-east/africa-middle-east/morocco/taghazout">di Taghazout</a></li>
+      <li><a href="https://www.equity-point.com/marrakech/local-experiences/new-years">Capodanno a Equity Point</a> · <a href="https://ra.co/events/2297892">Capodanno 2025 su El Fenn, Resident Advisor</a> · <a href="https://www.comptoirmarrakech.com/en/events">Comptoir Darna</a></li>
+      <li><a href="https://www.hostelworld.com/blog/?p=1311728">Taghazout, Hostelworld</a> · <a href="https://www.fodors.com/world/africa-and-middle-east/morocco/the-southern-atlantic-coast/places/agadir/things-to-do/nightlife">Agadir, Fodor's</a> · <a href="https://theculturetrip.com/africa/morocco/articles/top-bars-for-a-unique-night-out-in-rabat">Rabat, Culture Trip</a></li>
+    </ul>
+    <p class="muted" style="font-size:12.5px">Controllati l'8 novembre 2026. Programmi e prezzi di Capodanno escono a dicembre.</p>
+  </section>
+
+  <a class="nextlink" href="index.html">Torna alla Home →</a>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("notte");
+  const METER = [["Marrakech, 31 dicembre", 75, "var(--rosa)"], ["Ostelli di Taghazout", 55, "var(--c-oceano)"], ["Agadir, una sera", 45, "var(--c-deserto)"], ["Rabat, 30 dicembre", 25, "var(--c-montagna)"], ["Fes", 5, "var(--muted)"], ["Deserto", 0, "var(--muted)"]];
+  const mb = document.getElementById("meter");
+  METER.forEach(([t, p, c]) => mb.appendChild(el("div", { class: "meter-row" }, el("span", { text: t }), el("div", { class: "bar" }, el("i", { style: "width:" + Math.max(p, 2) + "%;background:" + c })), el("b", { class: "mono", text: p + "%" }))));
+
+  const CITY = [
+    { id: "mrk", n: "Marrakech", d: "31 dic · 1 gen", joke: "La notte giusta è questa. Se non succede qui, non succede. Daje.", posti: [
+      ["Theatro", "Club", "Dentro il resort Es Saadi. House e hip-hop, terrazza, dress code elegante."],
+      ["555 Famous Club", "Club", "Su boulevard Mohamed VI. House e hit, terrazza grande, caro."],
+      ["Secret Room", "Club", "Avenue Echouhada. Parte con la house, finisce con le hit da cantare."],
+      ["Epicurien", "Club", "Sempre all'Es Saadi. House, hit e musica dal vivo."],
+      ["El Fenn, rooftop in medina", "Capodanno", "L'anno scorso: festa sul tetto il 31, dalle 21 all'1:30, €50. Il programma 2026 esce a dicembre."],
+      ["Comptoir Darna", "Capodanno", "Cena-spettacolo con DJ, 3.500 dirham a testa. Cancellabile fino al 24 dicembre."],
+      ["Equity Point Hostel", "Ostello", "Capodanno in ostello: cena, sangria e musica a €25, solo per chi dorme lì. Bar sul tetto."],
+      ["Rodamon Riad e Riad Jennah Rouge", "Ostello", "Ostelli sociali, con eventi e terrazza. Il posto giusto per conoscere gente."],
+      ["Pub crawl di Marrakech", "Giro dei bar", "Il giovedì e il sabato, €25, partenza da Riad Dia. Si fa gruppo in un'ora."]
+    ] },
+    { id: "tgz", n: "Taghazout", d: "5 → 8 gen", joke: "Qui si va a letto presto per surfare. Le ragazze ci sono, ma alle 22 dormono. Porra.", posti: [
+      ["Azoul Hostel", "Ostello", "Bar, terrazza, poker, cene di gruppo e falò sul tetto. Niente coprifuoco. Da €13."],
+      ["Roof House Hostel", "Ostello", "Terrazza ed eventi la sera, a due minuti dalla spiaggia."],
+      ["Happy Surf Hostel", "Ostello", "Birra economica, quiz al pub ogni settimana, serate film. Da €9."],
+      ["Ajyal Surf Hostel", "Ostello", "Barbecue e terrazza al tramonto, sulla spiaggia."],
+      ["Scogliere sopra Anchor Point", "Tramonto", "Il tramonto gratis più bello del paese. Si va lì e si parla con chi c'è."]
+    ] },
+    { id: "aga", n: "Agadir", d: "una sera, oppure l'8", joke: "Mezz'ora di taxi da Taghazout. Il ritorno fissatelo prima, tossici.", posti: [
+      ["Papagayo", "Club", "Al resort Riu Tikida Beach. DJ internazionali, musica commerciale."],
+      ["So Lounge", "Club", "Al Sofitel: due piani, musica dal vivo, tre bar. Ingresso 300 dirham per chi non dorme lì."]
+    ] },
+    { id: "rab", n: "Rabat", d: "30 dic", joke: "Capitale, ragazzi giovani, prezzi umani. Una birra e via, domani si guida.", posti: [
+      ["Le Chill", "Bar", "Vicino al Palazzo Reale. Pieno di ragazzi dopo il lavoro, musica internazionale."],
+      ["Boca Grande", "Bar", "Tapas, vino e musica, stile andaluso."],
+      ["The American Pub", "Pub", "Al Sofia Palace. A volte band dal vivo, sport in tv."]
+    ] }
+  ];
+  const cb = document.getElementById("cities");
+  let sel = "mrk";
+  function showCity() {
+    [...cb.children].forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === sel)));
+    const c = CITY.find((x) => x.id === sel); const box = document.getElementById("city"); box.textContent = "";
+    box.append(el("div", { class: "sec-head" }, el("h2", { text: c.n }), el("span", { class: "mono muted", text: c.d })), el("p", { class: "hand", style: "color:var(--rosa)", text: c.joke }));
+    const g = el("div", { class: "grid g2" });
+    c.posti.forEach(([t, k, x]) => g.appendChild(el("article", { class: "card place" }, el("span", { class: "tipo " + (k === "Capodanno" ? "esperienza" : k === "Ostello" ? "locale" : "classico"), text: k }), el("b", { text: t }), el("p", { class: "muted", text: x }))));
+    box.appendChild(g);
+  }
+  CITY.forEach((c) => { const b = el("button", { type: "button", class: "chip", "data-id": c.id, onclick: () => { sel = c.id; showCity(); } }, c.n); cb.appendChild(b); });
+  showCity();
+
+  const MAI = [["Il campo nel deserto", "Solo cammelli, stelle e un tedesco di 60 anni con la frontale."], ["L'hammam", "Uomini da una parte, donne dall'altra. Ti resta l'omino del kessa."], ["Fes dopo le 22", "La medina chiude. Pure voi."], ["Tamraght", "Paese senza bar. Bello per il surf, morto per tutto il resto."], ["Le gole del Todra alle 8", "Un pullman di pensionati francesi. Bellissimi, ma no."], ["In macchina con voi tre", "Dopo sei ore di guida l'odore dice tutto. Nessuna salirebbe."]];
+  const m = document.getElementById("mai");
+  MAI.forEach(([t, x]) => m.appendChild(el("div", { class: "card cuore no" }, el("div", { class: "row-between" }, el("b", { style: "font-family:var(--f-display);font-size:18px", text: t }), el("b", { class: "mono", text: "0%" })), el("p", { class: "muted", style: "font-size:14px", text: x }))));
+
+  let reaz = [];
+  function render() {
+    const box = document.getElementById("picche"); box.textContent = "";
+    const pc = {}, nu = {}; C.CREW.forEach((n) => { pc[n] = 0; nu[n] = 0; });
+    reaz.forEach((r) => { const a = String(r.attivita); if (a.startsWith("picche:") && r.nome in pc) pc[r.nome]++; if (a.startsWith("numero:") && r.nome in nu) nu[r.nome]++; });
+    C.CREW.forEach((n) => box.appendChild(el("div", { class: "kpi" }, el("div", { style: "display:flex;gap:8px;align-items:center" }, M.avatar(n), el("b", { style: "font-size:17px", text: n })), el("b", { text: String(pc[n]) }), el("span", { text: nu[n] ? nu[n] + (nu[n] === 1 ? " numero, da verificare" : " numeri, da verificare") : "zero numeri. Classico." }))));
+    const tot = Object.values(pc).reduce((a, b) => a + b, 0);
+    const king = Object.keys(pc).sort((a, b) => pc[b] - pc[a])[0];
+    document.getElementById("re").textContent = tot ? "Re dei due di picche: " + king + ". Viva il re." : "Ancora zero due di picche. Perché non ci avete ancora provato.";
+  }
+  async function add(kind) {
+    const me = M.me(); if (!me) return M.askWho();
+    try {
+      await db.upsert("reazioni", { nome: me, attivita: kind + ":" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), voto: "si", aggiornato: new Date().toISOString() }, "nome,attivita");
+      M.toast(kind === "picche" ? ["Registrato. Il sito è con te, ma ride.", "Un altro. Porra, mano.", "Il re ringrazia per il contributo."][Math.floor(Math.random() * 3)] : "Un numero? Il tribunale vuole le prove.");
+      load();
+    } catch (e) { M.err(e); }
+  }
+  document.getElementById("b-picche").onclick = () => add("picche");
+  document.getElementById("b-num").onclick = () => add("numero");
+  async function load() { const d = await db.many(["reazioni", "persone"]); reaz = d.reazioni; render(); R.bar("cuori", d, M.me()); }
+  render(); load(); db.subscribe(["reazioni"], load);
+})();
+</script>
+</body>
+</html>

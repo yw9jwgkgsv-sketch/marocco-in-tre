@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>La ruota · Marocco in tre</title>
+<meta name="theme-color" content="#1A2272">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead zellige">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">La ruota</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>La <em>ruota</em></h1>
+    <span class="sticker ">Per non litigare su chi tocca</span>
+    <p class="lead">Scegli la domanda, gira, e il verdetto finisce sul muro. Non si contesta.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+  <div class="chips" id="qs" role="group" aria-label="Domanda"></div>
+  <section class="sec wheel-wrap">
+    <div class="wheel-box">
+      <span class="wheel-pin" aria-hidden="true"></span>
+      <svg id="wheel" viewBox="-110 -110 220 220" role="img" aria-label="Ruota con i nomi"></svg>
+    </div>
+    <button class="btn yellow" type="button" id="spin" style="justify-self:center;font-size:18px;padding:14px 30px">Gira</button>
+    <div class="card wheel-res" id="res" hidden></div>
+  </section>
+
+  <a class="nextlink" href="muro.html">Guarda il muro →</a>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("ruota");
+  const Q = ["Chi paga il tè?", "Chi guida oggi?", "Chi dorme vicino alla porta della tenda?", "Chi tratta nel souk?", "Chi sveglia gli altri domattina?", "Chi chiede indicazioni?", "Chi assaggia per primo la cosa strana?", "Chi prenota la prossima cosa?"];
+  const JOKE = ["Il destino ha parlato. Porra.", "Sentenza definitiva, niente ricorso. Sì, Davide, pure per te.", "Daje, è il tuo momento.", "Minchia, che sfiga.", "Esageruma nen, è solo una ruota. Ma ha deciso.", "Suave. Tocca a te, tossico."];
+  let q = Q[0], rot = 0, spinning = false;
+  const qs = document.getElementById("qs");
+  Q.forEach((t) => qs.appendChild(el("button", { type: "button", class: "chip", "aria-pressed": String(t === q), onclick: (e) => { q = t; [...qs.children].forEach((c) => c.setAttribute("aria-pressed", String(c === e.currentTarget))); } }, t)));
+  const svg = document.getElementById("wheel");
+  const N = C.CREW.length, seg = 360 / N;
+  const ns = "http://www.w3.org/2000/svg";
+  function mk(t, a) { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; }
+  const g = mk("g", { id: "wg" }); svg.appendChild(g);
+  C.CREW.forEach((n, i) => {
+    const a0 = (i * seg - 90) * Math.PI / 180, a1 = ((i + 1) * seg - 90) * Math.PI / 180;
+    const p = "M0 0 L" + 100 * Math.cos(a0) + " " + 100 * Math.sin(a0) + " A100 100 0 0 1 " + 100 * Math.cos(a1) + " " + 100 * Math.sin(a1) + " Z";
+    g.appendChild(mk("path", { d: p, fill: M.colorFor(n), stroke: "#fff", "stroke-width": "3" }));
+    const am = ((i + .5) * seg - 90) * Math.PI / 180;
+    const t = mk("text", { x: 58 * Math.cos(am), y: 58 * Math.sin(am), fill: "#fff", "font-size": "15", "font-weight": "800", "text-anchor": "middle", "dominant-baseline": "middle", "font-family": "Bricolage Grotesque, sans-serif", transform: "rotate(" + (function () { let r = (i + .5) * seg - 90; r = ((r % 360) + 360) % 360; if (r > 90 && r < 270) r -= 180; return r; })() + " " + 58 * Math.cos(am) + " " + 58 * Math.sin(am) + ")" });
+    t.textContent = n; g.appendChild(t);
+  });
+  g.appendChild(mk("circle", { r: "16", fill: "#fff" }));
+  document.getElementById("spin").addEventListener("click", () => {
+    if (spinning) return; spinning = true;
+    const pickIdx = Math.floor(Math.random() * N);
+    const target = 360 - (pickIdx * seg + seg / 2);
+    rot = rot - (rot % 360) + 360 * 6 + target + (Math.random() * seg * .6 - seg * .3);
+    g.style.transform = "rotate(" + rot + "deg)";
+    const res = document.getElementById("res"); res.hidden = true;
+    setTimeout(async () => {
+      spinning = false;
+      const n = C.CREW[pickIdx];
+      res.hidden = false; res.textContent = "";
+      const post = el("button", { type: "button", class: "btn small" }, "Attacca al muro");
+      post.onclick = async () => { try { await db.insert("muro", { nome: M.me() || "La ruota", testo: "🎡 " + q + " La ruota ha deciso: " + n + "." }); post.textContent = "Attaccato"; post.disabled = true; } catch (e) { M.err(e); } };
+      res.append(el("span", { class: "eyebrow", style: "color:var(--muted)", text: q }), el("b", { class: "wheel-name", text: n }), el("p", { class: "hand", style: "color:var(--rosa)", text: JOKE[Math.floor(Math.random() * JOKE.length)] }), post);
+    }, 4200);
+  });
+  R.bar("ruota", {}, M.me());
+})();
+</script>
+</body>
+</html>

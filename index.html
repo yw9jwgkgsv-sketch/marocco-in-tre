@@ -20,11 +20,27 @@
 </head>
 <body>
 <header class="pagehead zellige hero">
-  <div class="wrap" style="gap:14px">
+  <div class="wrap" style="gap:16px">
     <div class="topline"><span class="eyebrow">29 dic → 8 gen · in tre</span><span class="me-chip" id="me-chip"></span></div>
-    <span class="sticker" id="countdown-sticker">Partenza tra — giorni</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="sticker" id="countdown-sticker">Partenza tra — giorni</span><span class="sticker rosa">Guarda questi tossici</span></div>
     <h1 style="font-size:clamp(52px,13vw,112px)">Marocco <em>in tre</em></h1>
-    <p class="lead">Per organizzare il viaggio. E per prendervi per il culo.</p>
+    <p class="lead">Er romano, il saluzzese e er palermitano, ex Erasmus a San Paolo. Undici giorni in Marocco. Il sito vede tutto e ve lo rinfaccia.</p>
+    <div class="grid g4" aria-label="Conto alla rovescia">
+      <div class="kpi"><b id="cd-d">—</b><span>giorni</span></div>
+      <div class="kpi"><b id="cd-h">—</b><span>ore</span></div>
+      <div class="kpi"><b id="cd-m">—</b><span>minuti</span></div>
+      <div class="kpi"><b id="cd-cap">—</b><span>giorni a Capodanno</span></div>
+    </div>
+    <div class="route" aria-label="Percorso">
+      <div class="stops">
+        <div class="stop"><div class="dot"></div><span class="d">29 · 30</span><b>Fes</b><p>Medina, Volubilis, notte a Rabat</p></div>
+        <div class="stop"><div class="dot"></div><span class="d">31 · 1</span><b>Marrakech</b><p>Capodanno all'Hivernage</p></div>
+        <div class="stop"><div class="dot"></div><span class="d">2</span><b>Atlante</b><p>Tizi n'Tichka, Aït Benhaddou</p></div>
+        <div class="stop"><div class="dot"></div><span class="d">2 · 3</span><b>Valli</b><p>Dadès e Todra</p></div>
+        <div class="stop"><div class="dot"></div><span class="d">3 · 4</span><b>Deserto</b><p>Dune, moto, tenda</p></div>
+        <div class="stop"><div class="dot"></div><span class="d">5 → 8</span><b>Oceano</b><p>Imsouane, Taghazout, Agadir</p></div>
+      </div>
+    </div>
     <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Rivedi l'intro</button>
   </div>
 </header>
@@ -32,17 +48,12 @@
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
 
-  <section class="sec" aria-labelledby="h-todo">
-    <div class="sec-head"><h2 id="h-todo">Le tue cose da fare</h2><span class="mono muted" id="todo-count"></span></div>
-    <div class="steps" id="steps"></div>
-  </section>
-
   <section class="sec" aria-labelledby="h-giudica">
     <div class="feed-card">
       <span class="roast-lab">Il sito vi giudica</span>
-      <ul class="feed" id="feed" aria-labelledby="h-giudica"></ul>
-      <button class="btn yellow small" type="button" id="feed-more" style="justify-self:start" aria-describedby="h-giudica">Un'altra</button>
-      <span id="h-giudica" hidden>Battute del giorno</span>
+      <h3 id="h-giudica">Guarda questi tossici</h3>
+      <ul class="feed" id="feed"></ul>
+      <button class="btn yellow" type="button" id="feed-more" style="justify-self:start">Prendimi per il culo</button>
     </div>
   </section>
 
@@ -52,6 +63,7 @@
 
   <section class="sec" aria-labelledby="h-call">
     <div class="card callbox">
+      <span class="eyebrow" style="color:var(--rosa)">Contatore ufficiale</span>
       <b class="call-n mono" id="call-n">600.000</b>
       <h3 id="h-call" style="font-size:20px">chiamate WhatsApp di Davide per organizzare il viaggio</h3>
       <button class="btn" type="button" id="call-btn" style="justify-self:start;background:var(--rosa);color:#fff">Ha chiamato di nuovo</button>
@@ -60,11 +72,11 @@
   </section>
 
   <section class="sec" aria-labelledby="h-pagella">
-    <div class="sec-head"><h2 id="h-pagella">La pagella</h2></div>
+    <div class="sec-head"><h2 id="h-pagella">La pagella</h2><p>Titoli assegnati in base a quello che fate. Non si contestano.</p></div>
     <div class="grid g3" id="pagella"></div>
   </section>
 
-  <footer class="foot">Prezzi e tempi sono stime al 7 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br><span class="mono">Versione 10 · 7 nov 2026</span></footer>
+  <footer class="foot">Prezzi e tempi sono stime al 8 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br><span class="mono">Versione 11 · 8 nov 2026</span></footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -82,66 +94,47 @@
   if (intro) Intro.show();
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
 
-  const dep = new Date(2026, 11, 28, 23, 30, 0);
-  function tick() { const d = Math.max(0, Math.floor((dep - new Date()) / 86400000)); document.getElementById("countdown-sticker").textContent = d > 0 ? "Partenza tra " + d + " giorni" : "Siamo in Marocco!"; }
-  tick(); setInterval(tick, 60000);
+  const dep = new Date(2026, 11, 28, 23, 30, 0), cap = new Date(2026, 11, 31, 23, 0, 0);
+  function tick() {
+    let s = Math.max(0, Math.floor((dep - new Date()) / 1000));
+    const d = Math.floor(s / 86400); s -= d * 86400; const h = Math.floor(s / 3600); s -= h * 3600;
+    document.getElementById("cd-d").textContent = d; document.getElementById("cd-h").textContent = h; document.getElementById("cd-m").textContent = Math.floor(s / 60);
+    document.getElementById("cd-cap").textContent = Math.max(0, Math.ceil((cap - new Date()) / 86400000));
+    document.getElementById("countdown-sticker").textContent = d > 0 ? "Partenza tra " + d + " giorni" : "Siamo in Marocco!";
+  }
+  tick(); setInterval(tick, 30000);
 
   /* le pagine, ognuna con il suo «per non...» */
   const TILES = [
-    ["vota.html", "vota", "Vota", "Per non passare 11 giorni in riad", "var(--c-moto)"],
+    ["esplora.html", "esplora", "Esplora", "Per non passare 11 giorni in riad", "var(--c-moto)"],
     ["sifa.html", "sifa", "Si fa", "Per non discutere tre ore al bar", "var(--c-montagna)"],
+    ["notte.html", "notte", "La notte", "Dove forse c'è la sorca", "var(--c-capodanno)"],
     ["budget.html", "budget", "Budget", "Per una volta siamo seri", "var(--c-citta)"],
     ["organizza.html", "organizza", "Organizza", "Per non restare a terra", "var(--c-deserto)"],
-    ["cuori.html", "muro", "Cuori solitari", "Per non tornare single. Tornerete single.", "var(--c-capodanno)"],
-    ["tribunale.html", "crew", "Tribunale", "Per stabilire chi è il più tossico", "var(--c-cibo)"],
-    ["giro.html", "giro", "Il giro", "Per non perdervi", "var(--c-oceano)"],
-    ["kit.html", "kit", "Kit", "Per non fare figure de merda", "var(--c-sfide)"]
+    ["ruota.html", "ruota", "La ruota", "Per non litigare su chi paga il tè", "var(--c-oceano)"],
+    ["tribunale.html", "crew", "Tribunale", "Chi è il più tossico", "var(--c-cibo)"],
+    ["giro.html", "giro", "Il giro", "Per non perdervi", "var(--c-sfide)"],
+    ["kit.html", "kit", "Kit", "Per non fare figure de merda", "var(--c-montagna)"],
+    ["muro.html", "muro", "Il muro", "Per non dimenticarle, le figure de merda", "var(--c-moto)"]
   ];
   const tiles = document.getElementById("tiles");
   TILES.forEach(([href, ic, t, sub, col]) => tiles.appendChild(el("a", { class: "tile", href, style: "--cat:" + col }, icon(ic), el("b", { text: t }), el("span", { text: sub }))));
 
-  /* le cose da fare di chi guarda */
-  function renderSteps(d) {
-    const box = document.getElementById("steps"); box.textContent = "";
-    const me = M.me();
-    if (!me) {
-      box.appendChild(el("button", { type: "button", class: "step", onclick: M.askWho }, el("span", { class: "step-n", text: "1" }), el("span", { class: "step-t" }, el("b", { text: "Dicci chi sei" }), el("small", { text: "Così il sito sa chi insultare." })), el("span", { class: "step-go", text: "Vai" })));
-      document.getElementById("todo-count").textContent = "";
-      return;
-    }
-    const voti = d.reazioni.filter((r) => r.nome === me && !String(r.attivita).includes(":")).length;
-    const presa = d.todo.some((t) => t.chi === me);
-    const nItems = C.VALIGIA.reduce((a, g) => a + g.items.length, 0);
-    const val = Math.round((d.valigia.filter((v) => v.nome === me && v.fatto).length / nItems) * 100);
-    const S = [
-      { ok: voti >= C.ATT.length, t: "Vota le carte", s: voti ? "Sei a " + voti + " su " + C.ATT.length + ". Finiscile." : "Per non passare 11 giorni in riad.", href: "vota.html" },
-      { ok: presa, t: "Prenditi una prenotazione", s: "Per non restare a terra l'8 gennaio.", href: "organizza.html" },
-      { ok: val >= 80, t: "Fai la valigia", s: val ? "Sei al " + val + "%." : "Per non partire in ciabatte.", href: "kit.html#valigia" }
-    ];
-    const done = S.filter((x) => x.ok).length;
-    document.getElementById("todo-count").textContent = done + " su " + S.length;
-    S.forEach((x, k) => box.appendChild(el("a", { class: "step" + (x.ok ? " ok" : ""), href: x.href },
-      el("span", { class: "step-n", text: x.ok ? "✓" : String(k + 1) }),
-      el("span", { class: "step-t" }, el("b", { text: x.t }), el("small", { text: x.ok ? "Fatto. Non te ne vantare." : x.s })),
-      el("span", { class: "step-go", text: x.ok ? "" : "Vai" }))));
-    if (done === S.length) box.appendChild(el("p", { class: "hand", style: "color:var(--verde)", text: "Hai fatto tutto, " + me + ". Ora rompi le palle agli altri due." }));
-  }
-
   let lastD = { persone: [], reazioni: [], todo: [], valigia: [] };
   function renderRoast(d) {
     const f = document.getElementById("feed"); f.textContent = "";
-    R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t })));
+    R.feed(d, 4).forEach((t) => f.appendChild(el("li", { text: t })));
     const pg = document.getElementById("pagella"); pg.textContent = "";
     const T = R.titles(d);
     if (!T.length) pg.appendChild(el("div", { class: "pagella" }, el("span", { class: "tit", text: "Tutti uguali" }), el("p", { text: "Per ora siete tutti ugualmente inutili." })));
     T.slice(0, 6).forEach((t) => pg.appendChild(el("article", { class: "pagella" },
       el("div", { style: "display:flex;gap:10px;align-items:center" }, M.avatar(t.n), el("b", { style: "font-size:17px", text: t.n })),
-      el("span", { class: "tit", text: t.t }))));
+      el("span", { class: "tit", text: t.t }), el("p", { class: "muted", style: "font-size:14px", text: t.f }))));
   }
   document.getElementById("feed-more").addEventListener("click", () => {
     const f = document.getElementById("feed");
     f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:700" }), f.firstChild);
-    while (f.children.length > 3) f.removeChild(f.lastChild);
+    while (f.children.length > 5) f.removeChild(f.lastChild);
   });
 
   function renderCalls(calls) {
@@ -163,10 +156,9 @@
     const d = await db.many(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"]);
     lastD = d;
     renderCalls(d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")));
-    renderSteps(d); renderRoast(d);
+    renderRoast(d);
   }
-  M.onMe(() => renderSteps(lastD));
-  renderSteps(lastD); renderRoast(lastD);
+  renderRoast(lastD);
   load();
   db.subscribe(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"], load);
 })();

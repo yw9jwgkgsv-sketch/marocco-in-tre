@@ -75,6 +75,7 @@
   <section class="sec" id="meteo" aria-labelledby="h-me">
     <div class="sec-head"><h2 id="h-me">Che tempo fa a fine dicembre</h2><p>Gradi, medie stimate. Controllate le previsioni una settimana prima.</p></div>
     <div class="tbl-wrap"><table><thead><tr><th>Dove</th><th>Giorno</th><th>Notte</th><th>Da sapere</th></tr></thead><tbody id="mt"></tbody></table></div>
+    <p class="muted" style="font-size:13px" id="mt-note"></p>
   </section>
 
   <section class="sec" id="info" aria-labelledby="h-in">
@@ -156,7 +157,27 @@
   const pr = document.getElementById("pr");
   C.PREZZI.forEach((p) => pr.appendChild(el("tr", null, el("td", { text: p.cosa }), el("td", { class: "num", text: p.giusto + " MAD" }), el("td", { class: "muted", text: p.nota }))));
   const mt = document.getElementById("mt");
-  C.METEO.forEach((m) => mt.appendChild(el("tr", null, el("td", null, el("b", { text: m.dove })), el("td", { class: "num", text: m.giorno }), el("td", { class: "num", text: m.notte }), el("td", { class: "muted", text: m.nota }))));
+  const WHEN = { "Fes": ["2026-12-29", 34.03, -5.0], "Rabat": ["2026-12-30", 34.02, -6.84], "Marrakech": ["2026-12-31", 31.63, -7.98], "Passo dell'Atlante": ["2027-01-02", 31.29, -7.38], "Merzouga": ["2027-01-03", 31.1, -4.01], "Taghazout": ["2027-01-06", 30.54, -9.71] };
+  const rows = {};
+  C.METEO.forEach((m) => { const tr = el("tr", null, el("td", null, el("b", { text: m.dove }), WHEN[m.dove] ? el("div", { class: "muted", style: "font-size:12px", text: M.fmtDate(WHEN[m.dove][0]) }) : null), el("td", { class: "num", text: m.giorno }), el("td", { class: "num", text: m.notte }), el("td", { class: "muted", text: m.nota })); rows[m.dove] = tr; mt.appendChild(tr); });
+  (async function live() {
+    const note = document.getElementById("mt-note");
+    let n = 0;
+    for (const dove in WHEN) {
+      const [day, lat, lng] = WHEN[dove];
+      const diff = M.daysBetween(M.todayStr(), day);
+      if (diff < 0 || diff > 15) continue;
+      try {
+        const r = await fetch("https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lng + "&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&start_date=" + day + "&end_date=" + day);
+        const j = await r.json(); const dd = j.daily; if (!dd) continue;
+        const tr = rows[dove];
+        tr.children[1].textContent = Math.round(dd.temperature_2m_max[0]) + "°"; tr.children[2].textContent = Math.round(dd.temperature_2m_min[0]) + "°";
+        tr.children[3].textContent = "Previsione vera · pioggia " + (dd.precipitation_probability_max[0] ?? "?") + "%";
+        tr.children[3].style.color = "var(--verde)"; n++;
+      } catch (e) {}
+    }
+    note.textContent = n ? "In verde le previsioni vere di Open-Meteo per il giorno in cui sarete lì." : "Per ora sono medie. Da metà dicembre qui compaiono da sole le previsioni vere, giorno per giorno.";
+  })();
   const inf = document.getElementById("inf");
   C.INFO.forEach((i) => inf.appendChild(el("div", { class: "card", style: "display:grid;gap:4px" }, el("b", { style: "font-family:var(--f-display);font-size:19px", text: i.t }), el("p", { text: i.x }))));
   const num = document.getElementById("num");

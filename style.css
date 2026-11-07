@@ -468,3 +468,51 @@ footer.foot{color:var(--muted);font-size:13px;padding-block:6px 10px}
 .vcard-body{padding:12px 16px 14px;gap:8px}
 .vbtn{padding:10px 6px}
 .vbtn span{font-size:26px}
+
+/* ruota */
+.wheel-wrap{justify-items:center;gap:16px}
+.wheel-box{position:relative;width:min(320px,86vw);aspect-ratio:1;max-width:100%}
+.wheel-box svg{width:100%;height:100%;display:block}
+#wg{transition:transform 4s cubic-bezier(.15,.85,.2,1);transform-origin:0 0}
+.wheel-pin{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:26px solid var(--ink);z-index:2}
+.wheel-res{display:grid;gap:6px;justify-items:center;text-align:center;width:100%;max-width:420px}
+.wheel-name{font-family:var(--f-display);font-size:48px;font-weight:800;line-height:1}
+@media (prefers-reduced-motion: reduce){ #wg{transition-duration:.01ms} }
+/* notte */
+.meter{display:grid;gap:8px}
+.meter-row{display:grid;grid-template-columns:150px 1fr 44px;gap:10px;align-items:center;font-size:14px;font-weight:600}
+@media (max-width:420px){ .meter-row{grid-template-columns:120px 1fr 40px;font-size:13px} }
+.place{display:grid;gap:4px;align-content:start}
+.place b{font-family:var(--f-display);font-size:19px}
+.place p{font-size:14px}
+
+/* intro v5: pagina da scorrere, fasce colorate tutte uguali */
+.intro2{position:fixed;inset:0;z-index:60;overflow-y:auto;color:#fff;background:#2438C6;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;animation:in-fade .3s ease both}
+.intro2.in-out{animation:in-fadeout .3s ease both}
+.i2-skip{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(14px, env(safe-area-inset-right,0px));z-index:2;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.18);color:#fff;border-radius:999px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer}
+.i2-band{min-height:72vh;display:grid;align-items:center;padding:56px max(20px, env(safe-area-inset-right,0px)) 56px max(20px, env(safe-area-inset-left,0px))}
+.i2-hero{min-height:100vh;padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
+.i2-end{min-height:85vh;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 56px)}
+.i2-in{max-width:560px;width:100%;margin:0 auto;display:grid;gap:14px;justify-items:start}
+.i2-eye{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.i2-h1{font-family:var(--f-display);font-weight:800;font-size:clamp(56px,16vw,104px);line-height:.92;letter-spacing:-.035em}
+.i2-line{font-size:19px;line-height:1.4;color:rgba(255,255,255,.9);max-width:30ch}
+.i2-cast{display:grid;gap:8px;width:100%;margin-top:10px}
+.i2-person{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;font-size:14.5px;color:rgba(255,255,255,.85)}
+.i2-person div{display:grid;gap:1px}
+.i2-person b{color:#fff;font-family:var(--f-display);font-size:18px}
+.i2-person .av{border-color:rgba(255,255,255,.6)}
+.i2-down{font-weight:700;color:rgba(255,255,255,.8);margin-top:18px;animation:i2-bob 1.6s ease-in-out infinite}
+.i2-top{display:flex;justify-content:space-between;align-items:center;width:100%}
+.i2-num{font-family:var(--f-mono);font-size:14px;color:rgba(255,255,255,.7)}
+.i2-ic{width:40px;height:40px;opacity:.9}
+.i2-name{font-family:var(--f-display);font-weight:800;font-size:clamp(52px,15vw,96px);line-height:.92;letter-spacing:-.035em}
+.i2-what{font-size:20px;line-height:1.35;font-weight:600;max-width:28ch}
+.i2-joke{font-family:var(--f-hand);font-size:28px;line-height:1.1;color:#FFD15C;transform:rotate(-1.5deg)}
+.i2-pick{display:grid;gap:10px;width:100%}
+.i2-who{display:flex;align-items:center;gap:14px;background:#fff;color:#121633;border:0;border-radius:18px;padding:14px 16px;cursor:pointer;text-align:left}
+.i2-who b{font-family:var(--f-display);font-size:24px}
+.i2-end .in-other{color:rgba(255,255,255,.85)}
+@keyframes i2-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@media (prefers-reduced-motion: reduce){ .i2-down{animation:none} .intro2{scroll-behavior:auto} }
+

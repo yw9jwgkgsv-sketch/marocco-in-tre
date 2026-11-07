@@ -234,7 +234,7 @@ window.R = (function () {
   /* -------- il tasto «non ho capito un cazzo» -------- */
   const SPIEGA = {
     home: "Questa è la pagina iniziale: conto alla rovescia, a che punto siete e chi vi sta facendo fare brutta figura. Tocca le tessere colorate per andare nelle altre pagine.",
-    esplora: "Ci sono tutte le cose che si possono fare. Su ognuna premi Ci sto, Forse o Neanche morto. Se tutti e tre dite Ci sto, è un match e la facciamo.",
+    esplora: "Ci sono tutte le cose che si possono fare. Su ognuna premi Ci sto, Forse o Neanche morto. Se tutti e tre dite Ci sto, è un match: la trovi in «Cosa si fa».",
     giro: "In alto scegli lo scenario: A, B, C o D. Sotto vedi la mappa e cosa si fa ogni giorno, dove si dorme e quante ore si guida.",
     crew: "Compila il tuo profilo: budget, patente, fuoristrada e scenario preferito. Lo scenario del viaggio si decide da solo. Più sotto c'è il tribunale: si vota chi è più probabile che faccia una figura di merda.",
     organizza: "Prenotazioni: premi Me ne occupo io su quello che prenoti tu, e Fatto quando hai finito. Cassa: segna quello che paghi per tutti, il sito calcola chi deve dare soldi a chi.",
@@ -244,7 +244,9 @@ window.R = (function () {
     sifa: "Qui vedi il risultato dei voti. «Si fa»: tutti e tre 🔥, si prenota. «Manca uno»: due 🔥, il terzo deve decidere. «Bocciate»: qualcuno ha detto 💀.",
     budget: "Sopra c'è il totale a testa. Le spese sicure sono già dentro. Sotto accendi e spegni le cose che volete fare: il totale cambia da solo.",
     cuori: "Il registro: premi il tasto quando prendi un due di picche. Sotto: dove forse sì e dove sicuramente no.",
-    tribunale: "Per ogni domanda tocca il nome del colpevole. Chi prende più voti si becca l'adesivo."
+    tribunale: "Per ogni domanda tocca il nome del colpevole. Chi prende più voti si becca l'adesivo.",
+    notte: "In alto le probabilità di serata. Poi tocchi una città e vedi locali, feste e ostelli veri. Sotto c'è il registro dei due di picche: premi il tasto quando ne prendi uno.",
+    ruota: "Scegli la domanda, premi Gira, e la ruota decide chi tocca. Poi puoi attaccare il verdetto al muro."
   };
   function mountHelp(page) {
     if (document.getElementById("nocapito")) return;

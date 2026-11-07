@@ -43,7 +43,7 @@
 <script>
 (function () {
   const { el, db } = M;
-  M.start("sifa");
+  M.start("esplora");
   const CREW = C.CREW;
   let reaz = [], todo = [];
   function row(a, extra, kind) {
@@ -65,10 +65,10 @@
     });
     const sum = document.getElementById("sum"); sum.textContent = "";
     [[si.length, "si fanno", "var(--verde)"], [quasi.length, "manca uno", "var(--giallo)"], [aperte, "ancora da votare", "var(--muted)"]].forEach(([n, l, c]) =>
-      sum.appendChild(el("a", { class: "kpi", href: l === "ancora da votare" ? "vota.html" : "#h-" + (l === "si fanno" ? "si" : "quasi"), style: "text-decoration:none;color:inherit;border-left:5px solid " + c }, el("b", { text: String(n) }), el("span", { text: l }))));
+      sum.appendChild(el("a", { class: "kpi", href: l === "ancora da votare" ? "esplora.html" : "#h-" + (l === "si fanno" ? "si" : "quasi"), style: "text-decoration:none;color:inherit;border-left:5px solid " + c }, el("b", { text: String(n) }), el("span", { text: l }))));
 
     const L1 = document.getElementById("l-si"); L1.textContent = "";
-    if (!si.length) L1.appendChild(el("p", { class: "empty", text: "Ancora niente. Tre persone, nessuna cosa in comune. Bel gruppo." }));
+    if (!si.length) L1.appendChild(el("p", { class: "empty", text: "Ancora niente. Votate su Esplora: tre 🔥 sulla stessa cosa e finisce qui." }));
     si.forEach(([a]) => {
       const inList = todo.some((t) => String(t.titolo).includes(a.t));
       const b = el("button", { type: "button", class: "btn small" + (inList ? " ghost" : ""), disabled: inList || null }, inList ? "In prenotazioni" : "Prenota");

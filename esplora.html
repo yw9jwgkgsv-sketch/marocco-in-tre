@@ -22,6 +22,7 @@
     <p class="lead" id="lead">Idee da tranquille a «lo racconteremo ai nipoti». Votatele tutte: quando tutti e tre dite «Ci sto», è un match.</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
       <button class="btn yellow" type="button" id="surprise">Sorprendimi</button>
+      <a class="btn ghost" href="sifa.html" style="color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Cosa si fa</a>
       <span class="sticker rosa">Le tacche misurano la follia</span>
     </div>
   </div>
@@ -65,7 +66,7 @@
 <script>
 (function () {
   const { el, db, icon } = M;
-  M.start("vota");
+  M.start("esplora");
 
   const S = { cat: "tutte", reaz: [], crew: [] };
   const VOTI = [["si", "🔥", "Ci sto"], ["forse", "🤔", "Forse"], ["no", "💀", "Neanche morto"]];

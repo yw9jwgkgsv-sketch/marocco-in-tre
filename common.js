@@ -158,6 +158,8 @@ window.M = (function () {
     giro: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
     crew: '<circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M2.5 20c.5-3.5 3-5.5 5.5-5.5S13 16.5 13.5 20M14 14.8c2.8-.4 6 1 7 5.2"/>',
     organizza: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8l1.5 1.5L12 7M8 13l1.5 1.5L12 12M8 18h.01M14 8h3M14 13h3M14 18h3"/>',
+    notte: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/>',
+    ruota: '<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/>',
     vota: '<path d="M12 3c1 3 4 4.5 4 8.5A4 4 0 0 1 8 11.5c0-1.6.7-2.7 1.6-3.6.2 1.4 1 2.1 1.8 2.3C11 7.7 11.2 5.2 12 3z"/><path d="M6 15.5A6 6 0 0 0 18 15.5"/>',
     sifa: '<path d="M4 12.5l5 5L20 6.5"/>',
     budget: '<circle cx="9" cy="9" r="5"/><path d="M14.5 7.4A5 5 0 1 1 9.6 14.9"/><path d="M9 7v4M7.5 9h3"/>',
@@ -211,7 +213,7 @@ window.M = (function () {
   }
 
   /* ---------------- barra in basso ---------------- */
-  const NAV = [["index.html", "home", "Home"], ["vota.html", "vota", "Vota"], ["sifa.html", "sifa", "Si fa"], ["budget.html", "budget", "Budget"], ["organizza.html", "organizza", "Organizza"], ["kit.html", "kit", "Kit"]];
+  const NAV = [["index.html", "home", "Home"], ["esplora.html", "esplora", "Esplora"], ["notte.html", "notte", "Notte"], ["budget.html", "budget", "Budget"], ["organizza.html", "organizza", "Organizza"], ["kit.html", "kit", "Kit"]];
   function nav(active) {
     const ul = el("ul");
     NAV.forEach(([href, ic, lab]) => ul.appendChild(el("li", null, el("a", { href, "aria-current": ic === active ? "page" : null }, icon(ic), lab))));
