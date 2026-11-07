@@ -23,9 +23,9 @@
   <div class="wrap" style="gap:18px">
     <div class="topline"><span class="eyebrow">29 dic 2026 → 8 gen 2027 · in tre</span><span class="me-chip" id="me-chip"></span></div>
     <div style="display:grid;gap:10px">
-      <span class="sticker" id="countdown-sticker">Partenza tra — giorni</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="sticker" id="countdown-sticker">Partenza tra — giorni</span><span class="sticker rosa">Guarda questi tossici</span></div>
       <h1 style="font-size:clamp(52px,13vw,112px)">Marocco <em>in tre</em></h1>
-      <p class="lead">Tre amici, undici giorni, un cammello che vi giudica. Qui si decide tutto: cosa fare, chi prenota, chi paga e chi si perde per primo nella medina.</p>
+      <p class="lead">Tre tossici, uno de Roma, uno de Saluzzo e uno de Palermo, ex Erasmus a San Paolo. Undici giorni in Marocco. Il sito vede tutto, ricorda tutto e ve lo rinfaccia.</p>
     </div>
     <div class="grid g4" aria-label="Conto alla rovescia">
       <div class="kpi"><b id="cd-d">—</b><span>giorni</span></div>
@@ -49,6 +49,20 @@
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run. Un minuto.</div>
   <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+
+  <section class="sec" aria-labelledby="h-giudica">
+    <div class="feed-card">
+      <span class="roast-lab">Il sito vi giudica</span>
+      <h3 id="h-giudica">Guarda questi tossici</h3>
+      <ul class="feed" id="feed"></ul>
+      <button class="btn yellow" type="button" id="feed-more" style="justify-self:start">Prendimi per il culo</button>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-pagella">
+    <div class="sec-head"><h2 id="h-pagella">La pagella</h2><p>Titoli assegnati in base a quello che fate sul sito. Si aggiornano da soli, e non si contestano.</p></div>
+    <div class="grid g3" id="pagella"></div>
+  </section>
 
   <section class="sec" aria-labelledby="h-stato">
     <div class="sec-head"><h2 id="h-stato">Stato della missione</h2><span class="hand muted" id="stato-joke"></span></div>
@@ -132,7 +146,8 @@
   const JOKES = ["Nessuno ha ancora prenotato niente. Classico.", "Qualcuno lavora, qualcuno guarda.", "Si va avanti. Lentamente, ma si va.", "Quasi pronti. Quasi."];
 
   async function load() {
-    const d = await db.many(["persone", "todo", "spese", "reazioni", "muro"]);
+    const d = await db.many(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"]);
+    renderRoast(d);
     const pers = d.persone, todo = d.todo, spese = d.spese, reaz = d.reazioni, muro = d.muro;
     document.getElementById("k-risp").textContent = pers.length + "/" + M.GROUP;
     const done = todo.filter((t) => t.fatto).length;
@@ -172,8 +187,26 @@
       document.getElementById("v-why").textContent = v.why.join(" · ") + ".";
     }
   }
+  let lastD = {};
+  function renderRoast(d) {
+    lastD = d;
+    const f = document.getElementById("feed"); f.textContent = "";
+    R.feed(d, 5).forEach((t) => f.appendChild(el("li", { text: t })));
+    const pg = document.getElementById("pagella"); pg.textContent = "";
+    const T = R.titles(d);
+    if (!T.length) pg.appendChild(el("div", { class: "pagella" }, el("span", { class: "tit", text: "Tutti uguali" }), el("p", { text: "La pagella si riempie quando iniziate a usare il sito. Per ora siete tutti ugualmente inutili. Talìa." })));
+    T.forEach((t) => pg.appendChild(el("article", { class: "pagella" },
+      el("div", { style: "display:flex;gap:10px;align-items:center" }, M.avatar(t.n), el("b", { style: "font-size:17px", text: t.n })),
+      el("span", { class: "tit", text: t.t }), el("p", { text: t.f }))));
+  }
+  document.getElementById("feed-more").addEventListener("click", () => {
+    const f = document.getElementById("feed");
+    f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:700" }), f.firstChild);
+    while (f.children.length > 6) f.removeChild(f.lastChild);
+  });
+  renderRoast({});
   load();
-  db.subscribe(["persone", "todo", "spese", "reazioni", "muro"], load);
+  db.subscribe(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"], load);
 })();
 </script>
 </body>

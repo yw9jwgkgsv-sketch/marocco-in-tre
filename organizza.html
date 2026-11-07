@@ -118,7 +118,7 @@
   document.getElementById("tab-cassa").onclick = () => tab("cassa");
   if (location.hash === "#cassa") tab("cassa");
 
-  const people = () => [...new Set(C.CREW.concat(S.pers.map((p) => p.nome)).concat(S.pers.map((p) => p.nome).concat(S.spese.map((s) => s.pagato_da)).concat(M.me() ? [M.me()] : []))].filter(Boolean).sort();
+  const people = () => [...new Set(C.CREW.concat(S.pers.map((p) => p.nome)).concat(S.spese.map((s) => s.pagato_da)).concat(M.me() ? [M.me()] : []))].filter(Boolean).sort();
 
   async function act(fn) { try { await fn(); await load(); } catch (e) { M.err(e); } }
 

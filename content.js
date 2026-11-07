@@ -276,7 +276,7 @@ C.RUOLI = ["Autista ufficiale", "Cassiere", "Negoziatore del souk", "Navigatore"
 C.SONDAGGI = [
   { id: "tossico", q: "Chi è il più tossico della crew?" },
   { id: "sorca", q: "Chi dice «la sorca» più volte in un giorno?" },
-  { id: "salluzzo", q: "Chi dirà «Salluzzo Palermo» davanti a una guida?" },
+  { id: "minchia", q: "Chi dice «minchia» davanti a una guida?" },
   { id: "portoghese", q: "Chi tratterà nel souk in portoghese?" },
   { id: "saudade", q: "Chi ha ancora saudade di San Paolo?" },
   { id: "souk", q: "Chi si fa fregare per primo nel souk?" },

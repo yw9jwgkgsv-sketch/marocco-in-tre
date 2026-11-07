@@ -123,8 +123,15 @@ window.M = (function () {
     return e;
   }
   const COLORS = ["#2438C6", "#0F8A68", "#E04C66", "#8B3FD9", "#E08A00", "#1683D1", "#C2471B"];
-  function colorFor(name) { let h = 7; for (const c of String(name)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return COLORS[h % COLORS.length]; }
-  function avatar(name, cls) { return el("span", { class: "av " + (cls || ""), style: "background:" + colorFor(name || "?"), title: name || "", text: (String(name || "?").trim()[0] || "?").toUpperCase() }); }
+  const FIXED = { Alessandro: "#2438C6", Augusto: "#0F8A68", Davide: "#E04C66" };
+  function colorFor(name) { if (FIXED[name]) return FIXED[name]; let h = 7; for (const c of String(name)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return COLORS[h % COLORS.length]; }
+  function initials(name) {
+    const n = String(name || "?").trim(); const f = (n[0] || "?").toUpperCase();
+    const crew = (window.C && C.CREW) || [];
+    const clash = crew.some((o) => o !== n && (o[0] || "").toUpperCase() === f);
+    return clash ? f + (n[1] || "").toLowerCase() : f;
+  }
+  function avatar(name, cls) { return el("span", { class: "av " + (cls || ""), style: "background:" + colorFor(name || "?"), title: name || "", text: initials(name) }); }
   const eur = (n) => "€" + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   const eur2 = (n) => { const neg = n < 0; const [i, d] = Math.abs(n).toFixed(2).split("."); return (neg ? "-" : "") + "€" + i.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "," + d; };
   const MESI = ["gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic"];
@@ -242,7 +249,7 @@ window.M = (function () {
     const up = document.getElementById("upgrade");
     if (up && !LIVE) { up.hidden = false; up.innerHTML = "<b>Modalità prova</b>I dati restano solo su questo dispositivo finché il sito non è collegato al database."; }
     if (!me) setTimeout(askWho, 300);
-    if (window.R) R.mountSalluzzo(active || "home");
+    if (window.R) R.mountHelp(active || "home");
     if (me && LIVE) db.update("persone", { nome: me }, { visto: new Date().toISOString() }).catch(() => {});
   }
   function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
