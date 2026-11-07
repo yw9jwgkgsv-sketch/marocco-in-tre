@@ -201,11 +201,7 @@ window.R = (function () {
       return me + ", sei a " + m.voti + " su " + C.ATT.length + ". " + pick(["Daje che ce la fai.", "Bora, mancano poche carte. Più o meno.", "Il cammello vota più veloce de te."], seed);
     }
     if (page === "sifa") return pick(["Tre 🔥 e si fa. Se una cosa sta in «Manca uno», andate a rompere le palle a chi manca.", "Questa pagina dice cosa si fa davvero. Il resto sono chiacchiere da vocale de Davide.", "Quello che sta in «Si fa» va prenotato. Non domani, oggi. Porra."], seed);
-    if (page === "budget") {
-      if (d.moto === 3) return "Per una volta siamo seri: il tour in moto è la voce più grossa. Ne vale la pena, ma decidetelo a voce. Davide, senza chiamare.";
-      if (d.capodanno === 3) return "La cena-spettacolo da €320 da sola vale tre giorni di viaggio. Siete sicuri? Seriamente.";
-      return "Per una volta siamo seri. I numeri sono stime: quelli veri li vedete quando prenotate.";
-    }
+    if (page === "budget") return pick(["Per una volta siamo seri. Una.", "I numeri sono stime: quelli veri li vedete quando prenotate. Seriamente.", "Ogni tre 🔥 su Esplora, qui sale il conto. Votate con il portafoglio."], seed);
     if (page === "cuori") return pick(["Tre single in Marocco. L'unica che vi guarda negli occhi è la cammella.", "Le statistiche sono chiare: tornerete single, ma abbronzati.", "Probabilità di rimorchiare nel deserto: zero. Probabilità di innamorarsi del cammello: alta.", "Tinder in Marocco: unico match, la guida del deserto, 54 anni, baffi. Suave."], seed);
     if (page === "tribunale") return fill("Il tribunale è aperto. Le quote danno colpevole {X} su tutto. {END}", seed);
     if (page === "giro") return fill("Il giro è deciso. Resta da capire chi lo rovinerà per primo: le quote danno favorito {X}. {END}", seed);

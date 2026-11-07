@@ -1,70 +1,85 @@
-/* L'introduzione: una pagina da scorrere, una fascia colorata per funzione, tutte uguali.
-   Nome grande, cosa fa in una riga, una battuta. Si rivede dalla Home. */
+/* Il caricamento del sito: una barra che si riempie con un cammello che corre e le vostre battute al posto
+   dei messaggi di caricamento. Lungo la prima volta (con «chi sei?»), corto alle visite successive. */
 window.Intro = (function () {
   "use strict";
-  const KEY = "marocco_intro_v5";
-  const store = {
-    get() { try { return localStorage.getItem(KEY); } catch (e) { return "1"; } },
-    set() { try { localStorage.setItem(KEY, "1"); } catch (e) {} }
-  };
-  function shouldShow() { return !store.get() || /[?&]intro\b/.test(location.search); }
+  const KEY = "marocco_intro_v6", SKEY = "marocco_load_sess";
+  const ls = { get(k) { try { return localStorage.getItem(k); } catch (e) { return "1"; } }, set(k) { try { localStorage.setItem(k, "1"); } catch (e) {} } };
+  const ss = { get() { try { return sessionStorage.getItem(SKEY); } catch (e) { return "1"; } }, set() { try { sessionStorage.setItem(SKEY, "1"); } catch (e) {} } };
+  function shouldShow() { return !ss.get() || !ls.get(KEY) || /[?&]intro\b/.test(location.search); }
   function E(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined && text !== null) e.textContent = text; return e; }
-  function days() { return Math.max(0, Math.floor((new Date(2026, 11, 28, 23, 30) - new Date()) / 86400000)); }
 
-  const CAST = [["Alessandro", "Ha fatto il sito. Il volo de ritorno no."], ["Augusto", "Dice «suave». Non prenota niente."], ["Davide", "600.000 chiamate. Mo' è pure avvocato."]];
-
-  /* [colore, icona, nome, cosa fa, battuta] */
-  const FEAT = [
-    ["#D6345A", "esplora", "Esplora", "49 cose da fare. Su ognuna dici 🔥, 🤔 o 💀.", "Chi dice 💀 a tutto diventa er Cacasotto. Ufficiale."],
-    ["#0B7A5C", "sifa", "Si fa", "Tre 🔥 sulla stessa cosa e si fa. Il resto non si discute.", "Finalmente d'accordo su qualcosa. Porra."],
-    ["#6E2BC2", "notte", "La notte", "Locali, feste e ostelli veri, città per città. Più il registro dei due di picche.", "Dove forse c'è la sorca. E dove sicuramente no."],
-    ["#2438C6", "budget", "Budget", "Quanto spendete davvero, voce per voce. Accendi e spegni le cose.", "Per una volta siamo seri. Una."],
-    ["#B35A00", "organizza", "Organizza", "Chi prenota cosa, e chi deve soldi a chi. Al centesimo.", "Chi sfora la scadenza finisce sul muro della vergogna. Daje."],
-    ["#0F6FB8", "ruota", "La ruota", "Chi paga il tè, chi guida, chi dorme vicino alla porta. Gira e basta.", "La ruota non si contesta. Manco con l'avvocato, Davide."],
-    ["#B23A12", "crew", "Il tribunale", "Si vota chi è il più tossico. Chi vince si becca l'adesivo.", "Votarsi da soli si può. Ma è triste, neh."],
-    ["#141A4D", "kit", "Kit", "Valigia, frasi in darija, prezzi giusti nel souk, meteo vero.", "Per non fare figure de merda. O farne meno."]
+  const MSG = [
+    "Svegliando Davide dalla 600.000ª chiamata…",
+    "Spiegando ad Augusto che «suave» non è un piano…",
+    "Er romano sta a dì «daje» al server…",
+    "Traducendo il palermitano in italiano…",
+    "Convincendo il saluzzese a spendere un euro…",
+    "Cercando la sorca nel raggio di 40 km… 0 risultati",
+    "Gonfiando il materassino per il deserto…",
+    "Nascondendo il Rif da Google Maps…",
+    "Calibrando il tè «ma de quello forte»…",
+    "Controllando che Alessandro abbia prenotato il ritorno… no",
+    "Avvisando i cammelli. Sono preoccupati…",
+    "Caricando 49 cose che non farete…",
+    "Stirando la camicia per il Theatro…",
+    "Contando i due di picche futuri…"
   ];
 
   function show() {
     if (document.getElementById("intro")) return;
-    const ov = E("div", "intro2"); ov.id = "intro"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Introduzione al sito");
-    const skip = E("button", "i2-skip", "Salta"); skip.type = "button";
-    ov.appendChild(skip);
+    const first = !ls.get(KEY) || /[?&]intro\b/.test(location.search);
+    const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const ov = E("div", "loader zellige"); ov.id = "intro"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Caricamento");
+    const box = E("div", "ld-box");
+    const logo = E("div", "ld-logo"); logo.append(E("span", null, "Marocco"), E("em", null, " in tre"));
+    const pct = E("b", "ld-pct mono", "0%");
+    const track = E("div", "ld-track"); const fill = E("i", "ld-fill"); const camel = E("span", "ld-camel", "🐪"); camel.setAttribute("aria-hidden", "true");
+    track.append(fill, camel);
+    const msg = E("p", "ld-msg", "Caricamento tossici…"); msg.setAttribute("aria-live", "polite");
+    const tip = E("p", "ld-tip", "Tocca per andare più veloce");
+    box.append(logo, pct, track, msg, tip);
+    ov.appendChild(box); document.body.appendChild(ov); document.documentElement.style.overflow = "hidden";
 
-    const hero = E("section", "i2-band i2-hero zellige"); hero.style.backgroundColor = "#2438C6";
-    const hi = E("div", "i2-in");
-    hi.append(E("span", "i2-eye", "29 dic → 8 gen · in tre"), E("h1", "i2-h1", "Ahó, tossici."),
-      E("p", "i2-line", "Il sito per organizzare il Marocco. E per prendervi per il culo."),
-      E("span", "sticker", "Partenza tra " + days() + " giorni"));
-    const cast = E("div", "i2-cast");
-    CAST.forEach(([n, l]) => { const r = E("div", "i2-person"); const av = M.avatar(n); const t = E("div"); t.append(E("b", null, n), E("span", null, l)); r.append(av, t); cast.appendChild(r); });
-    hi.append(cast, E("p", "i2-down", "Scorri ↓"));
-    hero.appendChild(hi); ov.appendChild(hero);
+    const pool = MSG.slice().sort(() => Math.random() - 0.5).slice(0, first ? 6 : 3);
+    const total = reduce ? 600 : first ? 6200 : 2600;
+    let t0 = performance.now(), speed = 1, done = false, lastIdx = -1, elapsed = 0, prev = t0;
+    ov.addEventListener("click", () => { if (!done) speed = 4; });
+    function frame(now) {
+      if (done) return;
+      elapsed += (now - prev) * speed; prev = now;
+      const p = Math.min(1, elapsed / total);
+      // la barra si ferma un attimo, come i caricamenti veri
+      const shown = p < 0.62 ? p : p < 0.72 ? 0.62 + (p - 0.62) * 0.25 : 0.645 + (p - 0.72) * (0.355 / 0.28);
+      const v = Math.min(100, Math.round(shown * 100));
+      pct.textContent = v + "%"; fill.style.width = v + "%"; camel.style.left = "calc(" + v + "% - 14px)";
+      const idx = Math.min(pool.length - 1, Math.floor(p * pool.length));
+      if (idx !== lastIdx) { lastIdx = idx; msg.textContent = pool[idx]; msg.classList.remove("ld-in"); void msg.offsetWidth; msg.classList.add("ld-in"); }
+      if (p >= 1) { done = true; return finish(); }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
 
-    FEAT.forEach(([bg, ic, name, what, joke], i) => {
-      const b = E("section", "i2-band zellige"); b.style.backgroundColor = bg;
-      const inn = E("div", "i2-in");
-      const top = E("div", "i2-top"); top.append(E("span", "i2-num", String(i + 1).padStart(2, "0")), M.icon(ic, "i2-ic"));
-      inn.append(top, E("h2", "i2-name", name), E("p", "i2-what", what), E("p", "i2-joke", joke));
-      b.appendChild(inn); ov.appendChild(b);
-    });
-
-    const end = E("section", "i2-band i2-end zellige"); end.style.backgroundColor = "#2438C6";
-    const ei = E("div", "i2-in");
-    const me = M.me();
-    ei.append(E("h2", "i2-name", me ? "Sei " + me + "?" : "Chi sei?"), E("p", "i2-what", "Tocca il tuo nome: il sito sa chi insultare."));
-    const pick = E("div", "i2-pick");
-    CAST.forEach(([n]) => { const b = E("button", "i2-who"); b.type = "button"; b.append(M.avatar(n), E("b", null, n)); b.addEventListener("click", () => { M.setMe(n); close(); }); pick.appendChild(b); });
-    const other = E("button", "in-other", "Non sono nessuno dei tre"); other.type = "button"; other.addEventListener("click", () => { close(); setTimeout(M.askWho, 200); });
-    ei.append(pick, other); end.appendChild(ei); ov.appendChild(end);
-
-    document.body.appendChild(ov); document.documentElement.style.overflow = "hidden";
-    skip.addEventListener("click", () => end.scrollIntoView({ behavior: "smooth" }));
+    function finish() {
+      pct.textContent = "100%"; fill.style.width = "100%"; camel.style.left = "calc(100% - 14px)";
+      msg.textContent = "Pronto. Più o meno."; tip.hidden = true;
+      ss.set();
+      if (first && !M.me()) {
+        const q = E("div", "ld-who");
+        q.append(E("p", "ld-q", "Ultima cosa: chi sei?"));
+        const g = E("div", "ld-pick");
+        C.CREW.forEach((n) => { const b = E("button", "ld-btn"); b.type = "button"; b.append(M.avatar(n), E("b", null, n)); b.addEventListener("click", (e) => { e.stopPropagation(); M.setMe(n); msg.textContent = "Daje, " + n + ". Il sito ti stava aspettando."; q.remove(); setTimeout(close, 900); }); g.appendChild(b); });
+        const other = E("button", "ld-other", "Non sono nessuno dei tre"); other.type = "button";
+        other.addEventListener("click", (e) => { e.stopPropagation(); close(); setTimeout(M.askWho, 250); });
+        q.append(g, other); box.appendChild(q);
+      } else {
+        if (M.me()) msg.textContent = "Pronto, " + M.me() + ". Più o meno.";
+        setTimeout(close, first ? 900 : 500);
+      }
+    }
     function close() {
-      store.set(); window.INTRO_ACTIVE = false;
+      ls.set(KEY); window.INTRO_ACTIVE = false;
       ov.classList.add("in-out"); setTimeout(() => { ov.remove(); document.documentElement.style.overflow = ""; if (!M.me()) M.askWho(); }, 300);
     }
-    document.addEventListener("keydown", function k(e) { if (!document.getElementById("intro")) return document.removeEventListener("keydown", k); if (e.key === "Escape") end.scrollIntoView(); });
   }
   return { shouldShow, show };
 })();

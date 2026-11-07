@@ -408,3 +408,33 @@ C.BUDGET = {
   ],
   shopping: { min: 0, max: 300, step: 10, def: 60 }
 };
+
+/* Costo extra a testa di ogni esperienza, oltre alle spese sicure (stime).
+   0 = già dentro le spese sicure (dormire, mangiare, campo standard) oppure gratis. */
+C.COSTO = {
+  "cap-club": 140, "cap-agafay": 185, "cap-darna": 320, "cap-rooftop": 45,
+  "moto-tour3": 700, "moto-pista": 0, "moto-agafay": 70, "moto-dune": 100, "moto-buggy": 55, "moto-quad": 45, "moto-noleggio": 175,
+  "des-campo": 25, "des-chigaga": 45, "des-nomadi": 0, "des-cammello": 22, "des-sandboard": 10, "des-stelle": 0,
+  "mon-tichka": 0, "mon-benhaddou": 2, "mon-dades": 0, "mon-todra": 0, "mon-arrampicata": 55, "mon-rose": 22, "mon-ourika": 0,
+  "oc-imsouane": 60, "oc-taghazout": 90, "oc-tamraght": 0, "oc-rabat": 30, "oc-paradise": 0,
+  "cit-fes": 11, "cit-merinidi": 0, "cit-volubilis": 8, "cit-oudayas": 0, "cit-jemaa": 0, "cit-hammam": 10, "cit-majorelle": 17, "cit-benyoussef": 7,
+  "cibo-tanjia": 0, "cibo-mechoui": 0, "cibo-bissara": 0, "cibo-pastilla": 0, "cibo-pesce": 0, "cibo-corso": 40, "cibo-te": 0,
+  "sfida-souk": 10, "sfida-noapp": 0, "sfida-darija": 0, "sfida-foto": 0, "sfida-tagine": 0
+};
+C.SICURI = C.BUDGET.fissi.reduce((a, f) => a + f.e, 0);
+/* stato di ogni attività per la crew: "si" (tre 🔥), "quasi" (due 🔥 e nessun 💀), "no" (almeno un 💀), "aperta" */
+C.stato = function (reaz) {
+  const by = {};
+  (reaz || []).forEach((r) => { if (String(r.attivita).includes(":")) return; const o = (by[r.attivita] = by[r.attivita] || { si: [], forse: [], no: [] }); if (o[r.voto]) o[r.voto].push(r.nome); });
+  const out = {};
+  C.ATT.forEach((a) => {
+    const v = by[a.id] || { si: [], forse: [], no: [] };
+    out[a.id] = { v, s: v.no.length ? "no" : C.CREW.every((n) => v.si.includes(n)) ? "si" : v.si.length === 2 ? "quasi" : "aperta" };
+  });
+  return out;
+};
+C.spesa = function (reaz) {
+  const st = C.stato(reaz); let dec = 0, ballo = 0; const decise = [], inballo = [];
+  C.ATT.forEach((a) => { const c = C.COSTO[a.id] || 0; if (st[a.id].s === "si") { dec += c; decise.push([a, c]); } else if (st[a.id].s === "quasi") { ballo += c; inballo.push([a, c]); } });
+  return { sicuri: C.SICURI, decise: dec, ballo, tot: C.SICURI + dec, max: C.SICURI + dec + ballo, listaDecise: decise, listaBallo: inballo };
+};

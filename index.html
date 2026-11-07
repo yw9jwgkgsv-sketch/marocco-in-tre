@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="Marocco">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -41,7 +41,7 @@
         <div class="stop"><div class="dot"></div><span class="d">5 → 8</span><b>Oceano</b><p>Imsouane, Taghazout, Agadir</p></div>
       </div>
     </div>
-    <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Rivedi l'intro</button>
+    <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Rivedi il caricamento</button>
   </div>
 </header>
 
@@ -56,6 +56,12 @@
       <button class="btn yellow" type="button" id="feed-more" style="justify-self:start">Prendimi per il culo</button>
     </div>
   </section>
+
+  <a class="card money-mini" href="budget.html" aria-label="Spesa prevista, vai al budget">
+    <div class="row-between"><span class="lab">Spesa prevista a testa</span><b class="mono" id="mm-tot">€960</b></div>
+    <div class="mbar" aria-hidden="true"><i class="m-s" id="mm-s"></i><i class="m-d" id="mm-d"></i><i class="m-b" id="mm-b"></i></div>
+    <span class="muted" id="mm-note" style="font-size:13.5px">Spese sicure. Le esperienze decise si aggiungono da sole.</span>
+  </a>
 
   <section class="sec" aria-label="Pagine">
     <div class="grid g2 tiles" id="tiles"></div>
@@ -76,7 +82,7 @@
     <div class="grid g3" id="pagella"></div>
   </section>
 
-  <footer class="foot">Prezzi e tempi sono stime al 8 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br><span class="mono">Versione 11 · 8 nov 2026</span></footer>
+  <footer class="foot">Prezzi e tempi sono stime al 8 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br><span class="mono">Versione 12 · 8 nov 2026</span></footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -157,6 +163,10 @@
     lastD = d;
     renderCalls(d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")));
     renderRoast(d);
+    const s = C.spesa(d.reazioni), max = Math.max(s.max, 1);
+    document.getElementById("mm-tot").textContent = M.eur(s.tot);
+    document.getElementById("mm-s").style.width = (s.sicuri / max) * 100 + "%"; document.getElementById("mm-d").style.width = (s.decise / max) * 100 + "%"; document.getElementById("mm-b").style.width = (s.ballo / max) * 100 + "%";
+    document.getElementById("mm-note").textContent = M.eur(s.sicuri) + " sicure" + (s.decise ? " + " + M.eur(s.decise) + " di esperienze decise" : "") + (s.ballo ? " · in ballo altri " + M.eur(s.ballo) : "") + ".";
   }
   renderRoast(lastD);
   load();

@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,37 +19,32 @@
   <div class="wrap">
     <div class="topline"><span class="eyebrow">Budget</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Per una volta <em>siamo seri</em></h1>
-    <span class="sticker ">Niente battute. Quasi.</span>
-    <p class="lead">Quanto costa davvero, a testa e andata esclusa. Accendi e spegni le cose: il totale si aggiorna.</p>
+    <span class="sticker ">Quanto spendete, a testa</span>
+    <p class="lead">Spese sicure più le esperienze che avete deciso. Si aggiorna da solo quando votate.</p>
   </div>
 </header>
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
   <div id="roast" class="roastbar" hidden aria-live="polite"></div>
-  <section class="sec bud-total" aria-live="polite">
-    <span class="eyebrow" style="color:var(--muted)">Il tuo conto, a testa</span>
-    <b class="bud-n mono" id="tot">—</b>
-    <span class="muted" id="tot3"></span>
-    <div class="bud-bar" id="bar" aria-hidden="true"></div>
-    <div class="bud-leg" id="leg"></div>
+  <section class="sec money" aria-live="polite">
+    <span class="lab">Spesa prevista a testa</span>
+    <b class="money-n mono" id="tot">€960</b>
+    <div class="mbar" aria-hidden="true"><i class="m-s" id="b-s"></i><i class="m-d" id="b-d"></i><i class="m-b" id="b-b"></i></div>
+    <div class="mleg"><span><i class="m-s"></i>Sicure <b class="mono" id="l-s"></b></span><span><i class="m-d"></i>Esperienze decise <b class="mono" id="l-d"></b></span><span><i class="m-b"></i>In ballo <b class="mono" id="l-b"></b></span></div>
+    <p class="muted" id="note" style="font-size:14px"></p>
   </section>
 
-  <section class="sec" aria-labelledby="h-fissi">
-    <div class="sec-head"><h2 id="h-fissi">Questi li spendi di sicuro</h2><span class="mono" id="fissi-tot"></span></div>
-    <ul class="list" id="fissi"></ul>
+  <section class="sec" aria-labelledby="h-dec">
+    <div class="sec-head"><h2 id="h-dec">Esperienze decise</h2><a class="btn ghost small" href="esplora.html">Vota le altre</a></div>
+    <ul class="list mlist" id="dec"></ul>
   </section>
 
-  <section class="sec" aria-labelledby="h-scelte">
-    <div class="sec-head"><h2 id="h-scelte">Questi dipendono da voi</h2><span class="mono" id="scelte-tot"></span></div>
-    <div class="grid" id="scelte" style="gap:12px"></div>
-    <div class="card" style="display:grid;gap:8px">
-      <label for="shop" class="row-between"><b>Souvenir e souk</b><span class="mono" id="shop-v"></span></label>
-      <input type="range" id="shop" style="width:100%">
-    </div>
+  <section class="sec" aria-labelledby="h-sic">
+    <div class="sec-head"><h2 id="h-sic">Spese sicure</h2><span class="mono" id="sic-tot"></span></div>
+    <ul class="list mlist" id="sic"></ul>
+    <p class="muted" style="font-size:13px">Stime all'8 novembre 2026, andata esclusa perché già pagata.</p>
   </section>
-
-  <p class="muted" style="font-size:13px">Stime al 7 novembre 2026, da verificare quando prenotate. Il volo di andata è escluso perché è già pagato.</p>
 
   <a class="nextlink" href="organizza.html">Ora prenditi una prenotazione →</a>
 </main>
@@ -61,60 +56,26 @@
 <script src="roast.js"></script>
 <script>
 (function () {
-  const { el, eur } = M;
+  const { el, db, eur } = M;
   M.start("budget");
-  const B = C.BUDGET, KEY = "marocco_budget_v1";
-  let st = {};
-  try { st = JSON.parse(M.store.get(KEY) || "{}"); } catch (e) { st = {}; }
-  B.scelte.forEach((s) => { if (s.tipo === "uno" && st[s.id] === undefined) st[s.id] = s.def; if (s.tipo === "piu" && !Array.isArray(st[s.id])) st[s.id] = []; });
-  if (st.shop === undefined) st.shop = B.shopping.def;
-  const save = () => M.store.set(KEY, JSON.stringify(st));
-  const fissiTot = B.fissi.reduce((a, f) => a + f.e, 0);
-
-  const fl = document.getElementById("fissi");
-  B.fissi.forEach((f) => fl.appendChild(el("li", { class: "bud-li" }, el("div", { style: "min-width:0" }, el("b", { text: f.t }), el("div", { class: "muted", style: "font-size:13px", text: f.nota })), el("b", { class: "mono", text: eur(f.e) }))));
-  document.getElementById("fissi-tot").textContent = eur(fissiTot);
-
-  const box = document.getElementById("scelte");
-  B.scelte.forEach((s) => {
-    const card = el("fieldset", { class: "card bud-opt" }, el("legend", { text: s.t }));
-    s.opz.forEach((o, i) => {
-      const id = "o-" + s.id + "-" + i;
-      const inp = el("input", { type: s.tipo === "uno" ? "radio" : "checkbox", name: s.id, id, value: String(i) });
-      if (s.tipo === "uno" ? st[s.id] === i : st[s.id].includes(i)) inp.checked = true;
-      inp.addEventListener("change", () => {
-        if (s.tipo === "uno") st[s.id] = i; else st[s.id] = [...card.querySelectorAll("input:checked")].map((x) => Number(x.value));
-        save(); calc();
-      });
-      card.appendChild(el("label", { class: "bud-choice", for: id }, inp, el("span", { text: o.t }), el("b", { class: "mono", text: o.e ? "+" + eur(o.e) : "€0" })));
-    });
-    box.appendChild(card);
-  });
-  const shop = document.getElementById("shop");
-  shop.min = B.shopping.min; shop.max = B.shopping.max; shop.step = B.shopping.step; shop.value = st.shop;
-  shop.addEventListener("input", () => { st.shop = Number(shop.value); save(); calc(); });
-
-  const COL = { fissi: "var(--blu)", capodanno: "var(--c-capodanno)", moto: "var(--c-moto)", surf: "var(--c-oceano)", campo: "var(--c-deserto)", extra: "var(--c-montagna)", shop: "var(--c-cibo)" };
-  function calc() {
-    const parts = [["Sicuri", fissiTot, COL.fissi]];
-    let sc = 0;
-    B.scelte.forEach((s) => {
-      const v = s.tipo === "uno" ? s.opz[st[s.id]].e : st[s.id].reduce((a, i) => a + s.opz[i].e, 0);
-      sc += v; if (v) parts.push([s.t, v, COL[s.id]]);
-    });
-    sc += st.shop; if (st.shop) parts.push(["Souk", st.shop, COL.shop]);
-    const tot = fissiTot + sc;
-    document.getElementById("tot").textContent = eur(tot);
-    document.getElementById("tot3").textContent = "In tre: " + eur(tot * 3) + " · al giorno: circa " + eur(tot / 11) + " a testa";
-    document.getElementById("scelte-tot").textContent = "+" + eur(sc);
-    document.getElementById("shop-v").textContent = eur(st.shop);
-    const bar = document.getElementById("bar"); bar.textContent = "";
-    const leg = document.getElementById("leg"); leg.textContent = "";
-    parts.forEach(([l, v, c]) => { bar.appendChild(el("i", { style: "flex:" + v + ";background:" + c, title: l + " " + eur(v) })); leg.appendChild(el("span", null, el("i", { style: "background:" + c }), l + " " + eur(v))); });
-    document.getElementById("roast").hidden = false;
-    R.bar("budget", { persone: [], budgetTot: tot, moto: st.moto, capodanno: st.capodanno }, M.me());
+  const sic = document.getElementById("sic");
+  C.BUDGET.fissi.forEach((f) => sic.appendChild(el("li", null, el("div", { style: "min-width:0" }, el("b", { text: f.t }), el("div", { class: "muted", style: "font-size:13.5px", text: f.nota })), el("b", { class: "mono", text: eur(f.e) }))));
+  document.getElementById("sic-tot").textContent = eur(C.SICURI);
+  function render(reaz) {
+    const s = C.spesa(reaz), max = Math.max(s.max, 1);
+    document.getElementById("tot").textContent = eur(s.tot);
+    document.getElementById("b-s").style.width = (s.sicuri / max) * 100 + "%";
+    document.getElementById("b-d").style.width = (s.decise / max) * 100 + "%";
+    document.getElementById("b-b").style.width = (s.ballo / max) * 100 + "%";
+    document.getElementById("l-s").textContent = eur(s.sicuri); document.getElementById("l-d").textContent = eur(s.decise); document.getElementById("l-b").textContent = eur(s.ballo);
+    document.getElementById("note").textContent = s.ballo ? "Se dite sì anche a quelle in ballo, si arriva a " + eur(s.max) + ". In tre: " + eur(s.tot * 3) + " oggi." : "In tre: " + eur(s.tot * 3) + ".";
+    const dec = document.getElementById("dec"); dec.textContent = "";
+    if (!s.listaDecise.length && !s.listaBallo.length) dec.appendChild(el("li", { class: "empty", text: "Ancora niente di deciso. Su Esplora, tre 🔥 sulla stessa cosa e il costo arriva qui." }));
+    s.listaDecise.forEach(([a, c]) => dec.appendChild(el("li", null, el("div", { style: "min-width:0" }, el("b", { text: a.t }), el("div", { class: "muted", style: "font-size:13.5px", text: a.quando })), el("b", { class: "mono", text: c ? "+" + eur(c) : "gratis" }))));
+    s.listaBallo.forEach(([a, c]) => dec.appendChild(el("li", { class: "ballo" }, el("div", { style: "min-width:0" }, el("b", { text: a.t }), el("div", { class: "muted", style: "font-size:13.5px", text: "In ballo: manca un sì" })), el("b", { class: "mono muted", text: c ? "+" + eur(c) : "gratis" }))));
   }
-  calc();
+  async function load() { const d = await db.many(["reazioni", "persone"]); render(d.reazioni); R.bar("budget", { persone: [] }, M.me()); }
+  render([]); load(); db.subscribe(["reazioni"], load);
 })();
 </script>
 </body>
