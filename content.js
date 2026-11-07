@@ -31,7 +31,7 @@ C.ATT = [
     joke: "Fuochi d'artificio: le stelle. Bagno: una tenda. Ricordi: eterni." },
   { id: "cap-darna", cat: "capodanno", t: "Cena-spettacolo al Comptoir Darna", dove: "Marrakech, Hivernage", quando: "31 dic", prezzo: "€320", durata: "sera", follia: 2, tipo: "classico",
     desc: "3.500 dirham a testa da bere escluso, con musicisti, danzatrici e DJ. Cancellabile con rimborso fino al 24 dicembre.",
-    joke: "Augusto ha calcolato il ROI di questa cena. Negativo. Ma «tranquilo, è un investimento»." },
+    joke: "Per sentirvi ricchi una sera e poveri per dieci giorni. Daje." },
   { id: "cap-rooftop", cat: "capodanno", t: "Countdown su un rooftop della medina", dove: "Marrakech, medina", quando: "31 dic", prezzo: "€30–60", durata: "sera", follia: 2, tipo: "locale",
     desc: "Cena su una terrazza con vista sui tetti e sulla Koutoubia, poi taxi verso l'Hivernage. In medina l'alcol si trova poco: chiedete prima di prenotare.",
     joke: "Romantico. Siete in tre. Fate voi." },
@@ -171,7 +171,7 @@ C.ATT = [
   // SFIDE
   { id: "sfida-souk", cat: "sfide", t: "La sfida del souk", dove: "Fes o Marrakech", quando: "un pomeriggio", prezzo: "il prezzo delle babbucce", durata: "1 ora", follia: 3, tipo: "esperienza",
     desc: "Ognuno compra lo stesso oggetto, per esempio un paio di babbucce, in un negozio diverso. Vince chi paga meno. Regola d'oro: partite da un terzo del primo prezzo.",
-    joke: "Davide proverà a vincere citando il codice civile. Augusto con la curva di domanda. Vincerà il venditore. Porra." },
+    joke: "Davide proverà a vincere citando il codice civile. Vincerà il venditore. Porra." },
   { id: "sfida-noapp", cat: "sfide", t: "La medina senza Google Maps", dove: "Fes", quando: "29 dic", prezzo: "gratis", durata: "1–2 ore", follia: 4, tipo: "esperienza",
     desc: "Ognuno da solo raggiunge un punto deciso prima, per esempio Bab Boujloud, senza guardare il telefono. Fissate un orario limite e tenete il telefono acceso in tasca.",
     joke: "Se dopo due ore qualcuno non torna, ha vinto la medina." },
@@ -276,8 +276,9 @@ C.RUOLI = ["Autista ufficiale", "Cassiere", "Negoziatore del souk", "Navigatore"
 C.SONDAGGI = [
   { id: "tossico", q: "Chi è il più tossico della crew?" },
   { id: "whatsapp", q: "Chi chiama il gruppo più volte su WhatsApp?" },
+  { id: "rilassato", q: "Chi torna dal Marocco più rilassato del cammello?" },
+  { id: "teforte", q: "Chi chiederà il tè alla menta «ma de quello forte»?" },
   { id: "causa", q: "Chi farà causa a un venditore del souk?" },
-  { id: "businessplan", q: "Chi fa il business plan anche per un tè?" },
   { id: "sorca", q: "Chi dice «la sorca» più volte in un giorno?" },
   { id: "minchia", q: "Chi dice «minchia» davanti a una guida?" },
   { id: "portoghese", q: "Chi tratterà nel souk in portoghese?" },

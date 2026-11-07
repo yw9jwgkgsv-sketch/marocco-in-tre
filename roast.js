@@ -52,7 +52,7 @@ window.R = (function () {
     const S = stats(d), L = Object.values(S), out = [];
     const add = (tit, s, frase) => s && out.push({ t: tit, n: s.n, f: frase });
     const budg = L.filter((s) => s.prof && s.prof.budget);
-    if (budg.length >= 2) { const s = minBy(budg, (x) => Number(x.prof.budget)); add(s.n === "Augusto" ? "L'Economista Braccino" : "Il Braccino", s, "Ahó, " + s.n + " ha messo " + E(s.prof.budget) + " de budget. Co' " + E(s.prof.budget) + " in Marocco ce compri un tappeto e la scusa pe' restà a casa. Guarda questo tossico."); }
+    if (budg.length >= 2) { const s = minBy(budg, (x) => Number(x.prof.budget)); add("Il Braccino", s, "Ahó, " + s.n + " ha messo " + E(s.prof.budget) + " de budget. Co' " + E(s.prof.budget) + " in Marocco ce compri un tappeto e la scusa pe' restà a casa. Guarda questo tossico."); }
     const cod = maxBy(L, (s) => s.no); if (cod && cod.no >= 3) add("Il Cacasotto", cod, cod.n + " ha detto «Neanche morto» a " + cod.no + " attività. Minchia, ha più paura lui del cammello che il cammello di lui.");
     const ind = maxBy(L, (s) => s.forse); if (ind && ind.forse >= 3) add("L'Indeciso", ind, ind.n + ": " + ind.forse + " volte «Forse». Esageruma nen co' 'ste decisioni, eh. Decidi, tossico.");
     const tox = maxBy(L, (s) => s.folli); if (tox && tox.folli >= 2) add("Il Tossico Supremo", tox, tox.n + " vuole fare " + tox.folli + " cose da follia 4 o 5. Tossico certificato, serve un tutore legale. Caralho.");
@@ -107,12 +107,9 @@ window.R = (function () {
     "«Obiezione, vostro onore»: Davide al cammello che non parte. Respinta. Caralho.",
     "Davide ha mandato un vocale di 9 minuti per chiedere se il 29 è martedì. È martedì, dottore.",
     "Quando il venditore dirà «prezzo speciale per te», Davide chiederà le condizioni generali di contratto. Puta que pariu.",
-    "Augusto studia economia a Piacenza. Ha già fatto il business plan del tagine: margine negativo, ma ottima esperienza.",
-    "Augusto proverà a spiegare domanda e offerta a un venditore del souk. Il venditore gli venderà un tappeto. Suave.",
-    "Augusto calcolerà il ROI del Capodanno a €320. Risultato: «Tranquilo, è un investimento». Non lo è.",
     "Piacenza sta a Milano come Fes sta a Marrakech: tutti dicono che è vicina, nessuno ci va. Vero, Augusto? Bora.",
-    "Augusto chiederà il cambio euro-dirham a tre banche diverse per guadagnare 40 centesimi. Economista della sorca.",
-    "Davide chiama, Augusto fa i conti, Alessandro fa il sito. Il viaggio, intanto, non lo organizza nessuno. Foda-se.",
+    "Augusto dirà «tranquilo, suave» anche quando il cammello gli morde lo zaino. Porra.",
+    "Davide chiama, Augusto dice «suave», Alessandro fa il sito. Il viaggio, intanto, non lo organizza nessuno. Foda-se.",
     "Davide ha chiamato anche mentre scrivevamo questa frase. Non rispondete, è una trappola.",
     "{X}: «tranquilo, suave, bora». Tre parole e ha già perso il passaporto. Porra.",
     "Il saluzzese chiede se il tagine è buono come la bagna cauda. No, e mo' magna.",
@@ -129,7 +126,19 @@ window.R = (function () {
     "Tramonto nel deserto. Er romano: «Daje, bello». Il saluzzese: «Esageruma nen». Er palermitano: «Minchia». Poesia.",
     "Er palermitano dice «talìa» a ogni cammello. I cammelli, a loro volta, talìano lui. Male.",
     "Il saluzzese ha portato la giacca a vento da montagna. Per una volta, il più furbo della crew.",
-    "Er romano parla col venditore come al mercato di Porta Portese. Il venditore è più romano de lui."
+    "Er romano parla col venditore come al mercato di Porta Portese. Il venditore è più romano de lui.",
+    "{X} ha chiesto alla guida se a Ketama si fa «il giro panoramico». Panoramico per chi, tossico?",
+    "{X} sente «bomba» e pensa ai fuochi di Capodanno. {Y} pensa ad altro. {TOX}",
+    "{X} dice che vuole andare nel Rif «per le montagne». Le montagne. Certo. Mortacci.",
+    "Il cammello è più rilassato de {X}. E il cammello non s'è fatto niente. Suave.",
+    "{X} ha chiesto un tè alla menta «ma de quello forte». È tè, tossico. Solo tè.",
+    "Er palermitano vede un campo verde e dice «minchia, che bella menta». Non è menta, picciotto.",
+    "Il saluzzese: «Esageruma nen». Detto da uno che a Ketama voleva fermarsi tre giorni.",
+    "A Chefchaouen è tutto blu. Pure gli occhi de {X}, a giudicare dalle foto. Porra.",
+    "{X}: «Bora, una bomba e poi Jemaa el-Fnaa». La bomba era un msemen col miele. Fidatevi.",
+    "Promemoria del sito: in Marocco la legge sulle canne non scherza. {X}, il sito non viene a prenderti in caserma. Caralho.",
+    "{X} torna dal deserto e dice «ho visto cose». Erano le stelle, tossico. Erano solo le stelle.",
+    "Il tribunale non ha ancora votato chi torna più rilassato del cammello, ma il favorito è {X}. {END}"
   ];
   function feed(d, n, seed) {
     const seen = new Set(), T = [];
@@ -186,7 +195,7 @@ window.R = (function () {
   /* -------- reazioni alle azioni -------- */
   const REACT = {
     si: ["Fatto. Poi però ce vieni davvero, tossico.", "Ci sta. Vediamo se lo dici pure il giorno prima.", "Amunì! Anzi, yallah.", "Bora, caralho!", "Suave. Ci sta."],
-    si_folle: ["Follia confermata. Guarda questo tossico.", "Questa te costa un osso. Daje.", "Puta merda, che coraggio. O che incoscienza."],
+    si_folle: ["Follia confermata. Guarda questo tossico.", "Questa te costa un osso. Daje.", "Puta merda, che coraggio. O che incoscienza.", "Tossico certificato. Più del Rif."],
     forse: ["«Forse». Esageruma nen, eh.", "Un altro forse. Il Marocco non aspetta te, tossico.", "Forse. Come quando dicevi che da San Paolo tornavi presto."],
     no: ["Cacasotto.", "Neanche morto? Va bene, morirai de noia.", "Minchia, ma quanta paura hai?", "Ma la sorca. Coraggio zero.", "Que merda, vacilão.", "Porra, mano, che paura."],
     profilo: ["Profilo salvato. Ora tutti sanno quanto sei braccino.", "Salvato. Il tribunale prende nota.", "Fatto. Valeu."],

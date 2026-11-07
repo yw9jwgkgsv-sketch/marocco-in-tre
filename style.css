@@ -365,3 +365,29 @@ footer.foot{color:var(--muted);font-size:13px;padding-block:6px 10px}
 .in-nb{border:1px solid rgba(255,255,255,.3);background:transparent;color:var(--hero-ink);border-radius:12px;padding:11px 18px;font-weight:700;font-size:15px;cursor:pointer}
 .in-nb:disabled{opacity:.35}
 .in-nb-main{background:var(--giallo);color:var(--giallo-ink);border-color:var(--giallo);flex:1;max-width:220px}
+
+/* intro v3: colori per schermata, testi brevi */
+.intro{transition:background-color .5s ease}
+.intro .in-eye,.intro .in-brand{color:rgba(255,255,255,.78)}
+.intro .in-sub{color:rgba(255,255,255,.88);font-size:19px}
+.intro .in-hand{color:#fff;font-size:28px}
+.intro .in-row span{color:rgba(255,255,255,.82)}
+.intro .in-big{font-size:clamp(40px,11.5vw,78px)}
+.in-votes-big{max-width:420px}
+.in-votes-big .in-vote{background:#fff;color:#121633;border:0;padding:12px 6px;font-size:14px}
+.in-votes-big .in-vote i{font-size:28px}
+.in-cta{justify-self:start;font-size:17px;padding:14px 22px}
+.in-hint{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);margin-top:6px}
+
+/* home: le tue cose da fare */
+.steps{display:grid;gap:8px}
+.step{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:14px;border-radius:16px;background:var(--surface);border:1.5px solid var(--line);text-decoration:none;color:var(--ink);box-shadow:var(--shadow);cursor:pointer;text-align:left;font:inherit;width:100%}
+.step-n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--giallo);color:var(--giallo-ink);font-family:var(--f-display);font-weight:800;font-size:17px}
+.step-t{display:grid;gap:1px;min-width:0}
+.step-t b{font-family:var(--f-display);font-size:18px}
+.step-t small{font-size:13.5px;color:var(--muted)}
+.step-go{font-weight:800;color:var(--blu);font-size:14px}
+.step.ok{background:var(--verde-soft);border-color:transparent;box-shadow:none}
+.step.ok .step-n{background:var(--verde);color:#fff}
+.tile{min-height:120px}
+.tile b{font-size:22px}

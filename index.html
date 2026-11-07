@@ -6,7 +6,7 @@
 <title>Marocco in tre</title>
 <meta name="description" content="Fes, Capodanno a Marrakech, deserto in moto e surf. Tre amici, undici giorni.">
 <meta property="og:title" content="Marocco in tre · 29/12 → 8/1">
-<meta property="og:description" content="Tre amici, undici giorni, un solo cammello che vi giudica.">
+<meta property="og:description" content="Tre tossici, undici giorni, un sito che vi prende per il culo.">
 <meta name="theme-color" content="#1A2272">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -20,100 +20,51 @@
 </head>
 <body>
 <header class="pagehead zellige hero">
-  <div class="wrap" style="gap:18px">
-    <div class="topline"><span class="eyebrow">29 dic 2026 → 8 gen 2027 · in tre</span><span class="me-chip" id="me-chip"></span></div>
-    <div style="display:grid;gap:10px">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="sticker" id="countdown-sticker">Partenza tra — giorni</span><span class="sticker rosa">Guarda questi tossici</span><button type="button" id="replay" class="btn ghost small" style="color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Rivedi l'intro</button></div>
-      <h1 style="font-size:clamp(52px,13vw,112px)">Marocco <em>in tre</em></h1>
-      <p class="lead">Tre tossici, uno de Roma, uno de Saluzzo e uno de Palermo, ex Erasmus a San Paolo. Undici giorni in Marocco. Il sito vede tutto, ricorda tutto e ve lo rinfaccia.</p>
-    </div>
-    <div class="grid g4" aria-label="Conto alla rovescia">
-      <div class="kpi"><b id="cd-d">—</b><span>giorni</span></div>
-      <div class="kpi"><b id="cd-h">—</b><span>ore</span></div>
-      <div class="kpi"><b id="cd-m">—</b><span>minuti</span></div>
-      <div class="kpi"><b>11</b><span>giorni di viaggio</span></div>
-    </div>
-    <div class="route" aria-label="Percorso">
-      <div class="stops">
-        <div class="stop"><div class="dot"></div><span class="d">29 · 30</span><b>Fes</b><p>Medina, Volubilis, notte a Rabat</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">31 · 1</span><b>Marrakech</b><p>Capodanno all'Hivernage</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">2</span><b>Atlante</b><p>Tizi n'Tichka, Aït Benhaddou</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">2 · 3</span><b>Valli</b><p>Dadès e Todra</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">3 · 4</span><b>Deserto</b><p>Dune, moto, tenda</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">5 → 8</span><b>Oceano</b><p>Imsouane, Taghazout, Agadir</p></div>
-      </div>
-    </div>
+  <div class="wrap" style="gap:14px">
+    <div class="topline"><span class="eyebrow">29 dic → 8 gen · in tre</span><span class="me-chip" id="me-chip"></span></div>
+    <span class="sticker" id="countdown-sticker">Partenza tra — giorni</span>
+    <h1 style="font-size:clamp(52px,13vw,112px)">Marocco <em>in tre</em></h1>
+    <p class="lead">Per organizzare il viaggio. E per prendervi per il culo.</p>
+    <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Rivedi l'intro</button>
   </div>
 </header>
 
 <main class="wrap">
-  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run. Un minuto.</div>
-  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+
+  <section class="sec" aria-labelledby="h-todo">
+    <div class="sec-head"><h2 id="h-todo">Le tue cose da fare</h2><span class="mono muted" id="todo-count"></span></div>
+    <div class="steps" id="steps"></div>
+  </section>
 
   <section class="sec" aria-labelledby="h-giudica">
     <div class="feed-card">
       <span class="roast-lab">Il sito vi giudica</span>
-      <h3 id="h-giudica">Guarda questi tossici</h3>
-      <ul class="feed" id="feed"></ul>
-      <button class="btn yellow" type="button" id="feed-more" style="justify-self:start">Prendimi per il culo</button>
+      <ul class="feed" id="feed" aria-labelledby="h-giudica"></ul>
+      <button class="btn yellow small" type="button" id="feed-more" style="justify-self:start" aria-describedby="h-giudica">Un'altra</button>
+      <span id="h-giudica" hidden>Battute del giorno</span>
     </div>
+  </section>
+
+  <section class="sec" aria-label="Pagine">
+    <div class="grid g2" id="tiles"></div>
   </section>
 
   <section class="sec" aria-labelledby="h-call">
     <div class="card callbox">
-      <span class="eyebrow" style="color:var(--rosa)">Contatore ufficiale</span>
       <b class="call-n mono" id="call-n">600.000</b>
-      <h3 id="h-call" style="font-size:22px">chiamate WhatsApp di Davide per organizzare il viaggio</h3>
-      <p class="muted" id="call-last">Il viaggio, intanto, è sempre lo stesso.</p>
-      <button class="btn" type="button" id="call-btn" style="justify-self:start;background:var(--rosa);color:#fff">Davide ha chiamato di nuovo</button>
+      <h3 id="h-call" style="font-size:20px">chiamate WhatsApp di Davide per organizzare il viaggio</h3>
+      <button class="btn" type="button" id="call-btn" style="justify-self:start;background:var(--rosa);color:#fff">Ha chiamato di nuovo</button>
+      <p class="muted" id="call-last" style="font-size:13px"></p>
     </div>
   </section>
 
   <section class="sec" aria-labelledby="h-pagella">
-    <div class="sec-head"><h2 id="h-pagella">La pagella</h2><p>Titoli assegnati in base a quello che fate sul sito. Si aggiornano da soli, e non si contestano.</p></div>
+    <div class="sec-head"><h2 id="h-pagella">La pagella</h2></div>
     <div class="grid g3" id="pagella"></div>
   </section>
 
-  <section class="sec" aria-labelledby="h-stato">
-    <div class="sec-head"><h2 id="h-stato">Stato della missione</h2><span class="hand muted" id="stato-joke"></span></div>
-    <div class="grid g4">
-      <a class="kpi" href="crew.html" style="text-decoration:none;color:inherit"><b id="k-risp">—</b><span>hanno risposto</span></a>
-      <a class="kpi" href="organizza.html" style="text-decoration:none;color:inherit"><b id="k-pren">—</b><span>prenotazioni fatte</span></a>
-      <a class="kpi" href="organizza.html#cassa" style="text-decoration:none;color:inherit"><b id="k-spese">—</b><span>spesi finora</span></a>
-      <a class="kpi" href="esplora.html#match" style="text-decoration:none;color:inherit"><b id="k-match">—</b><span>match di gruppo</span></a>
-    </div>
-    <div class="card" id="verdetto" style="display:grid;gap:6px;background:var(--blu-soft);border-color:transparent">
-      <span class="eyebrow" style="color:var(--blu)">Il verdetto</span>
-      <h3 id="v-title" style="font-size:26px">Mancano le risposte</h3>
-      <p id="v-why" class="muted">Quando rispondete tutti e tre nella pagina Crew, qui compare lo scenario scelto.</p>
-    </div>
-  </section>
-
-  <section class="sec" aria-labelledby="h-pagine">
-    <div class="sec-head"><h2 id="h-pagine">Dove andare</h2></div>
-    <div class="grid g3" id="tiles"></div>
-  </section>
-
-  <section class="sec" aria-labelledby="h-top">
-    <div class="sec-head"><h2 id="h-top">Le più volute</h2><a class="btn ghost small" href="esplora.html">Vota le altre</a></div>
-    <ul class="list" id="top"><li class="empty">Ancora nessun voto. Andate su Esplora e dite «Ci sto».</li></ul>
-  </section>
-
-  <section class="sec" aria-labelledby="h-muro">
-    <div class="sec-head"><h2 id="h-muro">Ultime dal muro</h2><a class="btn ghost small" href="muro.html">Scrivi qualcosa</a></div>
-    <div class="grid g3" id="muro"><p class="empty">Il muro è vuoto. Qualcuno deve pur iniziare.</p></div>
-  </section>
-
-  <section class="sec" aria-labelledby="h-frase">
-    <div class="card" style="display:grid;gap:6px">
-      <span class="eyebrow" style="color:var(--verde)" id="h-frase">Frase del giorno in darija</span>
-      <h3 style="font-size:32px" id="f-dj">—</h3>
-      <p><b id="f-it"></b> · <span class="mono muted" id="f-pr"></span></p>
-      <p class="hand" style="color:var(--rosa)" id="f-uso"></p>
-    </div>
-  </section>
-
-  <footer class="foot">Prezzi e tempi sono stime al 7 novembre 2026, da verificare quando prenotate. Serve il passaporto: la carta d'identità non basta.<br><span class="mono">Versione 8 · 7 nov 2026</span></footer>
+  <footer class="foot">Prezzi e tempi sono stime al 7 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br><span class="mono">Versione 9 · 7 nov 2026</span></footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -124,91 +75,80 @@
 <script src="intro.js"></script>
 <script>
 (function () {
-  const { el, db, icon, eur } = M;
+  const { el, db, icon } = M;
   const intro = Intro.shouldShow();
   if (intro) window.INTRO_ACTIVE = true;
   M.start("home");
   if (intro) Intro.show();
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
 
-  // conto alla rovescia: atterraggio nella notte tra 28 e 29 dicembre
   const dep = new Date(2026, 11, 28, 23, 30, 0);
-  function tick() {
-    let s = Math.max(0, Math.floor((dep - new Date()) / 1000));
-    const d = Math.floor(s / 86400); s -= d * 86400; const h = Math.floor(s / 3600); s -= h * 3600; const m = Math.floor(s / 60);
-    document.getElementById("cd-d").textContent = d; document.getElementById("cd-h").textContent = h; document.getElementById("cd-m").textContent = m;
-    document.getElementById("countdown-sticker").textContent = d > 0 ? "Partenza tra " + d + " giorni" : "Siamo in Marocco!";
-  }
-  tick(); setInterval(tick, 30000);
+  function tick() { const d = Math.max(0, Math.floor((dep - new Date()) / 86400000)); document.getElementById("countdown-sticker").textContent = d > 0 ? "Partenza tra " + d + " giorni" : "Siamo in Marocco!"; }
+  tick(); setInterval(tick, 60000);
 
-  // frase del giorno
-  const idx = Math.floor(Date.now() / 86400000) % C.DARIJA.length; const f = C.DARIJA[idx];
-  document.getElementById("f-dj").textContent = f.dj; document.getElementById("f-it").textContent = f.it;
-  document.getElementById("f-pr").textContent = f.pr; document.getElementById("f-uso").textContent = f.uso;
-
-  // tessere
+  /* le pagine, ognuna con il suo «per non...» */
   const TILES = [
-    ["esplora.html", "esplora", "Esplora", C.ATT.length + " cose da fare, da votare", "var(--c-moto)"],
-    ["giro.html", "giro", "Il giro", "Giorno per giorno, con la mappa", "var(--c-oceano)"],
-    ["crew.html", "crew", "La crew", "Risposte, verdetto e tribunale", "var(--c-capodanno)"],
-    ["organizza.html", "organizza", "Organizza", "Chi prenota, chi paga", "var(--c-montagna)"],
-    ["kit.html", "kit", "Il kit", "Valigia, darija, prezzi, cambio", "var(--c-deserto)"],
-    ["muro.html", "muro", "Il muro", "Frasi celebri e voti ai tagine", "var(--c-cibo)"]
+    ["esplora.html", "esplora", "Esplora", "Per non passare 11 giorni in riad", "var(--c-moto)"],
+    ["crew.html", "crew", "Crew", "Per non decidere coi vocali di Davide", "var(--c-capodanno)"],
+    ["organizza.html", "organizza", "Organizza", "Per non restare a terra", "var(--c-deserto)"],
+    ["giro.html", "giro", "Il giro", "Per non perdervi", "var(--c-oceano)"],
+    ["kit.html", "kit", "Kit", "Per non fare figure de merda", "var(--c-montagna)"],
+    ["muro.html", "muro", "Muro", "Per non dimenticarle, le figure de merda", "var(--c-cibo)"]
   ];
   const tiles = document.getElementById("tiles");
   TILES.forEach(([href, ic, t, sub, col]) => tiles.appendChild(el("a", { class: "tile", href, style: "--cat:" + col }, icon(ic), el("b", { text: t }), el("span", { text: sub }))));
 
-  const JOKES = ["Nessuno ha ancora prenotato niente. Classico.", "Qualcuno lavora, qualcuno guarda.", "Si va avanti. Lentamente, ma si va.", "Quasi pronti. Quasi."];
-
-  async function load() {
-    const d = await db.many(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"]);
-    renderRoast(d);
-    const pers = d.persone, todo = d.todo, spese = d.spese, reaz = d.reazioni, muro = d.muro;
-    document.getElementById("k-risp").textContent = pers.length + "/" + M.GROUP;
-    const done = todo.filter((t) => t.fatto).length;
-    document.getElementById("k-pren").textContent = done + "/" + todo.length;
-    document.getElementById("k-spese").textContent = eur(spese.reduce((t, s) => t + (Number(s.importo) || 0), 0));
-    const ratio = todo.length ? done / todo.length : 0;
-    document.getElementById("stato-joke").textContent = JOKES[ratio === 0 ? 0 : ratio < 0.4 ? 1 : ratio < 0.8 ? 2 : 3];
-
-    // match e classifica
-    const crew = new Set(pers.map((p) => p.nome));
-    const by = {};
-    const calls = reaz.filter((r) => String(r.attivita).startsWith("chiama:"));
-    renderCalls(calls);
-    reaz.filter((r) => !String(r.attivita).startsWith("chiama:")).forEach((r) => { (by[r.attivita] = by[r.attivita] || { si: [], forse: [], no: [] })[r.voto] && by[r.attivita][r.voto].push(r.nome); });
-    const n = Math.max(crew.size, 1);
-    const matchCount = Object.values(by).filter((v) => v.si.length >= Math.min(n, M.GROUP) && v.si.length >= 2).length;
-    document.getElementById("k-match").textContent = matchCount;
-
-    const ranked = C.ATT.map((a) => ({ a, si: (by[a.id] || { si: [] }).si })).filter((x) => x.si.length).sort((x, y) => y.si.length - x.si.length).slice(0, 5);
-    const top = document.getElementById("top"); top.textContent = "";
-    if (!ranked.length) top.appendChild(el("li", { class: "empty", text: "Ancora nessun voto. Andate su Esplora e dite «Ci sto»." }));
-    ranked.forEach(({ a, si }, i) => top.appendChild(el("li", null,
-      el("a", { href: "esplora.html#" + a.id, class: "row-between", style: "text-decoration:none;color:inherit" },
-        el("span", { style: "display:flex;gap:12px;align-items:center;min-width:0" },
-          el("b", { class: "mono", style: "font-size:18px;color:var(--muted)", text: String(i + 1) }),
-          el("span", { style: "min-width:0" }, el("b", { text: a.t }), el("div", { class: "muted", style: "font-size:13px", text: C.CATS[a.cat].nome + " · " + a.prezzo }))),
-        el("span", { class: "avs" }, si.map((nm) => M.avatar(nm)))))));
-
-    // muro
-    const mb = document.getElementById("muro"); mb.textContent = "";
-    const posts = muro.slice().sort((a, b) => String(b.creato).localeCompare(String(a.creato))).slice(0, 3);
-    if (!posts.length) mb.appendChild(el("p", { class: "empty", text: "Il muro è vuoto. Qualcuno deve pur iniziare." }));
-    posts.forEach((p) => mb.appendChild(el("div", { class: "post postit" }, M.avatar(p.nome), el("div", { style: "min-width:0;display:grid;gap:4px" }, el("div", { class: "txt", text: p.testo }), el("div", { class: "when", text: p.nome + " · " + M.ago(p.creato) })))));
-
-    // verdetto
-    const v = M.decide(pers);
-    if (v.pick) {
-      document.getElementById("v-title").textContent = v.pick + " · " + C.SCEN[v.pick].nome + " · " + eur(C.SCEN[v.pick].costo) + " a testa";
-      document.getElementById("v-why").textContent = v.why.join(" · ") + ".";
+  /* le cose da fare di chi guarda */
+  function renderSteps(d) {
+    const box = document.getElementById("steps"); box.textContent = "";
+    const me = M.me();
+    if (!me) {
+      box.appendChild(el("button", { type: "button", class: "step", onclick: M.askWho }, el("span", { class: "step-n", text: "1" }), el("span", { class: "step-t" }, el("b", { text: "Dicci chi sei" }), el("small", { text: "Così il sito sa chi insultare." })), el("span", { class: "step-go", text: "Vai" })));
+      document.getElementById("todo-count").textContent = "";
+      return;
     }
+    const prof = d.persone.find((p) => p.nome === me);
+    const voti = d.reazioni.filter((r) => r.nome === me && !String(r.attivita).startsWith("chiama:")).length;
+    const presa = d.todo.some((t) => t.chi === me);
+    const nItems = C.VALIGIA.reduce((a, g) => a + g.items.length, 0);
+    const val = Math.round((d.valigia.filter((v) => v.nome === me && v.fatto).length / nItems) * 100);
+    const S = [
+      { ok: !!(prof && prof.budget && prof.scenario), t: "Compila il profilo", s: "Per non far decidere tutto a Davide.", href: "crew.html#f-prof" },
+      { ok: voti >= 20, t: "Vota le attività", s: voti ? "Ne hai votate " + voti + " su " + C.ATT.length + ". Arriva almeno a 20." : "Per non passare 11 giorni in riad.", href: "esplora.html" },
+      { ok: presa, t: "Prenditi una prenotazione", s: "Per non restare a terra l'8 gennaio.", href: "organizza.html" },
+      { ok: val >= 80, t: "Fai la valigia", s: val ? "Sei al " + val + "%." : "Per non partire in ciabatte.", href: "kit.html#valigia" }
+    ];
+    const done = S.filter((x) => x.ok).length;
+    document.getElementById("todo-count").textContent = done + " su " + S.length;
+    S.forEach((x, k) => box.appendChild(el("a", { class: "step" + (x.ok ? " ok" : ""), href: x.href },
+      el("span", { class: "step-n", text: x.ok ? "✓" : String(k + 1) }),
+      el("span", { class: "step-t" }, el("b", { text: x.t }), el("small", { text: x.ok ? "Fatto. Non te ne vantare." : x.s })),
+      el("span", { class: "step-go", text: x.ok ? "" : "Vai" }))));
+    if (done === S.length) box.appendChild(el("p", { class: "hand", style: "color:var(--verde)", text: "Hai fatto tutto, " + me + ". Ora rompi le palle agli altri due." }));
   }
+
+  let lastD = { persone: [], reazioni: [], todo: [], valigia: [] };
+  function renderRoast(d) {
+    const f = document.getElementById("feed"); f.textContent = "";
+    R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t })));
+    const pg = document.getElementById("pagella"); pg.textContent = "";
+    const T = R.titles(d);
+    if (!T.length) pg.appendChild(el("div", { class: "pagella" }, el("span", { class: "tit", text: "Tutti uguali" }), el("p", { text: "Per ora siete tutti ugualmente inutili." })));
+    T.slice(0, 6).forEach((t) => pg.appendChild(el("article", { class: "pagella" },
+      el("div", { style: "display:flex;gap:10px;align-items:center" }, M.avatar(t.n), el("b", { style: "font-size:17px", text: t.n })),
+      el("span", { class: "tit", text: t.t }))));
+  }
+  document.getElementById("feed-more").addEventListener("click", () => {
+    const f = document.getElementById("feed");
+    f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:700" }), f.firstChild);
+    while (f.children.length > 3) f.removeChild(f.lastChild);
+  });
+
   function renderCalls(calls) {
     const n = 600000 + calls.length;
     document.getElementById("call-n").textContent = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     const last = calls.slice().sort((a, b) => String(b.aggiornato || "").localeCompare(String(a.aggiornato || "")))[0];
-    document.getElementById("call-last").textContent = last ? "Ultima segnalata da " + last.nome + (last.aggiornato ? ", " + M.ago(last.aggiornato) : "") + ". Il viaggio è sempre lo stesso. Porra." : "Il viaggio, intanto, è sempre lo stesso.";
+    document.getElementById("call-last").textContent = last ? "L'ultima l'ha segnata " + last.nome + ", " + M.ago(last.aggiornato) + "." : "";
   }
   document.getElementById("call-btn").addEventListener("click", async () => {
     const me = M.me(); if (!me) return M.askWho();
@@ -218,24 +158,15 @@
       load();
     } catch (e) { M.err(e); }
   });
-  let lastD = {};
-  function renderRoast(d) {
+
+  async function load() {
+    const d = await db.many(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"]);
     lastD = d;
-    const f = document.getElementById("feed"); f.textContent = "";
-    R.feed(d, 5).forEach((t) => f.appendChild(el("li", { text: t })));
-    const pg = document.getElementById("pagella"); pg.textContent = "";
-    const T = R.titles(d);
-    if (!T.length) pg.appendChild(el("div", { class: "pagella" }, el("span", { class: "tit", text: "Tutti uguali" }), el("p", { text: "La pagella si riempie quando iniziate a usare il sito. Per ora siete tutti ugualmente inutili. Talìa." })));
-    T.forEach((t) => pg.appendChild(el("article", { class: "pagella" },
-      el("div", { style: "display:flex;gap:10px;align-items:center" }, M.avatar(t.n), el("b", { style: "font-size:17px", text: t.n })),
-      el("span", { class: "tit", text: t.t }), el("p", { text: t.f }))));
+    renderCalls(d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")));
+    renderSteps(d); renderRoast(d);
   }
-  document.getElementById("feed-more").addEventListener("click", () => {
-    const f = document.getElementById("feed");
-    f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:700" }), f.firstChild);
-    while (f.children.length > 6) f.removeChild(f.lastChild);
-  });
-  renderRoast({});
+  M.onMe(() => renderSteps(lastD));
+  renderSteps(lastD); renderRoast(lastD);
   load();
   db.subscribe(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"], load);
 })();
