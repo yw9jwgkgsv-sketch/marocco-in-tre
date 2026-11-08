@@ -38,8 +38,19 @@ window.M = (function () {
   let missingShown = false;
   function needUpgrade() {
     if (missingShown) return; missingShown = true;
-    const b = document.getElementById("upgrade");
-    if (b) b.hidden = false;
+    let b = document.getElementById("upgrade");
+    if (me !== "Alessandro") { if (b) b.hidden = true; return; }   // gli altri non devono vederlo
+    if (!b) { b = el("div", { id: "upgrade", class: "banner" }); const m = document.querySelector("main"); if (m) m.prepend(b); }
+    b.hidden = false; b.className = "banner fixdb"; b.textContent = "";
+    const copy = el("button", { type: "button", class: "btn small" }, "1. Copia il codice");
+    copy.addEventListener("click", async () => {
+      try { const t = await (await fetch("schema_v3.sql", { cache: "no-store" })).text(); await navigator.clipboard.writeText(t); copy.textContent = "Copiato ✓"; }
+      catch (e) { window.open("schema_v3.sql", "_blank"); }
+    });
+    b.append(
+      el("b", { text: "Solo per te, Ale: manca un pezzo del database" }),
+      el("p", { text: "Documenti, profili e proposte non si salvano finché non lo attivi. Gli altri non vedono questo avviso. Sono 3 minuti:" }),
+      el("ol", null, el("li", null, copy), el("li", null, el("a", { class: "btn small", href: "https://supabase.com/dashboard/project/dssjsegjucnzvqlmcaaa/sql/new", target: "_blank", rel: "noopener" }, "2. Apri Supabase")), el("li", { text: "3. Incolla tutto nella pagina bianca e premi Run in basso a destra. Poi ricarica il sito." })));
   }
   function chk(r) { if (r.error) { if (isMissing(r.error)) needUpgrade(); throw r.error; } return r.data; }
 
@@ -175,7 +186,7 @@ window.M = (function () {
     if (!t) { t = el("div", { id: "toast", class: "toast", role: "status" }); document.body.appendChild(t); }
     t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2600);
   }
-  function err(e) { console.error(e); toast(isMissing(e) ? "Questa parte va attivata: guarda l'avviso in alto." : "Non salvato. Controlla la connessione e riprova."); }
+  function err(e) { console.error(e); toast(isMissing(e) || /bucket/i.test(String(e && e.message)) ? (me === "Alessandro" ? "Questa parte va attivata: guarda l'avviso in alto." : "Questa parte la deve ancora attivare Ale. Diteglielo, e chiamate Davide.") : "Non salvato. Controlla la connessione e riprova."); }
 
   /* ---------------- icone ---------------- */
   const P = {

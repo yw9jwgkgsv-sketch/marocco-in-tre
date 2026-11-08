@@ -15,64 +15,42 @@
 <meta name="apple-mobile-web-app-title" content="Marocco">
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="home2">
-<main class="wrap hm2">
+<body>
+<main class="wrap h3">
   <div class="topline hm-top"><span class="eyebrow" id="oggi">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
 
-  <article class="bp" aria-label="La tua carta d'imbarco">
-    <div class="bp-top"><span>Marocco in tre</span><span>Carta d'imbarco</span></div>
-    <div class="bp-route">
-      <span><b>FEZ</b><span>Fes, 28 dicembre</span></span>
-      <span class="pl" aria-hidden="true">✈︎</span>
-      <span class="r"><b>AGA</b><span>Agadir, 8 gennaio</span></span>
-    </div>
-    <div class="bp-f">
-      <span>Passeggero<b id="pax">—</b></span>
-      <span>Imbarco<b>23:30</b></span>
-      <span>Posto<b id="seat">Vicino a Davide</b></span>
-    </div>
-    <div class="bp-cut" aria-hidden="true"></div>
-    <div class="bp-bot">
-      <span class="bp-days"><b><span id="cd-d">0</span> giorni</b><small>«Ragazzi, quando prendiamo i voli?» Davide, finché non li abbiamo presi</small></span>
-      <span class="bp-bar" aria-hidden="true"></span>
-    </div>
-    <button type="button" class="bp-call" id="call-btn"><span>📞 Chiamate di Davide: <b id="call-n">600.000</b></span><i>Ha richiamato ＋1</i></button>
-  </article>
+  <div id="upgrade" class="banner" hidden></div>
 
-  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v3.sql del repository e premi Run.</div>
-
-  <section class="kb2">
-    <h2>7 zone.</h2>
-    <p>Dal Rif all'oceano. Ogni zona ha le sue idee: votatele, o proponetene di vostre.</p>
-    <div class="tks" data-t="viaggio scenari"></div>
+  <section class="h3-hero">
+    <b class="h3-n" id="cd-d">0</b>
+    <span class="h3-l">giorni al Marocco.</span>
+    <p class="h3-d">Si parte da Fes il 28 dicembre alle 23:30. Si torna da Agadir l'8 gennaio, passando da Londra.</p>
+    <div class="h3-msg"><span class="av" id="dav"></span><p>Ragazzi, quando prendiamo i voli?<small>Davide, ogni giorno, finché non li abbiamo presi</small></p></div>
+    <div class="h3-sand" aria-hidden="true"><span class="h3-camel">🐪</span></div>
+    <a class="h3-cue" href="#come">Come funziona ↓</a>
   </section>
 
-  <section class="kb2">
-    <h2>4 must.</h2>
-    <p>Ketama, surf, moto, deserto. Si fanno. Si decide solo come.</p>
-    <div class="tks" data-t="must sifa"></div>
+  <section class="h3-how" id="come" aria-labelledby="h-come">
+    <div class="h3-head"><h2 id="h-come">Come funziona</h2><p>Quattro cose, in quest'ordine. Il sito spunta da solo quelle che hai fatto.</p></div>
+    <div class="h3-prog"><i id="prog-bar"></i></div>
+    <p class="h3-prog-t" id="prog-t">0 di 4 fatte</p>
+    <ol class="h3-steps" id="steps"></ol>
   </section>
 
-  <section class="kb2">
-    <h2 id="soldi">€830.</h2>
-    <p>A testa, per ora. Il saluzzese l'ha già letto tre volte.</p>
-    <div class="tks" data-t="documenti soldi organizza"></div>
+  <section class="h3-all" aria-labelledby="h-dec">
+    <h2 id="h-dec">Per decidere</h2>
+    <nav class="h3-grid" data-g="viaggio must scenari soldi sifa organizza documenti"></nav>
   </section>
 
-  <section class="kb2">
-    <h2>0 sorca.</h2>
-    <p>Per ora. I club, il Capodanno, la mappa con tutti i posti e il kit per non fare figure de merda.</p>
-    <div class="tks" data-t="notte mappa kit"></div>
+  <section class="h3-all" aria-labelledby="h-rid">
+    <h2 id="h-rid">Per non perdersi, e per ridere</h2>
+    <nav class="h3-grid" data-g="mappa notte kit profilo tribunale ruota muro"></nav>
   </section>
 
-  <section class="kb2">
-    <h2>3 tossici.</h2>
-    <p>Fatevi riconoscere, giudicatevi, e lasciate una figura de merda sul muro.</p>
-    <div class="tks" data-t="profilo tribunale ruota muro"></div>
-  </section>
+  <button type="button" class="h3-call" id="call-btn"><span>📞 Davide ha chiamato <b id="call-n">600.000</b> volte per il viaggio.</span><i>Ha richiamato ＋1</i></button>
 
-  <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:#fff">Rivedi il caricamento e l'intro</button>
-  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 19 · 8 nov 2026</footer>
+  <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:#fff">Rivedi l'intro</button>
+  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 20 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -83,46 +61,69 @@
 <script src="intro.js"></script>
 <script>
 (function () {
-  const { el, db, eur } = M;
+  const { el, db } = M;
   M.start("home");
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
+  document.getElementById("dav").replaceWith(M.avatar("Davide"));
 
-  /* i biglietti: uno per pagina */
+  /* le pagine del sito */
   const T = {
     viaggio: ["viaggio.html", "🧭", "#D6345A", "Il viaggio", "Cosa si fa, zona per zona"],
-    scenari: ["scenari.html", "🚗", "#1d1d6b", "Scenari e costi", "Dacia, moto, treno o zaino"],
     must: ["must.html", "⭐", "#0B7A5C", "I must", "Ketama, surf, moto, deserto"],
-    sifa: ["sifa.html", "🔥", "#E8590C", "Cosa si fa", "Quello già deciso da tutti e tre"],
-    documenti: ["documenti.html", "📎", "#ff9f0a", "Documenti", "Carica qui biglietti e prenotazioni"],
+    scenari: ["scenari.html", "🚗", "#1d1d6b", "Scenari e costi", "Come vi muovete, giorno per giorno"],
     soldi: ["budget.html", "💸", "#1d8a3a", "I soldi", "Quanto spendete a testa"],
+    sifa: ["sifa.html", "🔥", "#E8590C", "Cosa si fa", "Quello deciso da tutti e tre"],
     organizza: ["organizza.html", "✅", "#FF7A45", "Organizza", "Chi prenota cosa, chi deve soldi"],
-    notte: ["notte.html", "🌙", "#6E2BC2", "La notte", "Club, Capodanno, due di picche"],
+    documenti: ["documenti.html", "📎", "#B35A00", "Documenti", "Carica qui biglietti e prenotazioni"],
     mappa: ["mappa.html", "📍", "#0F6FB8", "La mappa", "Sorca, surf, tagine, foto"],
-    kit: ["kit.html", "🎒", "#B35A00", "Il kit", "Valigia, darija, prezzi giusti"],
+    notte: ["notte.html", "🌙", "#6E2BC2", "La notte", "Club, Capodanno, due di picche"],
+    kit: ["kit.html", "🎒", "#B35A00", "Il kit", "Valigia, darija, prezzi del souk"],
     profilo: ["profilo.html", "😎", "#C2255C", "Il tuo profilo", "Faccia, soprannome, tormentone"],
     tribunale: ["tribunale.html", "⚖️", "#6E2BC2", "Il tribunale", "Chi è il più tossico"],
     ruota: ["ruota.html", "🎡", "#D6345A", "La ruota", "Chi paga il tè"],
     muro: ["muro.html", "🧱", "#8B5A2B", "Il muro", "Le figure de merda, per sempre"]
   };
-  document.querySelectorAll(".tks").forEach((box) => box.dataset.t.split(" ").forEach((k) => {
+  document.querySelectorAll(".h3-grid").forEach((g) => g.dataset.g.split(" ").forEach((k) => {
     const [href, e, c, t, sub] = T[k];
-    box.appendChild(el("a", { class: "tk", href, style: "--c:" + c }, el("span", { class: "tk-s", text: e }), el("span", { class: "tk-b" }, el("b", { text: t }), el("small", { text: sub })), el("i", { text: "›" })));
+    g.appendChild(el("a", { href }, el("span", { class: "ic", style: "background:" + c, text: e }), el("b", { text: t }), el("small", { text: sub })));
   }));
 
-  /* la carta d'imbarco: nome, posto, giorni */
+  /* i giorni: corrono una volta, quando l'intro si chiude */
   const GG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"], MM = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
   const now = new Date(), gg = Math.max(0, Math.ceil((new Date(2026, 11, 28, 23, 30, 0) - now) / 86400000));
   document.getElementById("oggi").textContent = GG[now.getDay()] + " " + now.getDate() + " " + MM[now.getMonth()];
-  const SEAT = { Alessandro: "Al volante", Augusto: "Finestrino, dorme", Davide: "Corridoio, al telefono" };
-  function pax() { const me = M.me(); document.getElementById("pax").textContent = me || "Tossico"; document.getElementById("seat").textContent = SEAT[me] || "Vicino a Davide"; }
-  pax(); M.onMe(pax);
   const cd = document.getElementById("cd-d");
-  function runCount() {
+  function run() {
+    document.querySelector(".h3-hero").classList.add("go");
     if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { cd.textContent = gg; return; }
-    const t0 = performance.now(), D = 1200;
+    const t0 = performance.now(), D = 1300;
     (function f(t) { const p = Math.min(1, (t - t0) / D); cd.textContent = Math.round(gg * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); })(t0);
   }
-  (function waitIntro() { if (window.INTRO_ACTIVE || document.getElementById("intro")) return setTimeout(waitIntro, 300); runCount(); })();
+  (function wait() { if (window.INTRO_ACTIVE || document.getElementById("intro")) return setTimeout(wait, 300); run(); })();
+
+  /* il tutorial: quattro passi, spuntati da soli */
+  function steps(d) {
+    const me = M.me(), reaz = (d.reazioni || []).filter((r) => !String(r.attivita).includes(":") && r.nome === me);
+    const must = C.MUST.filter((m) => (d.sondaggi || []).some((r) => r.nome === me && r.domanda === "must-" + m.id)).length;
+    const docs = (d.documenti || []).filter((x) => x.nome === me).length;
+    const S = [
+      { ok: !!me, t: "Dicci chi sei", x: "Così il sito sa chi prendere in giro. Tocca il tuo nome, una volta sola.", b: "Scegli", go: () => M.askWho() },
+      { ok: reaz.length >= 5, t: "Vota cosa fare", x: "Apri Il viaggio, scegli una zona e su ogni idea premi 🔥 ci sto, 🤔 forse o 💀 no. Se tutti e tre premete 🔥, si fa.", b: "Vota", href: "viaggio.html", n: reaz.length ? "Hai votato " + reaz.length + " idee" : "" },
+      { ok: must === C.MUST.length, t: "Scegli i must", x: "Ketama, surf, moto e deserto si fanno per forza. Tu scegli come: vince il modo più votato.", b: "Scegli", href: "must.html", n: must ? must + " su " + C.MUST.length : "" },
+      { ok: docs > 0, t: "Carica i documenti", x: "Biglietti e prenotazioni in un posto solo, così li hanno tutti. Basta «me lo rimandi?».", b: "Carica", href: "documenti.html" }
+    ];
+    const n = S.filter((s) => s.ok).length;
+    document.getElementById("prog-bar").style.width = (n / S.length) * 100 + "%";
+    document.getElementById("prog-t").textContent = n === S.length ? "Fatto tutto. Ora Davide non ha più scuse per chiamare." : n + " di " + S.length + " fatte" + (me ? ", " + me : "") + ".";
+    const ol = document.getElementById("steps"); ol.textContent = "";
+    S.forEach((s, i) => {
+      const cta = s.href ? el("a", { class: "h3-go", href: s.href }, s.ok ? "Riapri" : s.b) : el("button", { type: "button", class: "h3-go", onclick: s.go }, s.ok ? "Cambia" : s.b);
+      ol.appendChild(el("li", { class: s.ok ? "ok" : (S.slice(0, i).every((p) => p.ok) ? "now" : "") },
+        el("span", { class: "h3-num", text: s.ok ? "✓" : String(i + 1) }),
+        el("div", { class: "h3-st" }, el("b", { text: s.t }), el("p", { text: s.x }), s.n ? el("small", { text: s.n }) : null),
+        cta));
+    });
+  }
 
   document.getElementById("call-btn").addEventListener("click", async () => {
     const me = M.me(); if (!me) return M.askWho();
@@ -134,14 +135,14 @@
   });
 
   async function load() {
-    const d = await db.many(["reazioni", "sondaggi"]);
+    const d = await db.many(["reazioni", "sondaggi", "documenti"]);
     const calls = d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")).length;
     document.getElementById("call-n").textContent = String(600000 + calls).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    const g = C.scenGruppo(d.sondaggi);
-    document.getElementById("soldi").textContent = eur(C.spesa(d.reazioni.filter((r) => !String(r.attivita).includes(":")), g.pick).tot) + ".";
+    steps(d);
   }
-  load();
-  db.subscribe(["reazioni", "sondaggi"], load);
+  steps({}); load();
+  M.onMe(load);
+  db.subscribe(["reazioni", "sondaggi", "documenti"], load);
 })();
 </script>
 </body>

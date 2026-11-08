@@ -63,8 +63,7 @@ window.Intro = (function () {
       const me = M.me();
       if (me && !forcePick) {
         s.append(E("span", "in-eye", "Bentornato", 0), E("h2", "in-big", "Daje, " + me + ".", 120), E("p", "in-sub", (BYE[me] || ["", "Ora vota, tossico."])[1], 260));
-        const go = E("button", "in-cta in-anim", "Entra", 420); go.type = "button";
-        go.addEventListener("click", (ev) => { ev.stopPropagation(); done(); });
+        const go = unlock(done, 420);
         const other = E("button", "in-other", "Non sono " + me, 600); other.type = "button";
         other.addEventListener("click", (ev) => { ev.stopPropagation(); forcePick = true; s.replaceWith(SLIDES[SLIDES.length - 1].make(done)); });
         s.append(go, other);
@@ -85,14 +84,29 @@ window.Intro = (function () {
     } }
   ];
 
+  function unlock(done, d) {
+    const w = E("div", "in-unlock in-anim", null, d || 400);
+    const knob = E("button", "in-knob", "🐪"); knob.type = "button"; knob.setAttribute("aria-label", "Scorri per entrare nel sito");
+    const lab = E("span", "in-ul-t", "scorri per entrare");
+    w.append(lab, knob);
+    let x0 = null, dx = 0, max = 0, doneOnce = false;
+    function finish() { if (doneOnce) return; doneOnce = true; knob.style.transform = "translateX(" + max + "px)"; w.classList.add("ok"); setTimeout(done, 260); }
+    knob.addEventListener("pointerdown", (e) => { e.stopPropagation(); x0 = e.clientX; max = w.clientWidth - knob.offsetWidth - 8; knob.setPointerCapture(e.pointerId); w.classList.add("drag"); });
+    knob.addEventListener("pointermove", (e) => { if (x0 === null) return; dx = Math.max(0, Math.min(max, e.clientX - x0)); knob.style.transform = "translateX(" + dx + "px)"; lab.style.opacity = String(1 - dx / max); });
+    function up(e) { if (x0 === null) return; e.stopPropagation(); x0 = null; w.classList.remove("drag"); if (dx > max * 0.82) finish(); else { dx = 0; knob.style.transform = ""; lab.style.opacity = ""; } }
+    knob.addEventListener("pointerup", up); knob.addEventListener("pointercancel", up);
+    knob.addEventListener("click", (e) => e.stopPropagation());
+    knob.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " " || e.key === "ArrowRight") { e.preventDefault(); max = w.clientWidth - knob.offsetWidth - 8; finish(); } });
+    w.addEventListener("pointerup", (e) => e.stopPropagation()); w.addEventListener("pointerdown", (e) => e.stopPropagation());
+    return w;
+  }
+
   const BYE = { Alessandro: ["Daje, Alessandro.", "Ora prenota qualcosa, che il sito l'hai già fatto."], Augusto: ["Bora, Augusto.", "Suave, ma oggi vota."], Davide: ["Talìa, Davide.", "Ora vota. Senza chiamare nessuno."] };
   function finale(slide, n, done) {
     slide.textContent = "";
     const b = BYE[n] || ["Daje, " + n + ".", "Ora vota, tossico."];
     slide.append(E("h2", "in-big", b[0], 0), E("p", "in-sub", b[1], 200));
-    const go = E("button", "in-cta in-anim", "Entra", 400); go.type = "button";
-    go.addEventListener("click", (e) => { e.stopPropagation(); done(); });
-    slide.appendChild(go);
+    slide.appendChild(unlock(done, 400));
   }
 
   function show() {
@@ -101,8 +115,7 @@ window.Intro = (function () {
     const ov = E("div", "intro zellige"); ov.id = "intro"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", "Introduzione al sito");
     const bars = E("div", "in-progress");
     const head = E("div", "in-head");
-    const skip = E("button", "in-skip", "Salta"); skip.type = "button";
-    head.append(E("span", "in-brand", "Marocco in tre"), skip);
+    head.append(E("span", "in-brand", "Marocco in tre"), E("span", "in-brand", "tocca per andare avanti"));
     const stage = E("div", "in-stage");
     const hint = E("p", "in-hint", "Tocca per andare avanti");
     ov.append(bars, head, stage, hint);
@@ -155,26 +168,27 @@ window.Intro = (function () {
       dur = sl.last ? 0 : Math.min(7500, 3000 + (node.textContent || "").length * 34);
       [...bars.children].forEach((b, k) => { b.className = "in-seg" + (k < i || (k === i && !dur) ? " done" : k === i ? " on" : ""); b.style.setProperty("--dur", dur + "ms"); });
       hint.hidden = i > 0 || stage.hidden;
+      head.lastChild.textContent = sl.last ? "" : "tocca per andare avanti";
       paused = false; ov.classList.remove("in-paused");
       if (dur) { started = Date.now(); left = dur; timer = setTimeout(() => go(i + 1), dur); }
     }
     function pause() { if (paused || !dur) return; paused = true; clearTimeout(timer); left -= Date.now() - started; ov.classList.add("in-paused"); }
     function resume() { if (!paused) return; paused = false; ov.classList.remove("in-paused"); started = Date.now(); timer = setTimeout(() => go(i + 1), Math.max(300, left)); }
 
-    skip.addEventListener("click", (e) => { e.stopPropagation(); go(SLIDES.length - 1); });
     let downAt = 0;
     stage.addEventListener("pointerdown", (e) => { if (e.target.closest("button, a")) return; downAt = Date.now(); pause(); });
     stage.addEventListener("pointerup", (e) => {
       if (e.target.closest("button, a")) return;
       if (Date.now() - downAt > 350) return resume();
-      go(e.clientX / window.innerWidth < 0.3 ? i - 1 : i + 1);
+      if (e.clientX / window.innerWidth < 0.3) return go(i - 1);
+      if (SLIDES[i].last) return;   // all'ultima si entra solo scorrendo
+      go(i + 1);
     });
     stage.addEventListener("pointercancel", resume);
     document.addEventListener("keydown", function k(e) {
       if (!document.getElementById("intro")) return document.removeEventListener("keydown", k);
-      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); go(i + 1); }
+      if ((e.key === "ArrowRight" || e.key === " ") && !SLIDES[i].last) { e.preventDefault(); go(i + 1); }
       else if (e.key === "ArrowLeft") go(i - 1);
-      else if (e.key === "Escape") go(SLIDES.length - 1);
     });
   }
   return { shouldShow, show };
