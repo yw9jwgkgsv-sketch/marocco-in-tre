@@ -982,3 +982,30 @@ html:has(body.home2){scroll-snap-type:y proximity}
 
 .h5-callc{border:0;font:inherit;text-align:left;cursor:pointer;background:#d70015}
 .h5-callc b{font-variant-numeric:tabular-nums}
+
+/* ---------- Prova Home: l'indice che spiega ridendo ---------- */
+.h6{gap:26px!important}
+.h6-head{display:grid}
+.h6-what{background:#fff;color:#1d1d1f;border-radius:24px;padding:18px;display:grid;gap:10px;box-shadow:0 10px 28px rgba(5,10,60,.28)}
+.h6-what h2{font-size:15px;font-weight:700;color:#2438C6;letter-spacing:0}
+.h6-lead{font-size:22px;font-weight:800;line-height:1.2;letter-spacing:-.025em}
+.h6-steps{margin:4px 0 0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
+.h6-steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:15.5px;line-height:1.4;color:#3a3a3c}
+.h6-steps li::before{content:counter(s);width:28px;height:28px;border-radius:50%;background:#2438C6;color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px}
+.h6-steps b{color:#1d1d1f}
+.h6-grp{display:grid;gap:10px}
+.h6-gh h2{font-size:clamp(26px,7.4vw,30px);letter-spacing:-.03em}
+.h6-gh p{font-size:15px;opacity:.85;margin-top:2px}
+.h6-list{list-style:none;margin:0;padding:0;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 10px 28px rgba(5,10,60,.25)}
+.h6-list li+li .h6-row{border-top:1px solid #ececf0}
+.h6-row{display:grid;grid-template-columns:44px 1fr 12px;gap:12px;align-items:center;width:100%;padding:13px 14px;background:#fff;border:0;color:#1d1d1f!important;text-decoration:none!important;font:inherit;text-align:left;cursor:pointer}
+.h6-row:active{background:#f2f2f7}
+.h6-ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;align-self:start}
+.h6-tx{display:grid;gap:3px;min-width:0}
+.h6-nm{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.h6-nm b{font-size:17px;letter-spacing:-.015em}
+.h6-st{font-size:12px;font-weight:800;color:#6e6e73;background:#f2f2f7;border-radius:999px;padding:3px 8px;white-space:nowrap}
+.h6-st.due{background:#ff3b30;color:#fff}
+.h6-j{font-size:14.5px;line-height:1.35;color:#3a3a3c}
+.h6-chev{font-size:22px;color:#c7c7cc}
+.h6-stack{height:min(470px,62svh);margin-top:4px}

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Marocco in tre · prova Home</title>
+<meta name="theme-color" content="#2438C6">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap h4 h6">
+  <div class="topline hm-top"><span class="eyebrow" id="oggi">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
+
+  <header class="h6-head">
+    <p class="h5-cd"><b id="cd-d">0</b><span>giorni a Fes.</span></p>
+  </header>
+
+  <div id="upgrade" class="banner" hidden></div>
+
+  <section class="h6-what" aria-labelledby="h-what">
+    <h2 id="h-what">Cos'è sto sito</h2>
+    <p class="h6-lead">Il posto dove tre tossici decidono il Marocco senza fare 600.000 chiamate.</p>
+    <ol class="h6-steps">
+      <li><span><b>Votate cosa fare.</b> Se dite 🔥 tutti e tre, si fa. Se no si litiga qui, non sul gruppo.</span></li>
+      <li><span><b>Il sito fa i conti.</b> Il giro, i soldi a testa, chi prenota cosa. Da solo.</span></li>
+      <li><span><b>Il 28 dicembre si parte.</b> E Davide smette di chiamare. Forse.</span></li>
+    </ol>
+  </section>
+
+  <section class="h6-grp" aria-labelledby="h-g1"><div class="h6-gh"><h2 id="h-g1">Da decidere</h2><p>Qui si litiga. Poi si parte.</p></div><ul class="h6-list" id="g1"></ul></section>
+  <section class="h6-grp" aria-labelledby="h-g2"><div class="h6-gh"><h2 id="h-g2">Da organizzare</h2><p>La parte noiosa. Fatela lo stesso.</p></div><ul class="h6-list" id="g2"></ul></section>
+  <section class="h6-grp" aria-labelledby="h-g3"><div class="h6-gh"><h2 id="h-g3">Per ridere</h2><p>Non serve a niente. Per questo è la parte migliore.</p></div><ul class="h6-list" id="g3"></ul></section>
+
+  <footer class="foot">Questa è una proposta di Home: la Home vera non è cambiata.<br>Prova · 8 nov 2026</footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script src="intro.js"></script>
+<script>
+(function () {
+  const { el, db, eur } = M;
+  M.start("home");
+  let D = {}, busy = false, closeDeck = null;
+
+  /* ogni riga: icona, nome, la battuta che spiega cosa fa, e quello che ti manca */
+  const ROWS = {
+    g1: [
+      ["domande", null, "⚡", "#E8590C", "Domande veloci", "Dodici domande sì o no. Ci metti meno di Davide a chiedere dei voli."],
+      ["viaggio", "viaggio.html", "🧭", "#D6345A", "Il viaggio", "Tutto quello che si può fare, zona per zona. Votate 🔥 🤔 💀 e smettete di dire «vediamo lì»."],
+      ["must", "must.html", "⭐", "#0B7A5C", "I must", "Ketama, surf, moto, deserto: si fanno e basta. Voi scegliete solo come. Democrazia, ma poco."],
+      ["scenari", "scenari.html", "🚗", "#1d1d6b", "Gli scenari", "Cinque modi di girare il Marocco. Ne vince uno, gli altri due si adeguano e si lamentano."]
+    ],
+    g2: [
+      ["soldi", "budget.html", "💸", "#1d8a3a", "I soldi", "Quanto spende ognuno, aggiornato da solo. Niente «poi facciamo i conti» a gennaio."],
+      ["organizza", "organizza.html", "✅", "#FF7A45", "Organizza", "Chi prenota cosa e chi deve soldi a chi. Così il riad non lo prenotate in due. O in zero."],
+      ["documenti", "documenti.html", "📎", "#B35A00", "Documenti", "Biglietti e prenotazioni per tutti. Basta «me lo rimandi?» alle 2 di notte."],
+      ["sifa", "sifa.html", "🔥", "#E8590C", "Cosa si fa", "Le idee con tre 🔥. Quelle sono decise, non si ridiscutono al bar."],
+      ["mappa", "mappa.html", "📍", "#0F6FB8", "La mappa", "Surf, tagine, foto e i posti dove la sorca è a zero. Segnati con onestà."],
+      ["kit", "kit.html", "🎒", "#8B5A2B", "Il kit", "Valigia, darija e prezzi del souk. Per non pagare 40 euro una lampada da 4."]
+    ],
+    g3: [
+      ["notte", "notte.html", "🌙", "#6E2BC2", "La notte", "Club e Capodanno, con le probabilità vere. Non quelle che vi raccontate."],
+      ["tribunale", "tribunale.html", "⚖️", "#5B2BA8", "Il tribunale", "Si vota chi è il più tossico. Verdetto definitivo e pubblico."],
+      ["ruota", "ruota.html", "🎡", "#D6345A", "La ruota", "Quando non decidete, decide lei. Di solito paga il tè chi l'ha girata."],
+      ["muro", "muro.html", "🧱", "#7A4A1E", "Il muro", "Le figure di merda del viaggio, scritte per sempre. Anche quelle di adesso."],
+      ["profilo", "profilo.html", "😎", "#C2255C", "Il tuo profilo", "Faccia, soprannome e tormentone. Il tormentone arriva agli altri come notifica: pensaci."],
+      ["davide", null, "📞", "#d70015", "Le chiamate di Davide", "Ogni volta che chiama per il viaggio, toccate qui. A gennaio si legge il totale davanti a lui."]
+    ]
+  };
+
+  function status(d) {
+    const me = M.me(), s = {}, miss = d._miss || [];
+    if (!me) return s;
+    const mine = (d.reazioni || []).filter((r) => r.nome === me && !String(r.attivita).includes(":"));
+    const zone = Object.values(C.AREA_ATT).filter((ids) => !ids.some((id) => mine.some((r) => r.attivita === id))).length;
+    const must = C.MUST.filter((m) => !(d.sondaggi || []).some((r) => r.nome === me && r.domanda === "must-" + m.id)).length;
+    const left = C.DOMANDE.filter((q) => !M.answerOf(q, d)).length;
+    const g = C.scenGruppo(d.sondaggi);
+    const st = C.stato(d.reazioni || []), decise = C.ATT.filter((a) => st[a.id].s === "si").length;
+    const todo = (d.todo || []).filter((t) => !t.fatto), liberi = todo.filter((t) => !t.chi).length;
+    const calls = 600000 + (d.reazioni || []).filter((r) => String(r.attivita).startsWith("chiama:")).length;
+    s.domande = left ? ["Te ne mancano " + left, 1] : ["Fatte ✓", 0];
+    s.viaggio = zone ? ["Ti mancano " + zone + " zone", 1] : ["Votato ✓", 0];
+    s.must = must ? ["Te ne mancano " + must, 1] : ["Scelti ✓", 0];
+    s.scenari = (d.sondaggi || []).some((r) => r.nome === me && r.domanda === "scenario") ? ["Per ora vince " + g.pick, 0] : ["Manca il tuo voto", 1];
+    s.soldi = [eur(C.spesa(d.reazioni || [], g.pick).tot) + " a testa", 0];
+    s.organizza = liberi ? [liberi + " senza nessuno", 1] : [todo.length + " aperte", 0];
+    if (!miss.includes("documenti")) s.documenti = (d.documenti || []).some((x) => x.nome === me) ? [(d.documenti || []).length + " caricati", 0] : ["Carica i tuoi", 1];
+    s.sifa = [decise + (decise === 1 ? " decisa" : " decise"), 0];
+    s.mappa = [C.POI.length + " posti", 0];
+    s.muro = [(d.muro || []).length + " figure", 0];
+    s.davide = [String(calls).replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ＋1", 0];
+    return s;
+  }
+
+  function render(d) {
+    const s = status(d);
+    Object.keys(ROWS).forEach((g) => {
+      const ul = document.getElementById(g); ul.textContent = "";
+      ROWS[g].forEach(([k, href, e, c, t, j]) => {
+        const st = s[k];
+        const inner = [el("span", { class: "h6-ic", style: "background:" + c, text: e }),
+          el("span", { class: "h6-tx" }, el("span", { class: "h6-nm" }, el("b", { text: t }), st ? el("span", { class: "h6-st" + (st[1] ? " due" : ""), text: st[0] }) : null), el("span", { class: "h6-j", text: j })),
+          el("span", { class: "h6-chev", "aria-hidden": "true", text: "›" })];
+        const row = href ? el("a", { href, class: "h6-row" }, inner)
+          : el("button", { type: "button", class: "h6-row", onclick: k === "domande" ? openDeck : call }, inner);
+        ul.appendChild(el("li", null, row));
+      });
+    });
+  }
+
+  /* ---------- domande veloci in un foglio: una alla volta, sì o no ---------- */
+  const Q = C.DOMANDE;
+  const todo = () => Q.filter((q) => !M.answerOf(q, D));
+  const ph = (k) => { const u = C.foto(k, "960px"); return u ? "background-image:linear-gradient(180deg,rgba(8,14,70,.5) 0%,rgba(8,14,70,0) 28%,rgba(8,14,70,0) 40%,rgba(8,14,70,.92) 100%),url('" + u + "')" : null; };
+  function who(q) {
+    return el("div", { class: "h4-who" }, C.CREW.filter((n) => n !== M.me()).map((n) => {
+      const v = M.answerOf(q, D, n);
+      return el("span", { class: "h4-wh" + (v ? " " + v : "") }, M.avatar(n), el("small", { text: v === "si" ? "sì" : v === "no" ? "no" : v ? "forse" : "deve rispondere" }));
+    }));
+  }
+  function card(q) {
+    return el("article", { class: "h4-card", style: ph(q.f) },
+      el("div", { class: "h5-qh" }, el("span", { class: "h4-tag", text: q.tag }), el("span", { class: "h5-qn", text: (Q.indexOf(q) + 1) + " di " + Q.length })),
+      el("div", { class: "h4-q" }, el("h2", { text: q.t }), el("p", { text: q.x }), who(q),
+        el("div", { class: "h5-qb" }, el("button", { type: "button", class: "h4-no", onclick: () => pick(q, "no") }, "💀 No"), el("button", { type: "button", class: "h4-si", onclick: () => pick(q, "si") }, "🔥 Sì"))),
+      el("span", { class: "h4-stamp si", text: "SÌ" }), el("span", { class: "h4-stamp no", text: "NO" }));
+  }
+  function deck() {
+    const st = document.getElementById("stack"); if (!st) return; st.textContent = "";
+    const left = todo();
+    if (!left.length) { st.appendChild(el("article", { class: "h4-card h4-plain", style: "background:#2438C6" }, el("span", { class: "h4-tag", text: "✅ Fatto" }), el("div", { class: "h4-q" }, el("h2", { text: "Finite. Più veloce di Davide." }), el("p", { text: "Le risposte degli altri arrivano qui man mano." })))); return; }
+    if (left[1]) { const b = card(left[1]); b.classList.add("h4-back"); b.setAttribute("aria-hidden", "true"); st.appendChild(b); }
+    const c = card(left[0]); st.appendChild(c); drag(c, left[0]);
+  }
+  async function pick(q, v, c) {
+    if (busy) return; busy = true;
+    c = c || document.querySelector("#stack .h4-card:not(.h4-back)");
+    if (c && !matchMedia("(prefers-reduced-motion: reduce)").matches) { c.classList.add(v === "si" ? "go-si" : "go-no"); await new Promise((r) => setTimeout(r, 300)); }
+    try {
+      await M.answer(q, v);
+      if (q.k === "att") D.reazioni = (D.reazioni || []).filter((r) => !(r.nome === M.me() && r.attivita === q.id)).concat([{ nome: M.me(), attivita: q.id, voto: v }]);
+      else D.sondaggi = (D.sondaggi || []).filter((r) => !(r.nome === M.me() && r.domanda === "q-" + q.id)).concat([{ nome: M.me(), domanda: "q-" + q.id, scelta: v }]);
+    } catch (e) { M.err(e); }
+    busy = false; deck(); render(D);
+  }
+  function drag(c, q) {
+    let x0 = null, dx = 0;
+    c.addEventListener("pointerdown", (e) => { if (e.target.closest("button")) return; x0 = e.clientX; dx = 0; c.setPointerCapture(e.pointerId); c.style.transition = "none"; });
+    c.addEventListener("pointermove", (e) => { if (x0 === null) return; dx = e.clientX - x0; c.style.transform = "translateX(" + dx + "px) rotate(" + dx / 18 + "deg)"; c.classList.toggle("lean-si", dx > 40); c.classList.toggle("lean-no", dx < -40); });
+    const up = () => { if (x0 === null) return; x0 = null; c.style.transition = ""; c.style.transform = ""; if (Math.abs(dx) > 90) pick(q, dx > 0 ? "si" : "no", c); else c.classList.remove("lean-si", "lean-no"); };
+    c.addEventListener("pointerup", up); c.addEventListener("pointercancel", up);
+  }
+  function openDeck() {
+    if (!M.me()) return M.askWho();
+    closeDeck = M.info({ ic: "⚡", col: "#E8590C", t: "Domande veloci", ok: "Basta per ora", x: ["Scorri a destra per sì, a sinistra per no. Oppure i tasti."], body: el("div", { class: "h4-stack h6-stack", id: "stack" }) });
+    deck();
+  }
+
+  async function call() {
+    const me = M.me(); if (!me) return M.askWho();
+    try {
+      await db.upsert("reazioni", { nome: me, attivita: "chiama:" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), voto: "si", aggiornato: new Date().toISOString() }, "nome,attivita");
+      M.roast(me === "Davide" ? "chiamata_davide" : "chiamata"); load();
+    } catch (e) { M.err(e); }
+  }
+
+  const GG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"], MM = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+  const now = new Date(), gg = Math.max(0, Math.ceil((new Date(2026, 11, 28, 23, 30, 0) - now) / 86400000));
+  document.getElementById("oggi").textContent = GG[now.getDay()] + " " + now.getDate() + " " + MM[now.getMonth()];
+  const cd = document.getElementById("cd-d");
+  function run() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { cd.textContent = gg; return; }
+    const t0 = performance.now(), T = 1100;
+    (function f(t) { const p = Math.min(1, (t - t0) / T); cd.textContent = Math.round(gg * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); })(t0);
+  }
+  (function wait() { if (window.INTRO_ACTIVE || document.getElementById("intro")) return setTimeout(wait, 300); run(); })();
+
+  async function load() { D = await db.many(["reazioni", "sondaggi", "documenti", "todo", "muro"]); render(D); if (!busy) deck(); }
+  render({}); load();
+  M.onMe(load);
+  db.subscribe(["reazioni", "sondaggi", "documenti", "todo", "muro"], () => { if (!busy) load(); });
+})();
+</script>
+</body>
+</html>
