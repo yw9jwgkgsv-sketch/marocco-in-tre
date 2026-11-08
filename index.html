@@ -16,21 +16,34 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="wrap" style="gap:28px;padding-top:0">
-  <div class="topline" style="padding-top:calc(env(safe-area-inset-top,0px) + 14px)"><span class="eyebrow">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
+<main class="wrap hm">
+  <div class="topline hm-top"><span class="eyebrow" id="oggi">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
 
-  <section class="phero" id="phero">
-    <div class="phero-in">
-      <span class="date" id="oggi">—</span>
-      <b class="big" id="cd-d">—</b>
-      <span class="lab">giorni al Marocco</span>
-      <p class="phero-q">«Ragazzi, quando prendiamo i voli?»<small>Davide, tutti i giorni, finché non li abbiamo presi</small></p>
+  <section class="hm-hero" id="hero">
+    <span class="hm-hi" id="hi">Ciao, tossico.</span>
+    <div class="hm-count">
+      <b id="cd-d">0</b>
+      <span>giorni al Marocco</span>
+      <small>29 dicembre → 8 gennaio · Fes → Agadir</small>
     </div>
   </section>
 
-  <nav class="ptiles" aria-label="Cosa c'è nel sito" id="list"></nav>
+  <section class="hm-quote">
+    <b>«Ragazzi, quando prendiamo i voli?»</b>
+    <span>Davide, tutti i giorni, finché non li abbiamo presi</span>
+  </section>
 
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+
+  <a class="hm-now" id="now" href="must.html"><span class="hm-now-l">Adesso tocca a te</span><b id="now-t">Scegli come fare le valli di Ketama</b><span id="now-j" class="hm-now-j"></span><span class="hm-now-b" id="now-b">Vai ›</span></a>
+
+  <nav class="hm-list" id="list" aria-label="Cosa c'è nel sito"></nav>
+
+  <div class="hm-stats">
+    <a href="budget.html"><b id="soldi">€830</b><span>a testa, per ora</span></a>
+    <button type="button" id="call-btn"><b id="call-n">600.000</b><span>chiamate di Davide · tocca se ha richiamato</span></button>
+    <a href="must.html"><b id="must-n">0/4</b><span>must decisi</span></a>
+  </div>
 
   <section class="sec" style="gap:10px">
     <div class="nhead"><h2>Notifiche</h2><button type="button" id="clear">Cancella tutto</button></div>
@@ -39,20 +52,10 @@
 
   <section class="hquote" id="quote" aria-label="Frase del giorno"></section>
 
+  <p class="hmore">Anche: <a href="scenari.html">scenari e costi</a> · <a href="organizza.html">organizza</a> · <a href="sifa.html">cosa si fa</a> · <a href="ruota.html">la ruota</a> · <a href="tribunale.html">il tribunale</a> · <a href="muro.html">il muro</a></p>
 
-  <a class="hmoney" href="budget.html"><span>Per ora spendete</span><b id="soldi">€830</b><span>a testa ›</span></a>
-
-  <section class="hcall">
-    <span class="eyebrow">Chiamate WhatsApp di Davide</span>
-    <b id="call-n">600.000</b>
-    <button class="btn" type="button" id="call-btn">Ha chiamato di nuovo</button>
-    <p class="muted" id="call-last" style="font-size:14px"></p>
-  </section>
-
-  <p class="hmore">Anche: <a href="ruota.html">la ruota</a> · <a href="tribunale.html">il tribunale</a> · <a href="muro.html">il muro</a> · <a href="sifa.html">cosa si fa</a> · <a href="scenari.html">scenari e costi</a> · <a href="organizza.html">organizza</a></p>
-
-  <button type="button" id="replay" class="btn ghost small" style="justify-self:start">Rivedi l'intro</button>
-  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 17 · 8 nov 2026</footer>
+  <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:#fff">Rivedi il caricamento e l'intro</button>
+  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto. Foto: Wikipedia.<br>Versione 18 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -63,58 +66,69 @@
 <script src="intro.js"></script>
 <script>
 (function () {
-  const { el, db, icon, eur } = M;
-  const intro = Intro.shouldShow();
-  if (intro) window.INTRO_ACTIVE = true;
+  const { el, db, eur } = M;
   M.start("home");
-  if (intro) Intro.show();
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
 
-  const dep = new Date(2026, 11, 28, 23, 30, 0);
+  /* data, saluto, giorni che corrono fino al numero vero */
   const GG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"], MM = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
-  function tick() { const n = new Date(); document.getElementById("oggi").textContent = GG[n.getDay()] + " " + n.getDate() + " " + MM[n.getMonth()]; document.getElementById("cd-d").textContent = Math.max(0, Math.ceil((dep - n) / 86400000)); }
-  tick(); setInterval(tick, 60000);
+  const now = new Date(), dep = new Date(2026, 11, 28, 23, 30, 0), gg = Math.max(0, Math.ceil((dep - now) / 86400000));
+  document.getElementById("oggi").textContent = GG[now.getDay()] + " " + now.getDate() + " " + MM[now.getMonth()];
+  function hi() { document.getElementById("hi").textContent = "Ciao, " + (M.me() || "tossico") + "."; }
+  hi(); M.onMe(() => { hi(); load(); });
+  document.getElementById("hero").style.backgroundImage = "linear-gradient(180deg,rgba(15,25,100,.35) 0%,rgba(15,25,100,0) 35%,rgba(10,15,60,.85) 100%),url('" + C.foto("Erg_Chebbi", "960px") + "')";
+  const cd = document.getElementById("cd-d");
+  function runCount() {
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { cd.textContent = gg; return; }
+    const t0 = performance.now(), D = 1400;
+    (function f(t) { const p = Math.min(1, (t - t0) / D); cd.textContent = Math.round(gg * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); })(t0);
+  }
+  /* parte quando l'intro si chiude, così si vede */
+  (function waitIntro() { if (window.INTRO_ACTIVE || document.getElementById("intro")) return setTimeout(waitIntro, 300); runCount(); })();
 
-  /* la citazione del giorno */
-  const day = Math.floor(Date.now() / 86400000);
-  const [frase, vuol, da] = C.CITAZIONI[day % C.CITAZIONI.length];
-  document.getElementById("quote").append(el("span", { class: "eyebrow", text: "La frase del giorno" }), el("b", { text: "«" + frase + "»" }), el("span", { class: "muted", text: da + ": " + vuol }));
-
-  /* cosa c'è nel sito: una riga per pagina */
-  document.getElementById("phero").style.backgroundImage = "linear-gradient(180deg,rgba(20,30,110,.25),rgba(20,30,110,.75)),url('" + C.foto("Erg_Chebbi", "960px") + "')";
+  /* le pagine, in un elenco con le foto */
   const LIST = [
-    ["viaggio.html", "Aït_Benhaddou", "Il viaggio", "Il Marocco zona per zona: cosa si fa. Votate."],
+    ["viaggio.html", "Aït_Benhaddou", "Il viaggio", "Il Marocco zona per zona. Votate cosa fare."],
     ["must.html", "Ketama", "I must", "Le valli di Ketama, surf, moto, deserto."],
-    ["mappa.html", "Todgha_Gorge", "Mappa", "Sorca, surf, tagine, foto. Tutto su una mappa."],
-    ["notte.html", "Jemaa_el-Fnaa", "La notte", "Club, Capodanno, due di picche."],
-    ["kit.html", "Souk", "Kit", "Valigia, darija, prezzi del souk."]
+    ["mappa.html", "Todgha_Gorge", "La mappa", "Sorca, surf, tagine, foto. Tutto su una mappa."],
+    ["notte.html", "Jemaa_el-Fnaa", "La notte", "Club, Capodanno e due di picche."],
+    ["kit.html", "Souk", "Il kit", "Valigia, darija, prezzi giusti del souk."]
   ];
   const list = document.getElementById("list");
-  LIST.forEach(([href, f, t, sub], i) => list.appendChild(el("a", { href, class: i === 0 ? "wide" : null, style: "background-image:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(10,15,60,.85)),url('" + C.foto(f, "500px") + "')" }, el("b", { text: t }), el("span", { text: sub }))));
+  LIST.forEach(([href, f, t, sub]) => list.appendChild(el("a", { href }, el("img", { src: C.foto(f, "330px"), alt: "", loading: "lazy" }), el("span", null, el("b", { text: t }), el("small", { text: sub })), el("i", { text: "›" }))));
 
-  let lastD = { persone: [], reazioni: [], todo: [], valigia: [] };
-  /* le notifiche in Home: le ultime quattro, si toccano per andare alla pagina */
-  const WHEN = ["ora", "3 min fa", "12 min fa", "1 ora fa"];
+  /* la frase del giorno */
+  const [frase, vuol, da] = C.CITAZIONI[Math.floor(Date.now() / 86400000) % C.CITAZIONI.length];
+  document.getElementById("quote").append(el("span", { class: "eyebrow", text: "La frase del giorno" }), el("b", { text: "«" + frase + "»" }), el("span", { class: "muted", text: da + ": " + vuol }));
+
+  /* «adesso tocca a te»: l'unica cosa da fare subito, diversa per ognuno */
+  function nextStep(d) {
+    const me = M.me(), sond = d.sondaggi || [], reaz = (d.reazioni || []).filter((r) => !String(r.attivita).includes(":"));
+    if (!me) return { t: "Dicci chi sei", j: "Il sito non parla con gli sconosciuti. Tranne Ahmed.", b: "Scegli ›", href: "#", who: true };
+    const m = C.MUST.find((x) => !sond.some((r) => r.nome === me && r.domanda === "must-" + x.id));
+    if (m) return { t: "Scegli come fare " + m.t.charAt(0).toLowerCase() + m.t.slice(1), j: m.id === "valli" ? "Si guarda, non si compra. Ma prima si vota." : "Gli altri hanno già scelto, o stanno per farlo. Tu no. Tossico.", b: "Scegli ›", href: "must.html#" + m.id };
+    const mine = reaz.filter((r) => r.nome === me).length;
+    if (mine < 15) return { t: "Vota le cose da fare nel viaggio", j: "Hai votato " + mine + " idee su " + C.ATT.length + ". Davide ne ha votate di più. Al telefono.", b: "Vota ›", href: "viaggio.html" };
+    if (!sond.some((r) => r.nome === me && r.domanda === "scenario")) return { t: "Vota come vi muovete", j: "Dacia, moto, treno o zaino. Decidi, Bogia nen.", b: "Vota ›", href: "scenari.html" };
+    return { t: "Prenditi una prenotazione", j: "Hai votato tutto. Ora la parte che nessuno vuole fare.", b: "Organizza ›", href: "organizza.html" };
+  }
+  function renderNow(d) {
+    const s = nextStep(d), a = document.getElementById("now");
+    a.href = s.href; document.getElementById("now-t").textContent = s.t; document.getElementById("now-j").textContent = s.j; document.getElementById("now-b").textContent = s.b;
+    a.onclick = s.who ? (e) => { e.preventDefault(); M.askWho(); } : null;
+  }
+
+  /* notifiche in Home */
+  const WHEN = ["ora", "3 min fa", "1 ora fa"];
   function renderStack(d) {
     const st = document.getElementById("nstack"); st.textContent = "";
     const p = R.notifs(d, "home", M.me()), seed = Math.floor(Date.now() / 3600000);
-    const pick = [p[0]].concat(p.slice(1).map((n, i) => [((i + 1) * 7919 + seed * 104729) % 1000, n]).sort((a, b) => a[0] - b[0]).slice(0, 3).map((x) => x[1]));
-    pick.forEach((n, i) => st.appendChild(M.ntfNode(Object.assign({}, n, { quando: WHEN[i] }))));
+    [p[0]].concat(p.slice(1).map((n, i) => [((i + 1) * 7919 + seed * 104729) % 1000, n]).sort((a, b) => a[0] - b[0]).slice(0, 2).map((x) => x[1]))
+      .forEach((n, i) => st.appendChild(M.ntfNode(Object.assign({}, n, { quando: WHEN[i] }))));
   }
   document.getElementById("clear").addEventListener("click", () => M.toast("Non si cancellano. Come le chiamate di Davide."));
-  function renderRoast(d) {
-    renderStack(d); if (!document.getElementById("feed")) return; const f = document.getElementById("feed"); f.textContent = ""; R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t }))); }
-  if (document.getElementById("feed-more")) document.getElementById("feed-more").addEventListener("click", () => {
-    const f = document.getElementById("feed");
-    f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:600" }), f.firstChild);
-    while (f.children.length > 3) f.removeChild(f.lastChild);
-  });
 
-  function renderCalls(calls) {
-    document.getElementById("call-n").textContent = String(600000 + calls.length).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    const last = calls.slice().sort((a, b) => String(b.aggiornato || "").localeCompare(String(a.aggiornato || "")))[0];
-    document.getElementById("call-last").textContent = last ? "L'ultima l'ha segnata " + last.nome + ", " + M.ago(last.aggiornato) + "." : "";
-  }
+  /* il contatore di Davide */
   document.getElementById("call-btn").addEventListener("click", async () => {
     const me = M.me(); if (!me) return M.askWho();
     try {
@@ -126,15 +140,17 @@
 
   async function load() {
     const d = await db.many(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"]);
-    lastD = d;
-    renderCalls(d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")));
-    renderRoast(d);
+    const calls = d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")).length;
+    document.getElementById("call-n").textContent = String(600000 + calls).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     const g = C.scenGruppo(d.sondaggi);
     document.getElementById("soldi").textContent = eur(C.spesa(d.reazioni.filter((r) => !String(r.attivita).includes(":")), g.pick).tot);
+    const decisi = C.MUST.filter((m) => { const v = {}; d.sondaggi.forEach((r) => { if (r.domanda === "must-" + m.id) v[r.scelta] = (v[r.scelta] || 0) + 1; }); return Object.values(v).some((x) => x >= 2); }).length;
+    document.getElementById("must-n").textContent = decisi + "/" + C.MUST.length;
+    renderNow(d); renderStack(d);
   }
-  renderRoast(lastD);
+  renderNow({}); renderStack({});
   load();
-  db.subscribe(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"], load);
+  db.subscribe(["persone", "reazioni", "sondaggi"], load);
 })();
 </script>
 </body>

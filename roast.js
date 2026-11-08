@@ -248,7 +248,7 @@ window.R = (function () {
       { ic: "💃", col: "#d70015", app: "Mappa", t: "Sorca nelle vicinanze", x: "Nessun risultato nel raggio di 2.000 km. Mancano " + giorni + " giorni.", href: "mappa.html" },
       { ic: "🌿", col: "#1d8a3a", app: "Mappa", t: "Ketama", x: "Ketama aggiunta ai must. Il navigatore ha chiesto il permesso alla mamma.", href: "must.html#valli" },
       { ic: "💸", col: "#B35A00", app: "Banca", t: "Il saluzzese", x: "Ha controllato il conto del viaggio per la terza volta oggi. Esageruma nen.", href: "budget.html" },
-      { ic: "🔥", col: "#D6345A", app: "Esplora", t: "Votazione aperta", x: "Capodanno nel deserto aspetta il tuo voto. Il deserto no, quello aspetta da sempre.", href: "esplora.html#cap-agafay" },
+      { ic: "🔥", col: "#D6345A", app: "Il viaggio", t: "Votazione aperta", x: "Capodanno nel deserto aspetta il tuo voto. Il deserto no, quello aspetta da sempre.", href: "viaggio.html#cap-agafay" },
       { ic: "⚖️", col: "#6E2BC2", app: "Tribunale", t: "Avv. Davide", x: "Ha fatto ricorso contro il titolo di Tossico Supremo. Respinto.", href: "tribunale.html" },
       { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Ragazzi quando prendiamo i voli? Ah no, presi. Allora: quando prendiamo quelli dell'anno prossimo?", href: "viaggio.html" },
       { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Ho fatto un Excel coi voli. Ve lo spiego in un vocale da 9 minuti.", href: "viaggio.html" },
@@ -266,6 +266,21 @@ window.R = (function () {
     titles(d).slice(0, 3).forEach((x) => L.push({ chi: x.n, app: "Pagella", t: x.n + " è " + x.t, x: x.f, href: "index.html" }));
     feed(d, 3).forEach((x) => L.push({ ic: "🐪", app: "Il sito", t: "Guarda questo tossico", x, href: "index.html" }));
     return L;
+  }
+
+  /* -------- i popup: una domanda, due risposte, una battuta -------- */
+  function popups(d, page, me) {
+    return [
+      { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Ragazzi quando prendiamo i voli?", a: ["Domani", "Già presi!"], r: ["«Domani» l'hai detto anche il 3 ottobre. Ma ok.", "Presi l'8 novembre. Davide l'ha chiesto lo stesso altre 40 volte."], href: "index.html" },
+      { ic: "📞", col: "#30b94d", app: "Chiamata in arrivo", t: "Davide", x: "Vi chiamo 5 minuti per il transfer da Fes?", a: ["Rispondi", "Rifiuta"], r: ["Chiamata durata 47 minuti. Del transfer neanche una parola.", "Ha richiamato. Due volte. Ora sta scrivendo."], href: "organizza.html" },
+      { chi: "Augusto", app: "I 4 tossici", t: "Augusto", x: "Ragazzi ma il piumino serve davvero?", a: ["Sì, a Merzouga fa -2°", "No, suave"], r: ["Bravo. Lo comprerà il 27 dicembre alle 23.", "Ok. Ci vediamo nel deserto, ghiacciolo."], href: "kit.html" },
+      { ic: "🧔", col: "#8B5A2B", app: "Medina di Fes", t: "Ahmed, guida «amica»", x: "Amico! La strada è chiusa. Vieni con me?", a: ["Ok amico", "La, shukran"], r: ["Hai appena pagato 200 dirham per vedere una strada aperta.", "Bravo. Livello 1 della medina superato."], href: "mappa.html#fesguide" },
+      { ic: "🐪", col: "#B35A00", app: "Fatima, cammella", t: "Fatima", x: "Ti va un giro sulle dune stasera?", a: ["Sì 🐪", "Ho già una cammella"], r: ["Match! È l'unico del viaggio. Goditelo.", "Bugia. Non hai nessuno, tossico."], href: "notte.html" },
+      { ic: "🔥", col: "#D6345A", app: "Il viaggio", t: "Domanda seria", x: "Hai votato le cose da fare?", a: ["Sì, tutte", "Ehm…"], r: ["Bugia. Il sito vede tutto. Vai al Viaggio.", "Lo sapevo. Guarda questo tossico."], href: "viaggio.html" },
+      { ic: "🌿", col: "#1d8a3a", app: "Valle di Ketama", t: "Ketama", x: "Venite a trovarci il 30 dicembre?", a: ["Per la cultura", "Mamma dice di no"], r: ["Certo, per la cultura. Si guarda, non si compra.", "La mamma ha ragione. Ma il voto è nei must."], href: "must.html#valli" },
+      { ic: "🛂", col: "#0F6FB8", app: "Dogana di Londra", t: "8 gennaio", x: "Ha qualcosa da dichiarare?", a: ["No", "Solo saudade"], r: ["Bene. Il cane annusa lo stesso.", "La saudade passa. Il volo per Roma no."], href: "kit.html" },
+      { ic: "🎆", col: "#8e44ad", app: "Capodanno", t: "31 dicembre, Marrakech", x: "Stasera dove si va?", a: ["Theatro", "A letto alle 22"], r: ["Daje. Stira la camicia.", "Il saluzzese approva. Gli altri no."], href: "notte.html" }
+    ];
   }
 
   /* -------- il tasto «non ho capito un cazzo» -------- */
@@ -304,7 +319,7 @@ window.R = (function () {
       ok.addEventListener("click", () => ov.remove()); ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
       card.append(st, h2, p, br, ok); ov.appendChild(card); document.body.appendChild(ov); ok.focus();
     });
-    const top = document.querySelector(".pagehead .topline");
+    const top = document.querySelector(".pagehead .topline, .hm-top");
     if (top) { b.classList.add("in-top"); top.appendChild(b); } else document.body.appendChild(b);
   }
 
@@ -319,5 +334,5 @@ window.R = (function () {
     box.append(lab, txt, more);
   }
 
-  return { notifs, titles, feed, random, line, react, bar, mountHelp, fill, stats, CREW, TOX };
+  return { popups, notifs, titles, feed, random, line, react, bar, mountHelp, fill, stats, CREW, TOX };
 })();

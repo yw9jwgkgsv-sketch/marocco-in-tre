@@ -1,15 +1,23 @@
-/* L'intro: schermate a colori che vanno avanti da sole, come la versione 3 ma più pulita.
-   Una frase grande, una riga, una citazione in dialetto. Alla prima apertura; si rivede dalla Home. */
+/* L'ingresso nel sito: prima il caricamento (la barra col cammello e le vostre battute),
+   poi l'intro a schermate colorate. Ogni volta che si entra nel sito, anche se il telefono vi conosce già.
+   Dentro il sito, passando da una pagina all'altra, non si ripete. */
 window.Intro = (function () {
   "use strict";
-  const KEY = "marocco_intro_v7";
-  const ls = { get() { try { return localStorage.getItem(KEY); } catch (e) { return "1"; } }, set() { try { localStorage.setItem(KEY, "1"); } catch (e) {} } };
+  const KEY = "marocco_entrata_v8";
+  const ls = { get() { try { return sessionStorage.getItem(KEY); } catch (e) { return "1"; } }, set() { try { sessionStorage.setItem(KEY, "1"); } catch (e) {} } };
   function shouldShow() { return !ls.get() || /[?&]intro\b/.test(location.search); }
+  const MSG = [
+    "Svegliando Davide dalla 600.000ª chiamata…", "Spiegando ad Augusto che «suave» non è un piano…", "Er romano sta a dì «daje» al server…",
+    "Traducendo il palermitano in italiano…", "Convincendo il saluzzese a spendere un euro…", "Cercando la sorca nel raggio di 40 km… 0 risultati",
+    "Gonfiando il materassino per il deserto…", "Avvisando la valle di Ketama. È preoccupata…", "Calibrando il tè «ma de quello forte»…",
+    "Prenotando lo scalo a Londra: 7 gradi e pioggia…", "Avvisando i cammelli. Sono preoccupati…", "Stirando la camicia per il Theatro…", "Contando i due di picche futuri…"
+  ];
   function E(tag, cls, text, d) {
     const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined && text !== null) e.textContent = text;
     if (d !== undefined) e.style.setProperty("--d", d + "ms"); return e;
   }
 
+  let forcePick = false;
   const CAST = [["Alessandro", "Ha fatto il sito. Il viaggio, vedremo."], ["Augusto", "Dice «suave». Poi non prenota niente."], ["Davide", "600.000 chiamate. Mo' è pure avvocato."]];
 
   /* una schermata: etichetta, frase grande, una riga, citazione con chi la dice */
@@ -53,7 +61,16 @@ window.Intro = (function () {
     { bg: "#2438C6", last: true, make: (done) => {
       const s = E("div", "in-slide");
       const me = M.me();
-      s.append(E("span", "in-eye", "Ultima cosa", 0), E("h2", "in-big", me ? "Sei " + me + "?" : "Chi sei?", 120));
+      if (me && !forcePick) {
+        s.append(E("span", "in-eye", "Bentornato", 0), E("h2", "in-big", "Daje, " + me + ".", 120), E("p", "in-sub", (BYE[me] || ["", "Ora vota, tossico."])[1], 260));
+        const go = E("button", "in-cta in-anim", "Entra", 420); go.type = "button";
+        go.addEventListener("click", (ev) => { ev.stopPropagation(); done(); });
+        const other = E("button", "in-other", "Non sono " + me, 600); other.type = "button";
+        other.addEventListener("click", (ev) => { ev.stopPropagation(); forcePick = true; s.replaceWith(SLIDES[SLIDES.length - 1].make(done)); });
+        s.append(go, other);
+        return s;
+      }
+      s.append(E("span", "in-eye", "Ultima cosa", 0), E("h2", "in-big", "Chi sei?", 120));
       const g = E("div", "in-pick");
       CAST.forEach(([n], i) => {
         const b = E("button", "in-who", null, 320 + i * 120); b.type = "button";
@@ -92,6 +109,37 @@ window.Intro = (function () {
     SLIDES.forEach(() => { const b = E("span", "in-seg"); b.appendChild(E("i")); bars.appendChild(b); });
     document.body.appendChild(ov); document.documentElement.style.overflow = "hidden";
 
+    /* 1. il caricamento */
+    bars.hidden = true; head.hidden = true; hint.hidden = true; stage.hidden = true;
+    const ld = E("div", "ld-box");
+    const logo = E("div", "ld-logo"); logo.append(E("span", null, "Marocco"), E("em", null, " in tre"));
+    const pct = E("b", "ld-pct", "0%");
+    const track = E("div", "ld-track"); const fill = E("i", "ld-fill"); const camel = E("span", "ld-camel", "🐪"); camel.setAttribute("aria-hidden", "true");
+    track.append(fill, camel);
+    const msg = E("p", "ld-msg", "Caricamento tossici…"); msg.setAttribute("aria-live", "polite");
+    ld.append(logo, pct, track, msg, E("p", "ld-tip", "Tocca per andare più veloce"));
+    ov.appendChild(ld);
+    const pool = MSG.slice().sort(() => Math.random() - 0.5).slice(0, 4);
+    const total = reduce ? 400 : 3200;
+    let el0 = 0, prev = performance.now(), speed = 1, lastIdx = -1, ldDone = false;
+    function speedUp() { speed = 4; }
+    ov.addEventListener("click", speedUp);
+    function frame(now) {
+      if (ldDone) return;
+      el0 += (now - prev) * speed; prev = now;
+      const p = Math.min(1, el0 / total);
+      const shown = p < 0.62 ? p : p < 0.72 ? 0.62 + (p - 0.62) * 0.25 : 0.645 + (p - 0.72) * (0.355 / 0.28);
+      const v = Math.min(100, Math.round(shown * 100));
+      pct.textContent = v + "%"; fill.style.width = v + "%"; camel.style.left = "calc(" + v + "% - 14px)";
+      const idx = Math.min(pool.length - 1, Math.floor(p * pool.length));
+      if (idx !== lastIdx) { lastIdx = idx; msg.textContent = pool[idx]; msg.classList.remove("ld-in"); void msg.offsetWidth; msg.classList.add("ld-in"); }
+      if (p >= 1) { ldDone = true; ov.removeEventListener("click", speedUp); setTimeout(startSlides, 350); return; }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+    function startSlides() { ld.remove(); bars.hidden = false; head.hidden = false; stage.hidden = false; go(0); }
+
+    /* 2. le schermate */
     let i = 0, timer = null, started = 0, left = 0, dur = 0, paused = false;
     function close() {
       clearTimeout(timer); ls.set(); window.INTRO_ACTIVE = false;
@@ -106,7 +154,7 @@ window.Intro = (function () {
       stage.textContent = ""; const node = sl.make(close); stage.appendChild(node);
       dur = sl.last ? 0 : Math.min(7500, 3000 + (node.textContent || "").length * 34);
       [...bars.children].forEach((b, k) => { b.className = "in-seg" + (k < i || (k === i && !dur) ? " done" : k === i ? " on" : ""); b.style.setProperty("--dur", dur + "ms"); });
-      hint.hidden = i > 0;
+      hint.hidden = i > 0 || stage.hidden;
       paused = false; ov.classList.remove("in-paused");
       if (dur) { started = Date.now(); left = dur; timer = setTimeout(() => go(i + 1), dur); }
     }
@@ -128,7 +176,6 @@ window.Intro = (function () {
       else if (e.key === "ArrowLeft") go(i - 1);
       else if (e.key === "Escape") go(SLIDES.length - 1);
     });
-    go(0);
   }
   return { shouldShow, show };
 })();

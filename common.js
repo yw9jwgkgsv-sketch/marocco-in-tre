@@ -295,6 +295,22 @@ window.M = (function () {
     clearTimeout(ntfT); ntfT = setTimeout(hide, 6500);
     return true;
   }
+  /* il popup al centro, con due risposte: chi risponde si becca la battuta */
+  function popup(n) {
+    if (document.getElementById("intro") || document.querySelector(".overlay,.pop-dim")) return false;
+    const ic = n.chi ? avatar(n.chi, "pop-av") : el("span", { class: "pop-ic", style: n.col ? "background:" + n.col : null, text: n.ic || "🐪" });
+    const dim = el("div", { class: "pop-dim", role: "dialog", "aria-modal": "true", "aria-label": n.t });
+    const card = el("div", { class: "pop" },
+      el("div", { class: "pop-bd" }, ic, el("span", { class: "pop-app", text: n.app || "Marocco in tre" }), el("b", { text: n.t }), el("p", { text: n.x })),
+      el("div", { class: "pop-bt" }, n.a.map((lab, i) => el("button", { type: "button", onclick: () => {
+        dim.classList.add("out"); setTimeout(() => dim.remove(), 250);
+        const r = n.r && n.r[i]; if (r) setTimeout(() => notify({ ic: n.ic || "🐪", chi: n.chi, col: n.col, app: n.app, t: n.t, x: r, href: n.href }), 350);
+      } }, lab))));
+    dim.appendChild(card); document.body.appendChild(dim);
+    requestAnimationFrame(() => dim.classList.add("in"));
+    return true;
+  }
+
   /* ogni tanto ne arriva una: la prima dopo 5 secondi, poi una ogni 60-90 secondi, al massimo 2 per pagina */
   function ntfLoop(page) {
     if (!window.R || !R.notifs) return;
@@ -310,11 +326,30 @@ window.M = (function () {
       if (notify(n)) { ss.set("marocco_ntf_i", String(k + 1)); shown++; }
       setTimeout(next, 60000 + Math.random() * 30000);
     }
+    /* e una volta per pagina, dopo una trentina di secondi, un popup a cui rispondere */
+    async function pop() {
+      if (!R.popups) return;
+      if (document.hidden || window.INTRO_ACTIVE || document.getElementById("ntf-live")) return setTimeout(pop, 5000);
+      const list = R.popups(data || {}, page, me);
+      let k = Number(ss.get("marocco_pop_i") || 0);
+      if (popup(list[k % list.length])) ss.set("marocco_pop_i", String(k + 1)); else setTimeout(pop, 8000);
+    }
     setTimeout(next, 4500);
+    setTimeout(pop, 28000 + Math.random() * 10000);
   }
 
   /* ---------------- testata comune ---------------- */
+  function entrance() {
+    let seen = null; try { seen = sessionStorage.getItem("marocco_entrata_v8"); } catch (e) { seen = "1"; }
+    if (seen && !/[?&]intro\b/.test(location.search)) return;
+    window.INTRO_ACTIVE = true;
+    const go = () => { if (window.Intro) Intro.show(); else window.INTRO_ACTIVE = false; };
+    if (window.Intro) return go();
+    const sc = document.createElement("script"); sc.src = "intro.js"; sc.onload = go; sc.onerror = () => { window.INTRO_ACTIVE = false; };
+    document.head.appendChild(sc);
+  }
   function start(active) {
+    entrance();
     nav(active);
     renderMeChip();
     const up = document.getElementById("upgrade");
@@ -328,6 +363,6 @@ window.M = (function () {
   }
   function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
 
-  return { notify, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
+  return { notify, popup, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
     me: () => me, setMe, onMe: (f) => meListeners.push(f), askWho, store, isMissing };
 })();
