@@ -19,16 +19,16 @@
 <main class="wrap" style="gap:28px;padding-top:0">
   <div class="topline" style="padding-top:calc(env(safe-area-inset-top,0px) + 14px)"><span class="eyebrow">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
 
-  <section class="lock">
-    <span class="date" id="oggi">—</span>
-    <b class="big" id="cd-d">—</b>
-    <span class="lab">giorni alla partenza per il Marocco</span>
+  <section class="phero" id="phero">
+    <div class="phero-in">
+      <span class="date" id="oggi">—</span>
+      <b class="big" id="cd-d">—</b>
+      <span class="lab">giorni al Marocco</span>
+      <p class="phero-q">«Ragazzi, quando prendiamo i voli?»<small>Davide, tutti i giorni, finché non li abbiamo presi</small></p>
+    </div>
   </section>
 
-  <section class="dquote">
-    <b>«Ragazzi, quando prendiamo i voli?»</b>
-    <span>Davide, tutti i giorni, finché non li abbiamo presi</span>
-  </section>
+  <nav class="ptiles" aria-label="Cosa c'è nel sito" id="list"></nav>
 
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
 
@@ -39,7 +39,6 @@
 
   <section class="hquote" id="quote" aria-label="Frase del giorno"></section>
 
-  <nav class="hlist" aria-label="Cosa c'è nel sito" id="list"></nav>
 
   <a class="hmoney" href="budget.html"><span>Per ora spendete</span><b id="soldi">€830</b><span>a testa ›</span></a>
 
@@ -50,16 +49,10 @@
     <p class="muted" id="call-last" style="font-size:14px"></p>
   </section>
 
-  <section class="hjudge">
-    <h2>Il sito vi giudica</h2>
-    <ul class="feed" id="feed"></ul>
-    <button class="btn ghost" type="button" id="feed-more">Un'altra ›</button>
-  </section>
-
-  <p class="hmore">Anche: <a href="ruota.html">la ruota</a> · <a href="tribunale.html">il tribunale</a> · <a href="muro.html">il muro</a> · <a href="sifa.html">cosa si fa</a> · <a href="organizza.html">organizza</a></p>
+  <p class="hmore">Anche: <a href="ruota.html">la ruota</a> · <a href="tribunale.html">il tribunale</a> · <a href="muro.html">il muro</a> · <a href="sifa.html">cosa si fa</a> · <a href="scenari.html">scenari e costi</a> · <a href="organizza.html">organizza</a></p>
 
   <button type="button" id="replay" class="btn ghost small" style="justify-self:start">Rivedi l'intro</button>
-  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 15 · 8 nov 2026</footer>
+  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 16 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -88,15 +81,16 @@
   document.getElementById("quote").append(el("span", { class: "eyebrow", text: "La frase del giorno" }), el("b", { text: "«" + frase + "»" }), el("span", { class: "muted", text: da + ": " + vuol }));
 
   /* cosa c'è nel sito: una riga per pagina */
+  document.getElementById("phero").style.backgroundImage = "linear-gradient(180deg,rgba(20,30,110,.25),rgba(20,30,110,.75)),url('" + C.foto("Erg_Chebbi", "960px") + "')";
   const LIST = [
-    ["esplora.html", "esplora", "Esplora", "Votate cosa fare. Se dite tutti 🔥, si fa."],
-    ["mappa.html", "mappa", "Mappa", "Dov'è la sorca, il surf, il tagine. E Ketama, per dirvi di no."],
-    ["notte.html", "notte", "La notte", "Club, Capodanno, ostelli. E i due di picche."],
-    ["scenari.html", "scenari", "Scenari", "Come muovervi e quanto costa a testa."],
-    ["kit.html", "kit", "Kit", "Valigia, darija, prezzi giusti del souk."]
+    ["viaggio.html", "Aït_Benhaddou", "Il viaggio", "Giorno per giorno: dove siete e cosa si fa. Votate."],
+    ["must.html", "Dadès_Gorges", "I must", "Valli, surf, moto, deserto. Si decide solo come."],
+    ["mappa.html", "Todgha_Gorge", "Mappa", "Sorca, surf, tagine. E Ketama, per dirvi di no."],
+    ["notte.html", "Jemaa_el-Fnaa", "La notte", "Club, Capodanno, due di picche."],
+    ["kit.html", "Souk", "Kit", "Valigia, darija, prezzi del souk."]
   ];
   const list = document.getElementById("list");
-  LIST.forEach(([href, ic, t, sub]) => list.appendChild(el("a", { href }, icon(ic), el("span", null, el("b", { text: t }), el("span", { text: sub })), el("i", { text: "›" }))));
+  LIST.forEach(([href, f, t, sub], i) => list.appendChild(el("a", { href, class: i === 0 ? "wide" : null, style: "background-image:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(10,15,60,.85)),url('" + C.foto(f, "500px") + "')" }, el("b", { text: t }), el("span", { text: sub }))));
 
   let lastD = { persone: [], reazioni: [], todo: [], valigia: [] };
   /* le notifiche in Home: le ultime quattro, si toccano per andare alla pagina */
@@ -109,8 +103,8 @@
   }
   document.getElementById("clear").addEventListener("click", () => M.toast("Non si cancellano. Come le chiamate di Davide."));
   function renderRoast(d) {
-    renderStack(d); const f = document.getElementById("feed"); f.textContent = ""; R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t }))); }
-  document.getElementById("feed-more").addEventListener("click", () => {
+    renderStack(d); if (!document.getElementById("feed")) return; const f = document.getElementById("feed"); f.textContent = ""; R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t }))); }
+  if (document.getElementById("feed-more")) document.getElementById("feed-more").addEventListener("click", () => {
     const f = document.getElementById("feed");
     f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:600" }), f.firstChild);
     while (f.children.length > 3) f.removeChild(f.lastChild);

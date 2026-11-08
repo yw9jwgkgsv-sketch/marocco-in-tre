@@ -477,6 +477,7 @@ C.POICAT = {
   surf:      { e: "🏄", n: "Surf", c: "#0071e3" },
   mangiare:  { e: "🍢", n: "Mangiare", c: "#bf4800" },
   foto:      { e: "📸", n: "Foto da profilo", c: "#5e5ce6" },
+  vedere:    { e: "🏛️", n: "Da vedere", c: "#8B5A2B" },
   occhio:    { e: "⚠️", n: "Occhio", c: "#b25000" }
 };
 C.POI = [
@@ -546,6 +547,33 @@ C.POI = [
     x: "Il giardino blu di Yves Saint Laurent. Ingresso circa €17, prenotate online.", j: "Pieno di influencer. Statisticamente, l'unico posto dove c'è più sorca che a Theatro." },
   { id: "oudayas", cat: "foto", n: "Kasbah degli Oudayas", dove: "Rabat", lat: 34.0315, lng: -6.8360, q: "Kasbah of the Udayas",
     x: "Vicoli bianchi e blu sull'oceano. Gratis.", j: "La Chefchaouen dei poveri. E dei non tossici." },
+  // da vedere
+  { id: "koutoubia", cat: "vedere", n: "Koutoubia", dove: "Marrakech", lat: 31.6237, lng: -7.9936, q: "Koutoubia Mosque", w: "Koutoubia_Mosque",
+    x: "Il minareto simbolo di Marrakech. Si guarda da fuori, gratis, al tramonto.", j: "L'unico posto di Marrakech dove nessuno vi vende niente. Godetevelo." },
+  { id: "bahia", cat: "vedere", n: "Palazzo Bahia", dove: "Medina, Marrakech", lat: 31.6216, lng: -7.9831, q: "Bahia Palace", w: "Bahia_Palace",
+    x: "Palazzo dell'Ottocento: cortili, giardini, soffitti di cedro. Circa €7.", j: "Il riad che non vi potete permettere. Foto e via." },
+  { id: "benyoussef", cat: "vedere", n: "Medersa Ben Youssef", dove: "Medina, Marrakech", lat: 31.6318, lng: -7.9862, q: "Ben Youssef Madrasa", w: "Ben_Youssef_Madrasa",
+    x: "L'antica scuola coranica con il cortile più fotografato del paese. Circa €5.", j: "Qui studiavano 900 ragazzi. Voi tre non arrivate a 900 parole di darija." },
+  { id: "bouinania", cat: "vedere", n: "Medersa Bou Inania", dove: "Medina di Fes", lat: 34.0619, lng: -4.9830, q: "Bou Inania Madrasa Fes", w: "Bou_Inania_Madrasa",
+    x: "Legno intagliato, stucchi e zellige. Una delle poche dove si entra.", j: "Il 29, primo giorno. L'ultimo in cui sarete ancora puliti." },
+  { id: "merinidi", cat: "vedere", n: "Tombe merinidi", dove: "Collina sopra Fes", lat: 34.0674, lng: -4.9829, q: "Marinid Tombs Fes", w: "Marinid_Tombs",
+    x: "Rovine sulla collina: da qui al tramonto si vede tutta la medina.", j: "Il tramonto più bello di Fes. Ci si arriva in taxi, non a piedi, tossici." },
+  { id: "babmansour", cat: "vedere", n: "Bab Mansour", dove: "Meknès", lat: 33.8932, lng: -5.5664, q: "Bab Mansour Meknes", w: "Bab_Mansour",
+    x: "La porta più bella del Marocco, sulla strada del 30 dicembre.", j: "Dieci minuti, una foto, si riparte. Chi guida decide." },
+  { id: "volubilis", cat: "vedere", n: "Volubilis", dove: "Tra Fes e Meknès", lat: 34.0731, lng: -5.5541, q: "Volubilis", w: "Volubilis",
+    x: "Rovine romane con mosaici veri, in mezzo agli ulivi. Circa €7.", j: "Il romano si sente a casa. Fa la guida e sbaglia tutto. Daje." },
+  { id: "hassan", cat: "vedere", n: "Torre Hassan", dove: "Rabat", lat: 34.0240, lng: -6.8226, q: "Hassan Tower Rabat", w: "Hassan_Tower",
+    x: "Il minareto incompiuto del 1195 e il mausoleo con le guardie a cavallo. Gratis.", j: "Incompiuta da 800 anni. Come il programma del viaggio." },
+  { id: "todra", cat: "vedere", n: "Gole del Todra", dove: "Tinghir", lat: 31.5870, lng: -5.5880, q: "Todra Gorge", w: "Todgha_Gorge",
+    x: "Pareti di roccia alte 300 metri e larghe 10. Si cammina nel fiume.", j: "Lo spazio tra le pareti è lo stesso che lascia Davide tra una chiamata e l'altra." },
+  { id: "dades", cat: "vedere", n: "Gole del Dadès", dove: "Alto Atlante", lat: 31.4600, lng: -5.9500, q: "Dades Gorges", w: "Dadès_Gorges",
+    x: "La strada a tornanti più fotografata del Marocco.", j: "Chi soffre la macchina si siede davanti. E soffre lo stesso." },
+  { id: "ourika", cat: "vedere", n: "Valle dell'Ourika", dove: "1 ora da Marrakech", lat: 31.3500, lng: -7.7500, q: "Ourika Valley", w: "Ourika_Valley",
+    x: "Villaggi berberi e cascate. Il recupero perfetto del 1° gennaio.", j: "L'aria di montagna aiuta col post-Capodanno. Dicono." },
+  { id: "paradise", cat: "vedere", n: "Paradise Valley", dove: "Entroterra di Agadir", lat: 30.5680, lng: -9.5170, q: "Paradise Valley Morocco", w: "Paradise_Valley,_Morocco",
+    x: "Piscine naturali tra le palme, a 40 minuti da Taghazout.", j: "A gennaio l'acqua è gelida. Il primo che si tuffa vince il rispetto eterno." },
+  { id: "oufella", cat: "vedere", n: "Agadir Oufella", dove: "Collina sopra Agadir", lat: 30.4290, lng: -9.6230, q: "Agadir Oufella", w: "Agadir_Oufella",
+    x: "La vecchia kasbah sulla collina: vista su tutta la baia al tramonto.", j: "L'ultimo tramonto prima di Londra. Piangete pure, nessuno vi giudica. Il sito sì." },
   // occhio
   { id: "fesair", cat: "occhio", n: "Aeroporto di Fes, mezzanotte", dove: "Fes-Saïss", lat: 33.9273, lng: -4.9779, q: "Fes Saiss Airport",
     x: "Si arriva il 28 a mezzanotte: niente bus. Taxi grande a prezzo da fissare prima, o transfer del riad.", j: "Tre tossici all'uscita alle 00:30 senza transfer. Il tassista vi vede e sorride. Prenotate." },
@@ -579,3 +607,113 @@ C.CITAZIONI = [
   ["Bora!", "andiamo! Ricordo di San Paolo", "brasiliano"],
   ["Tá de brincadeira?", "stai scherzando?", "brasiliano"]
 ];
+
+/* ---------- Foto vere da Wikipedia (Wikimedia Commons, licenze libere) ---------- */
+C.WIKI = {
+ "Agadir": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/South_view_sea_side_from_Kasbah_of_Agadir_Oufella_%28cropped%29.jpg/330px-South_view_sea_side_from_Kasbah_of_Agadir_Oufella_%28cropped%29.jpg",
+ "Agadir_Oufella": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/AGADIR_OFELLA.jpg/330px-AGADIR_OFELLA.jpg",
+ "All-terrain_vehicle": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Four_wheeler.jpg/330px-Four_wheeler.jpg",
+ "Atlas_Mountains": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Plateau_Yagour%2C_Agdal%2C_Morocco.jpg/330px-Plateau_Yagour%2C_Agdal%2C_Morocco.jpg",
+ "Aït_Benhaddou": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Ksar_A%C3%AFt_Benhaddou%2C_Marocco_%28%D8%A3%D9%8A%D8%AA_%D8%A8%D9%86_%D8%AD%D8%AF%D9%88%D8%8C_%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8%2C_%E2%B4%B0%E2%B5%A2%E2%B5%9C_%E2%B5%83%E2%B4%B0%E2%B4%B7%E2%B4%B7%E2%B5%93%29.jpg/330px-Ksar_A%C3%AFt_Benhaddou%2C_Marocco_%28%D8%A3%D9%8A%D8%AA_%D8%A8%D9%86_%D8%AD%D8%AF%D9%88%D8%8C_%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8%2C_%E2%B4%B0%E2%B5%A2%E2%B5%9C_%E2%B5%83%E2%B4%B0%E2%B4%B7%E2%B4%B7%E2%B5%93%29.jpg",
+ "Bab_Bou_Jeloud": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Bab_Bou_Jeloud_%28Fes%2C_Marocco%29.jpg/330px-Bab_Bou_Jeloud_%28Fes%2C_Marocco%29.jpg",
+ "Bab_Mansour": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Bab_mansour_DSCF5811.jpg/330px-Bab_mansour_DSCF5811.jpg",
+ "Bahia_Palace": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Bahia_Palace_large_court.jpg/330px-Bahia_Palace_large_court.jpg",
+ "Ben_Youssef_Madrasa": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Coranic_School_%28106589859%29.jpeg/330px-Coranic_School_%28106589859%29.jpeg",
+ "Bissara": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Bissara_Moroccan_split_pea_and_fava_bean_soup.jpg/330px-Bissara_Moroccan_split_pea_and_fava_bean_soup.jpg",
+ "Bou_Inania_Madrasa": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Courtyard_Minaret_Bou_Inania_Fes_Nov25_A7CR_09138-42_HDR3.jpg/330px-Courtyard_Minaret_Bou_Inania_Fes_Nov25_A7CR_09138-42_HDR3.jpg",
+ "Chouara_Tannery": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Chouara_Tannery_-_154_-_Marokko_Handybilder_2018_-_Fes_%2827347707917%29.jpg/330px-Chouara_Tannery_-_154_-_Marokko_Handybilder_2018_-_Fes_%2827347707917%29.jpg",
+ "Dadès_Gorges": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/%22Spektakul%C3%A4re_Haarnadelkurven%22._04.jpg/330px-%22Spektakul%C3%A4re_Haarnadelkurven%22._04.jpg",
+ "Draa_River": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Draa_River.jpg/330px-Draa_River.jpg",
+ "Dromedary": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Camelus_dromedarius_in_Nuweiba.jpg/330px-Camelus_dromedarius_in_Nuweiba.jpg",
+ "Enduro": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Stefan_Merriman.jpg/330px-Stefan_Merriman.jpg",
+ "Erg_Chebbi": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Merzouga_Dunes_2011.jpg/330px-Merzouga_Dunes_2011.jpg",
+ "Erg_Chigaga": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Caravan_in_the_desert.jpg/330px-Caravan_in_the_desert.jpg",
+ "Fes": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Bab_Bou_Jeloud_Frame_Minaret_Fes_Nov25_A7CR_09127-8_HDR3.jpg/330px-Bab_Bou_Jeloud_Frame_Minaret_Fes_Nov25_A7CR_09127-8_HDR3.jpg",
+ "Fes_el_Bali": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Fes_Bab_Bou_Jeloud_2011.jpg/330px-Fes_Bab_Bou_Jeloud_2011.jpg",
+ "Hassan_Tower": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Hassan_Tower%2C_Rabat%2C_Marocco_%28%D8%B5%D9%88%D9%85%D8%B9%D8%A9_%D8%AD%D8%B3%D8%A7%D9%86_%29.jpg/330px-Hassan_Tower%2C_Rabat%2C_Marocco_%28%D8%B5%D9%88%D9%85%D8%B9%D8%A9_%D8%AD%D8%B3%D8%A7%D9%86_%29.jpg",
+ "Hivernage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Camp_de_S%C3%A9n%C3%A9galais_-_Fr%C3%A9jus_-_M%C3%A9diath%C3%A8que_de_l%27architecture_et_du_patrimoine_-_APZ0001924.jpg/330px-Camp_de_S%C3%A9n%C3%A9galais_-_Fr%C3%A9jus_-_M%C3%A9diath%C3%A8que_de_l%27architecture_et_du_patrimoine_-_APZ0001924.jpg",
+ "Imsouane": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Plage_Sud_Imsouane_-_2023.jpg/330px-Plage_Sud_Imsouane_-_2023.jpg",
+ "Jemaa_el-Fnaa": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Djemaa_el_Fna.jpg/330px-Djemaa_el_Fna.jpg",
+ "Kalaat_M'Gouna": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Modern_Pachalik_Building_Facade_in_Kelaa_M%27Gouna.jpg/330px-Modern_Pachalik_Building_Facade_in_Kelaa_M%27Gouna.jpg",
+ "Kasbah": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Kasbah_of_Sfax.jpg/330px-Kasbah_of_Sfax.jpg",
+ "Kasbah_of_the_Udayas": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/97/Kasbah_Oudayas_exterior.jpg/330px-Kasbah_Oudayas_exterior.jpg",
+ "Koutoubia_Mosque": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Marokko0112_%28retouched%29.jpg/330px-Marokko0112_%28retouched%29.jpg",
+ "Maghrebi_mint_tea": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Tunisian_Tea_with_pine_nuts.jpg/330px-Tunisian_Tea_with_pine_nuts.jpg",
+ "Majorelle_Garden": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Le_jardin_des_majorelle_40.JPG/330px-Le_jardin_des_majorelle_40.JPG",
+ "Marinid_Tombs": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Marinid_Tombs_in_April_2016_1.jpg/330px-Marinid_Tombs_in_April_2016_1.jpg",
+ "Marrakesh": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Marrakech%2C_Morocco_%285421595453%29_%285%29.jpg/330px-Marrakech%2C_Morocco_%285421595453%29_%285%29.jpg",
+ "Mechoui": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/Mechoui.jpg/330px-Mechoui.jpg",
+ "Meknes": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Bab_Mansour_in_Meknes1732.jpg/330px-Bab_Mansour_in_Meknes1732.jpg",
+ "Merzouga": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Merzouga_2024.jpg/330px-Merzouga_2024.jpg",
+ "Milky_Way": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-33a-07.jpg/330px-ESO-VLT-Laser-phot-33a-07.jpg",
+ "Moroccan_cuisine": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/%D9%85%D8%B3%D9%85%D9%86.jpg/330px-%D9%85%D8%B3%D9%85%D9%86.jpg",
+ "Ourika_Valley": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Ourika_Valley.jpg/330px-Ourika_Valley.jpg",
+ "Paradise_Valley,_Morocco": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Paradise_Valley_palmiers.jpg/330px-Paradise_Valley_palmiers.jpg",
+ "Pastilla": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Bisteeya.jpg/330px-Bisteeya.jpg",
+ "Rabat": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/%22Eine_beeindruckende_Festung%22._09.jpg/330px-%22Eine_beeindruckende_Festung%22._09.jpg",
+ "Souk": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Turkey_%2868742801%29.jpeg/330px-Turkey_%2868742801%29.jpeg",
+ "Surfing": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Mavericks_Surf_Contest_2010b.jpg/330px-Mavericks_Surf_Contest_2010b.jpg",
+ "Taghazout": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Taghazout_street_-_2026-02-02.jpg/330px-Taghazout_street_-_2026-02-02.jpg",
+ "Tajine": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Tajine-marocain-un-plat-varie-et-sain_%28cropped%29.jpg/330px-Tajine-marocain-un-plat-varie-et-sain_%28cropped%29.jpg",
+ "Tanjia": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Tanjia-959.jpg/330px-Tanjia-959.jpg",
+ "Tinghir": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Tinghir_DSC_0092_%2841274419445%29.jpg/330px-Tinghir_DSC_0092_%2841274419445%29.jpg",
+ "Tizi_n'Tichka": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Tizi_n%27Tichka.jpg/330px-Tizi_n%27Tichka.jpg",
+ "Todgha_Gorge": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/%22Ein_beeindruckendes_Naturwunder%22%2C_17.jpg/330px-%22Ein_beeindruckendes_Naturwunder%22%2C_17.jpg",
+ "Volubilis": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Volubilis_Longshot_II.jpg/330px-Volubilis_Longshot_II.jpg"
+};
+C.FOTO_ATT = {"cap-rooftop": "Koutoubia_Mosque", "moto-tour3": "Draa_River", "moto-pista": "Dadès_Gorges", "moto-agafay": "Enduro", "moto-dune": "Erg_Chebbi", "moto-buggy": "All-terrain_vehicle", "moto-quad": "All-terrain_vehicle", "moto-noleggio": "Atlas_Mountains", "des-campo": "Merzouga", "des-chigaga": "Erg_Chigaga", "des-cammello": "Dromedary", "des-stelle": "Milky_Way", "mon-tichka": "Tizi_n'Tichka", "mon-benhaddou": "Aït_Benhaddou", "mon-dades": "Kasbah", "mon-todra": "Todgha_Gorge", "mon-arrampicata": "Tinghir", "mon-ourika": "Ourika_Valley", "oc-imsouane": "Imsouane", "oc-taghazout": "Taghazout", "oc-rabat": "Rabat", "oc-paradise": "Paradise_Valley,_Morocco", "cit-fes": "Fes_el_Bali", "cit-merinidi": "Marinid_Tombs", "cit-volubilis": "Volubilis", "cit-oudayas": "Kasbah_of_the_Udayas", "cit-jemaa": "Jemaa_el-Fnaa", "cit-majorelle": "Majorelle_Garden", "cit-benyoussef": "Ben_Youssef_Madrasa", "cibo-tanjia": "Tanjia", "cibo-mechoui": "Mechoui", "cibo-bissara": "Bissara", "cibo-pastilla": "Pastilla", "cibo-pesce": "Moroccan_cuisine", "cibo-corso": "Tajine", "cibo-te": "Maghrebi_mint_tea", "sfida-souk": "Souk", "sfida-noapp": "Bab_Bou_Jeloud", "sfida-darija": "Fes", "sfida-foto": "Chouara_Tannery", "sfida-tagine": "Tajine"};
+C.FOTO_POI = {"erg": "Erg_Chebbi", "fesnotte": "Fes_el_Bali", "tichka": "Tizi_n'Tichka", "fesguide": "Bab_Bou_Jeloud", "jemaa": "Jemaa_el-Fnaa", "anchor": "Taghazout", "imsouane": "Imsouane", "mechoui": "Mechoui", "bissara": "Bissara", "porto": "Agadir", "chouara": "Chouara_Tannery", "benhaddou": "Aït_Benhaddou", "dune": "Merzouga", "majorelle": "Majorelle_Garden", "oudayas": "Kasbah_of_the_Udayas", "tichkaneve": "Atlas_Mountains", "agadirair": "Agadir", "cap-club": "Hivernage"};
+/* foto(chiave, "500px" o "960px"): l'indirizzo della foto alla grandezza giusta */
+C.foto = function (k, size) { const u = C.WIKI[k]; return u ? u.replace("/330px-", "/" + (size || "500px") + "-") : null; };
+
+/* ---------- Il viaggio: dove siete ogni giorno (tappe del giorno, in ordine) ---------- */
+C.DAYSTOPS = {
+  "2026-12-29": { A: ["fes"] },
+  "2026-12-30": { A: ["fes", "meknes", "volubilis", "rabat"], C: ["fes", "marrakech"] },
+  "2026-12-31": { A: ["rabat", "marrakech"], C: ["marrakech"] },
+  "2027-01-01": { A: ["marrakech", "agafay"] },
+  "2027-01-02": { A: ["marrakech", "tichka", "benhaddou", "dades"], B: ["marrakech", "tichka", "benhaddou", "ouarzazate"], C: ["marrakech", "benhaddou", "dades"], D: ["marrakech", "merzouga"] },
+  "2027-01-03": { A: ["dades", "todra", "merzouga"], B: ["ouarzazate", "dades", "todra"], C: ["dades", "todra", "merzouga"], D: ["merzouga"] },
+  "2027-01-04": { A: ["merzouga", "ouarzazate"], B: ["todra", "mhamid"], C: ["merzouga", "marrakech"], D: ["merzouga", "marrakech"] },
+  "2027-01-05": { A: ["ouarzazate", "taroudant", "imsouane"], B: ["mhamid", "ouarzazate"], C: ["marrakech", "taghazout"], D: ["marrakech", "taghazout"] },
+  "2027-01-06": { A: ["imsouane"], B: ["ouarzazate", "taghazout"], C: ["taghazout"] },
+  "2027-01-07": { A: ["imsouane", "taghazout"], B: ["taghazout"] },
+  "2027-01-08": { A: ["taghazout", "agadir"] }
+};
+C.stopsFor = function (d, s) { const x = C.DAYSTOPS[d] || {}; return x[s] || (s === "B" && x.A) || (s === "D" && x.C) || x.A || []; };
+/* idee che non stanno in un giorno preciso: le mettiamo dove si può farle */
+C.EXTRA_DAY = { "2026-12-29": ["cit-hammam", "cibo-corso", "sfida-souk", "sfida-darija", "cibo-te"], "2027-01-01": ["cit-jemaa", "cit-benyoussef", "cibo-tanjia"], "2027-01-02": ["mon-rose", "moto-noleggio"], "2027-01-03": ["des-nomadi"] };
+
+/* ---------- I must: si fanno per forza, si decide solo come ---------- */
+C.MUST = [
+  { id: "valli", e: "⛰️", t: "Le valli", foto: "Dadès_Gorges",
+    why: "Undici giorni in Marocco senza una gola è come Roma senza Colosseo. Il romano lo sa.",
+    opz: [
+      { id: "dades", t: "Dadès e Todra in auto", x: "2 e 3 gennaio, nel giro A. Si dorme in kasbah, le gole si fanno a piedi.", e: 0, att: "mon-todra" },
+      { id: "ourika", t: "Valle dell'Ourika in giornata", x: "Il 1° gennaio da Marrakech: villaggi berberi e cascate. Il recupero perfetto dopo Capodanno.", e: 30, att: "mon-ourika" },
+      { id: "rose", t: "Valle delle Rose a piedi", x: "Kelaat M'Gouna, mezza giornata con una guida.", e: 22, att: "mon-rose" },
+      { id: "tour", t: "Col tour organizzato", x: "Nel giro C: minibus, guida, tutto compreso. Comodo, pensionato.", e: 0 } ] },
+  { id: "surf", e: "🏄", t: "Il surf", foto: "Imsouane",
+    why: "Sei mesi a San Paolo e manco un'onda presa. Ora basta, tossici.",
+    opz: [
+      { id: "lezioni", t: "Due lezioni a Taghazout", x: "Tavola, muta e maestro, due mattine.", e: 60, att: "oc-taghazout" },
+      { id: "camp", t: "Surf camp di 3 giorni", x: "Letto, colazione, lezioni ogni giorno. Già dentro il giro C.", e: 150 },
+      { id: "imsouane", t: "La baia di Imsouane", x: "L'onda lunga e lenta, la migliore per imparare. Il 6 gennaio.", e: 60, att: "oc-imsouane" },
+      { id: "guardo", t: "Guardo dalla scogliera", x: "Birra, tramonto e commenti tecnici senza sapere niente.", e: 0 } ] },
+  { id: "moto", e: "🏍️", t: "La moto", foto: "Enduro",
+    why: "Il Marocco in moto è il motivo per cui siete partiti. Tranne il saluzzese: lui è partito perché costava poco.",
+    opz: [
+      { id: "quad", t: "Quad al tramonto", x: "Agafay, un paio d'ore. Non serve la patente.", e: 45, att: "moto-quad" },
+      { id: "alba", t: "Enduro all'alba ad Agafay", x: "Mezza giornata con la guida, vicino a Marrakech.", e: 70, att: "moto-agafay" },
+      { id: "dune", t: "Enduro sulle dune di Merzouga", x: "Il più bello. Si cade sulla sabbia, almeno.", e: 100, att: "moto-dune" },
+      { id: "tour", t: "Tour di 3 giorni con bivacco", x: "Il giro B. Serve la patente A e un po' di esperienza.", e: 700, att: "moto-tour3" } ] },
+  { id: "deserto", e: "🐪", t: "Il deserto", foto: "Erg_Chebbi",
+    why: "Una notte nelle dune. Freddo, stelle, zero campo. Si fa e basta.",
+    opz: [
+      { id: "campo", t: "Campo nelle dune di Merzouga", x: "Standard, cena e colazione. Già dentro i giri A, C e D.", e: 0, att: "des-campo" },
+      { id: "lusso", t: "Campo di lusso", x: "Bagno e riscaldamento: per chi a -2° piange.", e: 80 },
+      { id: "chigaga", t: "Erg Chigaga da M'Hamid", x: "Più lontano e più vuoto. Dentro il giro B.", e: 45, att: "des-chigaga" },
+      { id: "agafay", t: "Agafay, vicino a Marrakech", x: "Deserto di pietra a 40 minuti. Il deserto per chi ha fretta.", e: 40 } ] }
+];
+/* gli altri must: cose che se tornate senza averle fatte, non siete stati in Marocco */
+C.MUST_ALTRI = ["cit-jemaa", "mon-benhaddou", "des-stelle", "cit-hammam", "cibo-te", "sfida-souk", "sfida-tagine", "cit-fes", "cap-rooftop"];

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>I must · Marocco in tre</title>
+<meta name="theme-color" content="#2438C6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">I must</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Si fanno. <em>Punto.</em></h1>
+    <p class="lead" style="color:#fff">Valli, surf, moto e deserto non si discutono. Si decide solo come: ognuno sceglie il suo modo, vince il più votato.</p>
+  </div>
+</header>
+
+<main class="wrap" style="gap:26px">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+
+  <section class="sec" aria-labelledby="h-st">
+    <div class="sec-head"><h2 id="h-st">A che punto siete</h2><p id="st-sub"></p></div>
+    <div class="meter" id="meter"></div>
+  </section>
+
+  <div id="musts" style="display:grid;gap:26px"></div>
+
+  <section class="sec" aria-labelledby="h-altri">
+    <div class="sec-head"><h2 id="h-altri">⭐ Gli altri must</h2><p>Se tornate senza averle fatte, non siete stati in Marocco. Votatele come nel viaggio.</p></div>
+    <div id="altri" style="display:grid;gap:18px"></div>
+  </section>
+
+  <a class="nextlink" href="viaggio.html">Quando si fanno? Il viaggio ›</a>
+  <footer class="foot">Prezzi a testa in più rispetto a dormire e mangiare. Stime all'8 novembre 2026. Foto: Wikipedia.</footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db, eur } = M;
+  M.start("must");
+  const ATT = {}; C.ATT.forEach((a) => (ATT[a.id] = a));
+  const EMO = { capodanno: "🎆", moto: "🏍️", deserto: "🐪", montagna: "⛰️", oceano: "🏄", citta: "🕌", cibo: "🍢", sfide: "🏆" };
+  const VOTI = [["si", "🔥", "Ci sto"], ["forse", "🤔", "Forse"], ["no", "💀", "No"]];
+  const REAZ = {
+    valli: ["Ottima scelta. Il saluzzese approva: gratis.", "Valli scelte. Chi soffre la macchina si prenoti il posto davanti."],
+    surf: ["Scelto. Due secondi in piedi e venti di racconto. Caralho.", "Ok. Avvisate la muta: soffrirà."],
+    moto: ["Moto scelta. Avvisiamo le mamme.", "Brum brum, tossico. Il casco non è un optional."],
+    deserto: ["Deserto scelto. A -2° il piumino è un amico.", "Fatto. Fatima la cammella vi aspetta."]
+  };
+  let sond = [], reaz = [];
+
+  function votes(m) { const v = {}; m.opz.forEach((o) => (v[o.id] = [])); sond.forEach((r) => { if (r.domanda === "must-" + m.id && v[r.scelta]) v[r.scelta].push(r.nome); }); return v; }
+  function winner(m) { const v = votes(m); const top = m.opz.slice().sort((a, b) => v[b.id].length - v[a.id].length)[0]; return v[top.id].length ? top : null; }
+
+  async function pick(m, o) {
+    const me = M.me(); if (!me) return M.askWho();
+    const mine = sond.find((r) => r.nome === me && r.domanda === "must-" + m.id);
+    try {
+      if (mine && mine.scelta === o.id) { await db.remove("sondaggi", { nome: me, domanda: "must-" + m.id }); M.toast("Tolto. Bogia nen, eh."); }
+      else { await db.upsert("sondaggi", { nome: me, domanda: "must-" + m.id, scelta: o.id }, "nome,domanda"); const r = REAZ[m.id]; M.toast(r[Math.floor(Math.random() * r.length)]); }
+      await load();
+    } catch (e) { M.err(e); }
+  }
+
+  function meter() {
+    const box = document.getElementById("meter"); box.textContent = "";
+    const n = {}; C.CREW.forEach((c) => (n[c] = 0));
+    sond.forEach((r) => { if (String(r.domanda).startsWith("must-") && r.nome in n) n[r.nome]++; });
+    C.CREW.forEach((c) => box.appendChild(el("div", { class: "meter-row" }, el("span", { style: "display:flex;gap:8px;align-items:center" }, M.avatar(c), c), el("div", { class: "bar" }, el("i", { style: "width:" + Math.max((n[c] / C.MUST.length) * 100, 2) + "%;background:#fff" })), el("b", { class: "mono", text: n[c] + "/" + C.MUST.length }))));
+    const decisi = C.MUST.filter((m) => { const v = votes(m); return m.opz.some((o) => v[o.id].length >= 2); }).length;
+    const lazy = C.CREW.slice().sort((a, b) => n[a] - n[b])[0];
+    document.getElementById("st-sub").textContent = decisi + " must decisi su " + C.MUST.length + ". " + (n[lazy] < C.MUST.length ? lazy + " non ha ancora scelto tutto. " + R.TOX[n[lazy] % R.TOX.length] : "Avete scelto tutto. Commovente.");
+  }
+
+  function option(m, o, v, mine) {
+    return el("button", { type: "button", class: "mopt", "aria-pressed": String(!!mine && mine.scelta === o.id), onclick: () => pick(m, o) },
+      el("span", { class: "mopt-t" }, el("b", { text: o.t }), el("span", { text: o.x })),
+      el("span", { class: "mopt-r" }, el("b", { text: o.e ? "+" + eur(o.e) : "incluso" }), el("span", { class: "avs" }, v[o.id].map((n) => M.avatar(n)))));
+  }
+
+  function render() {
+    meter();
+    const box = document.getElementById("musts"); box.textContent = "";
+    const me = M.me();
+    C.MUST.forEach((m, i) => {
+      const v = votes(m), w = winner(m), mine = sond.find((r) => r.nome === me && r.domanda === "must-" + m.id);
+      const hero = el("div", { class: "mcard-hero", style: "background-image:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(10,15,60,.85)),url('" + C.foto(m.foto, "960px") + "')" },
+        el("span", { class: "mcard-n", text: (i + 1) + " di " + C.MUST.length }), el("h2", { text: m.e + " " + m.t }), el("p", { text: m.why }));
+      const body = el("div", { class: "mcard-body" }, el("b", { style: "font-size:17px", text: w ? "Per ora vince: " + w.t : "Come lo facciamo? Tocca la tua scelta." }));
+      m.opz.forEach((o) => body.appendChild(option(m, o, v, mine)));
+      box.appendChild(el("article", { class: "mcard", id: m.id }, hero, body));
+    });
+    const st = C.stato(reaz), alt = document.getElementById("altri"); alt.textContent = "";
+    C.MUST_ALTRI.filter((id) => ATT[id]).forEach((id) => {
+      const a = ATT[id], vv = st[id].v, mine2 = reaz.find((r) => r.nome === me && r.attivita === id), fk = C.FOTO_ATT[id];
+      const btns = el("div", { class: "vote3" });
+      VOTI.forEach(([k, e, lab]) => btns.appendChild(el("button", { type: "button", title: lab, "aria-label": lab, "aria-pressed": String(!!mine2 && mine2.voto === k), onclick: () => vote(a, k) }, e)));
+      btns.appendChild(el("span", { class: "avs", style: "margin-left:6px" }, vv.si.map((n) => M.avatar(n))));
+      alt.appendChild(el("article", { class: "mini-must" },
+        fk ? el("img", { src: C.foto(fk, "330px"), alt: "", loading: "lazy" }) : el("span", { class: "mm-emo", text: EMO[a.cat] }),
+        el("div", { style: "display:grid;gap:4px;min-width:0" }, el("b", { text: a.t }), el("span", { class: "muted", text: a.joke }), btns)));
+    });
+  }
+
+  async function vote(a, voto) {
+    const me = M.me(); if (!me) return M.askWho();
+    const mine = reaz.find((r) => r.nome === me && r.attivita === a.id);
+    try {
+      if (mine && mine.voto === voto) await db.remove("reazioni", { nome: me, attivita: a.id });
+      else { await db.upsert("reazioni", { nome: me, attivita: a.id, voto }, "nome,attivita"); M.roast(voto); }
+      await load();
+    } catch (e) { M.err(e); }
+  }
+
+  async function load() { const d = await db.many(["sondaggi", "reazioni", "persone"]); sond = d.sondaggi; reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":")); const y = window.scrollY; render(); window.scrollTo(0, y); }
+  render(); load(); db.subscribe(["sondaggi", "reazioni"], load); M.onMe(render);
+})();
+</script>
+</body>
+</html>

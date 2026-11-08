@@ -155,6 +155,8 @@ window.M = (function () {
   const P = {
     home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
     esplora: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+    viaggio: '<circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="6" r="2.2"/><path d="M7 17c5-1 2-6 6-7s3-3 4-3" stroke-dasharray="2.5 2.5"/>',
+    must: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
     mappa: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
     scenari: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
     giro: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
@@ -215,7 +217,7 @@ window.M = (function () {
   }
 
   /* ---------------- barra in basso ---------------- */
-  const NAV = [["index.html", "home", "Home"], ["esplora.html", "esplora", "Esplora"], ["mappa.html", "mappa", "Mappa"], ["notte.html", "notte", "Notte"], ["scenari.html", "scenari", "Scenari"], ["kit.html", "kit", "Kit"]];
+  const NAV = [["index.html", "home", "Home"], ["viaggio.html", "viaggio", "Viaggio"], ["must.html", "must", "Must"], ["mappa.html", "mappa", "Mappa"], ["notte.html", "notte", "Notte"], ["kit.html", "kit", "Kit"]];
   function nav(active) {
     const ul = el("ul");
     NAV.forEach(([href, ic, lab]) => ul.appendChild(el("li", null, el("a", { href, "aria-current": ic === active ? "page" : null }, icon(ic), lab))));
@@ -293,20 +295,20 @@ window.M = (function () {
     clearTimeout(ntfT); ntfT = setTimeout(hide, 6500);
     return true;
   }
-  /* ogni tanto ne arriva una: la prima dopo pochi secondi, poi ogni 40-70 secondi, al massimo 5 per pagina */
+  /* ogni tanto ne arriva una: la prima dopo 5 secondi, poi una ogni 60-90 secondi, al massimo 2 per pagina */
   function ntfLoop(page) {
     if (!window.R || !R.notifs) return;
     let data = null, shown = 0;
     const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
     async function next() {
-      if (shown >= 5) return;
+      if (shown >= 2) return;
       if (document.hidden || window.INTRO_ACTIVE) return setTimeout(next, 4000);
       if (!data) { try { data = await db.many(["persone", "reazioni", "todo", "valigia", "sondaggi", "spese", "muro"]); } catch (e) { data = {}; } }
       const pool = R.notifs(data, page, me);
       let k = Number(ss.get("marocco_ntf_i") || 0);
       const n = k === 0 ? pool[0] : pool[1 + ((k - 1) % (pool.length - 1))];
       if (notify(n)) { ss.set("marocco_ntf_i", String(k + 1)); shown++; }
-      setTimeout(next, 40000 + Math.random() * 30000);
+      setTimeout(next, 60000 + Math.random() * 30000);
     }
     setTimeout(next, 4500);
   }

@@ -204,6 +204,8 @@ window.R = (function () {
     if (page === "budget") return pick(["Per una volta siamo seri. Una.", "I numeri sono stime: quelli veri li vedete quando prenotate. Seriamente.", "Ogni tre 🔥 su Esplora, qui sale il conto. Votate con il portafoglio."], seed);
     if (page === "cuori") return pick(["Tre single in Marocco. L'unica che vi guarda negli occhi è la cammella.", "Le statistiche sono chiare: tornerete single, ma abbronzati.", "Probabilità di rimorchiare nel deserto: zero. Probabilità di innamorarsi del cammello: alta.", "Tinder in Marocco: unico match, la guida del deserto, 54 anni, baffi. Suave."], seed);
     if (page === "tribunale") return fill("Il tribunale è aperto. Le quote danno colpevole {X} su tutto. {END}", seed);
+    if (page === "viaggio") return fill(pick(["Undici giorni, una Dacia, zero piani. Votate, tossici. {END}", "Il giorno più a rischio è il 2 gennaio: sei ore di guida e {X} che chiede «quanto manca?». {END}"], seed), seed);
+    if (page === "must") return fill(pick(["I must non si discutono. Si discute solo come. {X}, scegli. {END}", "Se tornate senza aver fatto la moto, {X} paga la cena a tutti. {END}"], seed), seed);
     if (page === "mappa") return pick(["Ketama è segnata sulla mappa solo per dirvi di no. Tossici avvisati.", "La sorca più vicina ve la dice il tasto «Dove sono io?». Il risultato vi offenderà.", "Ogni pallino è un posto vero. Gli unici finti siete voi tre quando dite «domani prenotiamo»."], seed);
     if (page === "scenari") return fill(pick(["Quattro scenari, tre tossici, zero decisioni. {X}, vota e non rompere. {END}", "Il più votato vince. Se non votate, decide {X} da solo. Pensateci. {END}", "Scenario B: chi ha la patente A? {X} ha detto «più o meno». {TOX}"], seed), seed);
     if (page === "giro") return fill("Il giro è deciso. Resta da capire chi lo rovinerà per primo: le quote danno favorito {X}. {END}", seed);
@@ -234,20 +236,32 @@ window.R = (function () {
     d = d || {};
     const giorni = Math.max(0, Math.ceil((new Date(2026, 11, 28, 23, 30) - new Date()) / 86400000));
     const L = [
-      { chi: "Davide", app: "Gruppo «Marocco in tre»", t: "Davide", x: "Ragazzi quando prendiamo i voli?", href: "organizza.html" },
-      { chi: "Davide", app: "Gruppo «Marocco in tre»", t: "Davide", x: "Ragazzi quando prendiamo i voli? 🙏", href: "organizza.html" },
+      { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Ragazzi quando prendiamo i voli?", href: "organizza.html" },
+      { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Ragazzi quando prendiamo i voli? 🙏", href: "organizza.html" },
       { ic: "📞", col: "#30b94d", app: "Telefono", t: "Chiamata persa", x: "Davide (3)", quando: "2 min fa", href: "index.html" },
-      { chi: "Davide", app: "Gruppo «Marocco in tre»", t: "Davide", x: "Ok i voli li abbiamo presi. Ragazzi quando prenotiamo il riad?", href: "organizza.html" },
-      { chi: "Davide", app: "Gruppo «Marocco in tre»", t: "Davide", x: "Stasera vi chiamo per il transfer da Fes. Solo 5 minuti.", href: "organizza.html" },
-      { ic: "🐪", app: "Gruppo «Marocco in tre»", t: "Marocco in tre", x: "Davide ha cambiato il nome del gruppo in «Ragazzi quando prendiamo i voli»", href: "index.html" },
-      { chi: "Augusto", app: "Gruppo «Marocco in tre»", t: "Augusto", x: "Tranquilo, suave. Domani voto tutto.", href: "esplora.html" },
-      { chi: "Alessandro", app: "Gruppo «Marocco in tre»", t: "Alessandro", x: "Ho fatto un sito intero. Votate, tossici.", href: "esplora.html" },
+      { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Ok i voli li abbiamo presi. Ragazzi quando prenotiamo il riad?", href: "organizza.html" },
+      { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Stasera vi chiamo per il transfer da Fes. Solo 5 minuti.", href: "organizza.html" },
+      { ic: "🐪", app: "I 4 tossici", t: "I 4 tossici", x: "Davide ha cambiato il nome del gruppo in «Ragazzi quando prendiamo i voli»", href: "index.html" },
+      { chi: "Augusto", app: "I 4 tossici", t: "Augusto", x: "Tranquilo, suave. Domani voto tutto.", href: "esplora.html" },
+      { chi: "Alessandro", app: "I 4 tossici", t: "Alessandro", x: "Ho fatto un sito intero. Votate, tossici.", href: "esplora.html" },
       { ic: "🥶", col: "#0F6FB8", app: "Meteo", t: "Merzouga, stanotte", x: "-2°. Il piumino l'hai preso? No. Lo sapevo.", href: "kit.html" },
       { ic: "💃", col: "#d70015", app: "Mappa", t: "Sorca nelle vicinanze", x: "Nessun risultato nel raggio di 2.000 km. Mancano " + giorni + " giorni.", href: "mappa.html" },
       { ic: "🌿", col: "#1d8a3a", app: "Mappa", t: "Ketama", x: "Hai cercato Ketama. Il giro va a sud, tossico.", href: "mappa.html#ketama" },
       { ic: "💸", col: "#B35A00", app: "Banca", t: "Il saluzzese", x: "Ha controllato il conto del viaggio per la terza volta oggi. Esageruma nen.", href: "budget.html" },
       { ic: "🔥", col: "#D6345A", app: "Esplora", t: "Votazione aperta", x: "Capodanno nel deserto aspetta il tuo voto. Il deserto no, quello aspetta da sempre.", href: "esplora.html#cap-agafay" },
-      { ic: "⚖️", col: "#6E2BC2", app: "Tribunale", t: "Avv. Davide", x: "Ha fatto ricorso contro il titolo di Tossico Supremo. Respinto.", href: "tribunale.html" }
+      { ic: "⚖️", col: "#6E2BC2", app: "Tribunale", t: "Avv. Davide", x: "Ha fatto ricorso contro il titolo di Tossico Supremo. Respinto.", href: "tribunale.html" },
+      { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Ragazzi quando prendiamo i voli? Ah no, presi. Allora: quando prendiamo quelli dell'anno prossimo?", href: "viaggio.html" },
+      { chi: "Davide", app: "I 4 tossici", t: "Davide", x: "Ho fatto un Excel coi voli. Ve lo spiego in un vocale da 9 minuti.", href: "viaggio.html" },
+      { chi: "Augusto", app: "I 4 tossici", t: "Augusto", x: "Ragazzi ma nel deserto fa caldo vero? Porto solo i pantaloncini.", href: "kit.html" },
+      { chi: "Alessandro", app: "I 4 tossici", t: "Alessandro", x: "Ho messo i must. Votate o vi tolgo dal gruppo.", href: "must.html" },
+      { ic: "⭐", col: "#0B7A5C", app: "I must", t: "La moto", x: "Nessuno ha ancora scelto come fare la moto. Il cammello ride.", href: "must.html#moto" },
+      { ic: "🧭", col: "#D6345A", app: "Il viaggio", t: "3 gennaio", x: "Sveglia alle 6 per l'alba nelle dune. Davide metterà 4 sveglie e ne spegnerà 5.", href: "viaggio.html#d=2027-01-03" },
+      { ic: "🚨", col: "#d70015", app: "Polizia di Marrakech", t: "Segnalazione", x: "Tre italiani hanno contrattato un tè per 40 minuti. Uno era di Saluzzo.", href: "kit.html" },
+      { ic: "🐪", col: "#B35A00", app: "Fatima, cammella", t: "Nuovo match", x: "Fatima ha messo like alla tua foto. È l'unica.", href: "notte.html" },
+      { ic: "🧔", col: "#8B5A2B", app: "Ahmed, guida «amica»", t: "Messaggio", x: "Amico! La strada è chiusa. Vieni con me, prezzo buono.", href: "mappa.html#fesguide" },
+      { ic: "✈️", col: "#0F6FB8", app: "Volo Agadir → Londra", t: "8 gennaio", x: "A Londra 7 gradi e pioggia. Voi in ciabatte e muta. Welcome.", href: "kit.html" },
+      { ic: "🏄", col: "#0071e3", app: "Surf school Taghazout", t: "Prenotazione", x: "Il maestro ha visto le vostre foto. Ha chiesto un supplemento.", href: "must.html#surf" },
+      { ic: "🍷", col: "#8e44ad", app: "Capodanno", t: "31 dicembre", x: fill("Ultimo sondaggio: {X} crolla prima di mezzanotte. Quota 1,20.", "cap" + giorni), href: "notte.html" }
     ];
     titles(d).slice(0, 3).forEach((x) => L.push({ chi: x.n, app: "Pagella", t: x.n + " è " + x.t, x: x.f, href: "index.html" }));
     feed(d, 3).forEach((x) => L.push({ ic: "🐪", app: "Il sito", t: "Guarda questo tossico", x, href: "index.html" }));
@@ -256,6 +270,8 @@ window.R = (function () {
 
   /* -------- il tasto «non ho capito un cazzo» -------- */
   const SPIEGA = {
+    viaggio: "In alto scegli come vi muovete. Poi tocca un giorno sulla linea: la mappa ti mostra dove siete, sotto ci sono le cose da fare quel giorno. Premi 🔥, 🤔 o 💀.",
+    must: "Valli, surf, moto e deserto si fanno per forza. Per ognuno tocca il modo che preferisci: vince quello scelto da più persone. In fondo, gli altri must da votare.",
     home: "Scorri: ogni blocco spiega una parte del sito, con un link per entrarci. In basso c'è la barra con le pagine principali.",
     mappa: "Sopra scegli cosa vedere: sorca, surf, mangiare… Tocca un pallino per sapere cos'è e premere «Portami qui». «Dove sono io?» ti dice cosa hai vicino. Sotto la mappa puoi accendere il giro di uno scenario.",
     scenari: "In alto vedi chi ha votato cosa. Tocca uno scenario: c'è quanto costa, come vi muovete, dove dormite e il giro giorno per giorno. Premi «Voto questo»: vince il più votato.",

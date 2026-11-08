@@ -31,6 +31,7 @@
     <div class="pmap-wrap">
       <div id="pmap" role="application" aria-label="Mappa interattiva del Marocco"></div>
       <button class="pmap-me" type="button" id="b-me">📍 Dove sono io?</button>
+      <button class="pmap-me pmap-layer" type="button" id="b-layer">🗺️ Mappa</button>
     </div>
     <div class="tabs" role="tablist" aria-label="Il giro sulla mappa" id="routes"></div>
     <p class="muted" id="near" style="font-size:16px" aria-live="polite"></p>
@@ -94,9 +95,16 @@
   function init() {
     if (!window.L) { document.getElementById("pmap").textContent = "La mappa non si è caricata. Controlla la connessione e ricarica."; return false; }
     map = L.map("pmap", { scrollWheelZoom: false, zoomControl: true, tap: true }).setView([31.8, -6.8], 6);
-    const E = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_" + (dark ? "Dark" : "Light") + "_Gray_";
-    L.tileLayer(E + "Base/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, attribution: "Mappa © Esri, HERE, Garmin, © OpenStreetMap" }).addTo(map);
-    L.tileLayer(E + "Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16 }).addTo(map);
+    const A = "https://server.arcgisonline.com/ArcGIS/rest/services/";
+    const sat = L.layerGroup([
+      L.tileLayer(A + "World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 18, attribution: "Satellite © Esri, Maxar, Earthstar Geographics" }),
+      L.tileLayer(A + "Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 18 })]);
+    const plain = L.layerGroup([
+      L.tileLayer(A + "Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, attribution: "Mappa © Esri, HERE, Garmin, © OpenStreetMap" }),
+      L.tileLayer(A + "Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16 })]);
+    sat.addTo(map);
+    const tg = document.getElementById("b-layer"); let isSat = true;
+    tg.onclick = () => { isSat = !isSat; if (isSat) { plain.remove(); sat.addTo(map); tg.textContent = "🗺️ Mappa"; } else { sat.remove(); plain.addTo(map); tg.textContent = "🛰️ Satellite"; } drawRoute(); };
     C.POI.forEach((p) => { markers[p.id] = L.marker([p.lat, p.lng], { icon: pinIcon(p), title: p.n, keyboard: true }).on("click", () => select(p.id, false)); });
     return true;
   }
@@ -124,7 +132,7 @@
     if (scen === "-") return;
     routeLayer = L.layerGroup().addTo(map);
     const pts = C.ROUTES[scen].map((k) => [C.STOPS[k].lat, C.STOPS[k].lng]);
-    L.polyline(pts, { color: dark ? "#f5f5f7" : "#1d1d1f", weight: 3, opacity: .7, dashArray: "6 8" }).addTo(routeLayer);
+    L.polyline(pts, { color: "#ffffff", weight: 3, opacity: .9, dashArray: "6 8" }).addTo(routeLayer);
     [...new Set(C.ROUTES[scen])].forEach((k) => L.circleMarker([C.STOPS[k].lat, C.STOPS[k].lng], { radius: 4, color: dark ? "#000" : "#fff", weight: 2, fillColor: dark ? "#f5f5f7" : "#1d1d1f", fillOpacity: 1 }).bindTooltip(C.STOPS[k].n, { direction: "top" }).addTo(routeLayer));
   }
 
@@ -136,7 +144,10 @@
     selId = id; if (markers[id]) markers[id].setIcon(pinIcon(p, true)).setZIndexOffset(1000);
     if (fly && map) { on.add(p.cat); chips(); draw(); map.flyTo([p.lat, p.lng], Math.max(map.getZoom(), 12), { duration: .8 }); }
     const s = document.getElementById("sheet"); s.hidden = false; s.textContent = "";
+    const fk = p.w || C.FOTO_POI[p.id], fu = fk && C.foto(fk, "960px");
     s.appendChild(el("article", { class: "card place", style: "gap:10px" },
+      fu ? el("img", { class: "poi-photo", src: fu, alt: p.n, loading: "lazy" }) : null,
+      fu ? el("span", { class: "muted", style: "font-size:12px;margin-top:-6px", text: "Foto: Wikipedia" }) : null,
       el("span", { class: "eyebrow", style: "color:" + CAT[p.cat].c }, CAT[p.cat].e + " " + CAT[p.cat].n),
       el("h2", { style: "font-size:30px", text: p.n }),
       el("span", { class: "muted", text: p.dove + (here ? " · " + km(here, p) + " da te" : "") }),
@@ -161,7 +172,8 @@
       box.appendChild(el("div", { class: "catblock" },
         el("h2", { style: "font-size:24px" }, CAT[k].e + " " + CAT[k].n),
         el("ul", { class: "list" }, ps.map((p) => el("li", null, el("button", { type: "button", class: "poi-row", onclick: () => { select(p.id, true); document.getElementById("pmap").scrollIntoView({ behavior: "smooth", block: "center" }); } },
-          el("b", { text: p.n }), el("span", { class: "muted", text: p.dove + (here ? " · " + km(here, p) : "") }), el("span", { class: "joke", text: p.j })))))));
+          (p.w || C.FOTO_POI[p.id]) ? el("img", { class: "poi-thumb", src: C.foto(p.w || C.FOTO_POI[p.id], "330px"), alt: "", loading: "lazy" }) : el("span", { class: "poi-thumb poi-emoji", text: CAT[p.cat].e }),
+          el("span", { class: "poi-txt" }, el("b", { text: p.n }), el("span", { class: "muted", text: p.dove + (here ? " · " + km(here, p) : "") }), el("span", { class: "joke", text: p.j }))))))));
     });
   }
 

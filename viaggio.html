@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Il viaggio · Marocco in tre</title>
+<meta name="theme-color" content="#2438C6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Il viaggio</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Giorno per <em>giorno</em></h1>
+    <p class="lead" style="color:#fff">Tocca un giorno: vedi dove siete, cosa si può fare, e votate. 🔥 da tutti e tre e si fa.</p>
+  </div>
+</header>
+
+<main class="wrap" style="gap:22px">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+
+  <section class="sec" style="gap:8px">
+    <div class="row-between"><span class="eyebrow" style="color:#fff">Come vi muovete</span><a class="more" href="scenari.html" style="color:#fff;font-weight:600;font-size:15px">Costi e confronto ›</a></div>
+    <div class="hscroll" id="scen" role="tablist" aria-label="Scenario"></div>
+  </section>
+
+  <div class="dstrip" id="days" role="tablist" aria-label="Giorni"></div>
+
+  <section class="vmap-wrap"><div id="vmap" role="img" aria-label="Dove siete quel giorno"></div><span class="vmap-tag" id="vtag"></span></section>
+
+  <section class="sec" id="day" aria-live="polite" style="gap:16px"></section>
+
+  <div class="row-between" style="gap:10px">
+    <button class="btn" type="button" id="prev">‹ Giorno prima</button>
+    <button class="btn" type="button" id="next">Giorno dopo ›</button>
+  </div>
+
+  <a class="nextlink" href="must.html">I must: cosa si fa per forza ›</a>
+  <footer class="foot">Ore di guida stimate, da controllare su Maps. Il prezzo è quanto aggiunge a testa. Stime all'8 novembre 2026. Foto: Wikipedia.</footer>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db, eur } = M;
+  M.start("viaggio");
+  const ATT = {}; C.ATT.forEach((a) => (ATT[a.id] = a));
+  const EMO = { capodanno: "🎆", moto: "🏍️", deserto: "🐪", montagna: "⛰️", oceano: "🏄", citta: "🕌", cibo: "🍢", sfide: "🏆" };
+  const VOTI = [["si", "🔥", "Ci sto"], ["forse", "🤔", "Forse"], ["no", "💀", "No"]];
+  const DOW = { Lun: "lun", Mar: "mar", Mer: "mer", Gio: "gio", Ven: "ven", Sab: "sab", Dom: "dom" };
+  let reaz = [], sond = [], scen = null, sel = null, chosenScen = false;
+
+  /* che giorno mostrare: quello di oggi se siete in viaggio, altrimenti il primo; oppure quello nell'indirizzo */
+  const hp = new URLSearchParams(location.hash.slice(1));
+  const target = ATT[location.hash.slice(1)] ? location.hash.slice(1) : null;
+  if (C.SCEN[hp.get("s")]) { scen = hp.get("s"); chosenScen = true; }
+  sel = C.DAYS.find((d) => d.d === hp.get("d")) ? hp.get("d") : (C.DAYS.find((d) => d.d === M.todayStr()) || C.DAYS[0]).d;
+
+  function attFor(d, s) {
+    const x = C.dayFor(d, s); const ids = (x.att || []).slice();
+    (C.EXTRA_DAY[d.d] || []).forEach((id) => { if (!(s === "D" && d.d === "2027-01-02") && !ids.includes(id)) ids.push(id); });
+    return ids.filter((id) => ATT[id]);
+  }
+  if (target) { const d = C.DAYS.find((d) => attFor(d, scen || "A").includes(target)); if (d) sel = d.d; }
+
+  /* --- scenari --- */
+  function scenChips() {
+    const b = document.getElementById("scen"); b.textContent = "";
+    const g = C.scenGruppo(sond);
+    Object.keys(C.SCEN).forEach((k) => b.appendChild(el("button", { type: "button", class: "chip", "aria-pressed": String(scen === k), onclick: () => { scen = k; chosenScen = true; render(); } }, C.SCEN[k].emoji + " " + C.SCEN[k].nome + (g.voted && g.pick === k ? " ✓" : ""))));
+  }
+
+  /* --- la linea dei giorni --- */
+  function strip() {
+    const b = document.getElementById("days"); b.textContent = "";
+    C.DAYS.forEach((d, i) => {
+      const [wd, n, m] = d.lab.split(" "), st = C.stopsFor(d.d, scen), last = st.length ? C.STOPS[st[st.length - 1]].n.replace("Aeroporto di ", "") : "";
+      const btn = el("button", { type: "button", class: "dpill", role: "tab", "aria-selected": String(d.d === sel), onclick: () => { sel = d.d; render(); } },
+        el("span", { class: "dw", text: (DOW[wd] || wd) }), el("b", { text: n }), el("span", { class: "dm", text: m }), el("span", { class: "dp", text: last }));
+      b.appendChild(btn);
+    });
+    const on = b.querySelector('[aria-selected="true"]'); if (on) on.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+  }
+
+  /* --- la mappa del giorno --- */
+  let map = null, lay = null;
+  function drawMap() {
+    if (!window.L) { document.getElementById("vmap").textContent = "La mappa non si è caricata."; return; }
+    if (!map) {
+      map = L.map("vmap", { zoomControl: false, scrollWheelZoom: false, dragging: true, attributionControl: true }).setView([31.5, -6.5], 6);
+      const A = "https://server.arcgisonline.com/ArcGIS/rest/services/";
+      L.tileLayer(A + "World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 17, attribution: "Satellite © Esri" }).addTo(map);
+      L.tileLayer(A + "Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 17 }).addTo(map);
+    }
+    if (lay) lay.remove(); lay = L.layerGroup().addTo(map);
+    const all = C.ROUTES[scen].map((k) => [C.STOPS[k].lat, C.STOPS[k].lng]);
+    L.polyline(all, { color: "#fff", weight: 2, opacity: .45, dashArray: "4 7" }).addTo(lay);
+    const st = C.stopsFor(sel, scen), pts = st.map((k) => [C.STOPS[k].lat, C.STOPS[k].lng]);
+    if (pts.length > 1) L.polyline(pts, { color: "#ff9f0a", weight: 5, opacity: .95 }).addTo(lay);
+    st.forEach((k, i) => L.marker([C.STOPS[k].lat, C.STOPS[k].lng], { icon: L.divIcon({ className: "", iconSize: [30, 30], iconAnchor: [15, 15], html: '<span class="vpin' + (i === st.length - 1 ? " end" : "") + '">' + (i === st.length - 1 ? "🛏️" : i + 1) + "</span>" }) }).bindTooltip(C.STOPS[k].n, { permanent: i === st.length - 1, direction: "top", offset: [0, -14] }).addTo(lay));
+    if (pts.length === 1) map.flyTo(pts[0], 9, { duration: .8 }); else if (pts.length) map.flyToBounds(L.latLngBounds(pts).pad(0.35), { duration: .8, maxZoom: 10 });
+    const x = C.dayFor(C.DAYS.find((d) => d.d === sel), scen);
+    document.getElementById("vtag").textContent = st.map((k) => C.STOPS[k].n).join(" → ") + (x.ore ? " · " + (x.ore < 1 ? Math.round(x.ore * 60) + " min" : String(x.ore).replace(".", ",") + " ore") + " di guida" : "");
+  }
+
+  /* --- le schede delle attività, come in Esplora --- */
+  function stato(v) {
+    if (v.no.length) return ["ko", "💀 Bocciata da " + v.no.join(" e ")];
+    if (C.CREW.every((n) => v.si.includes(n))) return ["ok", "✓ Si fa"];
+    if (v.si.length) return ["", "Manca " + C.CREW.filter((n) => !v.si.includes(n)).join(" e ")];
+    return ["", "Ancora nessun voto"];
+  }
+  function card(a, v) {
+    const me = M.me(), mine = reaz.find((r) => r.nome === me && r.attivita === a.id);
+    const [cls, txt] = stato(v), c = C.COSTO[a.id] || 0, fk = C.FOTO_ATT[a.id];
+    return el("article", { class: "ecard" + (cls ? " " + cls : ""), id: a.id },
+      fk ? el("img", { class: "ecard-img", src: C.foto(fk, "500px"), alt: a.t, loading: "lazy" }) : el("div", { class: "ecard-img ecard-emo", text: EMO[a.cat] }),
+      el("div", { class: "ecard-body" },
+        el("span", { class: "ecard-st", text: txt }),
+        el("h3", { text: a.t }),
+        el("p", { class: "muted", text: a.dove + " · " + (c ? "+" + eur(c) + " a testa" : "niente in più") }),
+        el("p", { class: "joke", text: a.joke }),
+        el("div", { class: "ecard-vote", role: "group", "aria-label": "Il tuo voto" }, VOTI.map(([k, e, lab]) =>
+          el("button", { type: "button", class: "v-" + k, "aria-pressed": String(!!mine && mine.voto === k), onclick: () => vote(a, k) },
+            el("i", { text: e }), el("span", { text: lab }), el("span", { class: "avs" }, v[k].map((n) => M.avatar(n)))))),
+        el("details", null, el("summary", { text: "Cos'è" }), el("p", { class: "muted", style: "margin-top:6px", text: a.desc }))));
+  }
+
+  function dayPanel() {
+    const i = C.DAYS.findIndex((d) => d.d === sel), d = C.DAYS[i], x = C.dayFor(d, scen), box = document.getElementById("day"); box.textContent = "";
+    const st = C.stato(reaz), ids = attFor(d, scen);
+    const ore = x.ore ? (x.ore < 1 ? Math.round(x.ore * 60) + " minuti" : String(x.ore).replace(".", ",") + " ore") : "";
+    box.append(
+      el("div", { style: "display:grid;gap:6px" },
+        el("span", { class: "eyebrow", style: "color:#fff", text: "Giorno " + (i + 1) + " di " + C.DAYS.length + " · " + d.lab }),
+        el("h2", { style: "font-size:clamp(32px,9vw,46px)", text: x.t }),
+        el("div", { class: "vfacts" }, el("span", { text: "🛏️ " + x.dorme }), el("span", { text: ore ? "🚗 " + ore + " di guida" : "🛋️ Niente volante" }), ids.length ? el("span", { text: "✨ " + ids.length + (ids.length === 1 ? " cosa da fare" : " cose da fare") }) : null),
+        el("p", { class: "joke", style: "color:rgba(255,255,255,.9);font-size:17px", text: "Rischio del giorno: " + x.rischio.charAt(0).toLowerCase() + x.rischio.slice(1) + " " + R.fill("Favorito: {X}.", d.d + scen) })));
+
+    if (ids.length) {
+      box.appendChild(el("h3", { style: "font-size:24px;margin-top:6px", text: "Cosa si può fare" }));
+      ids.forEach((id) => box.appendChild(card(ATT[id], st[id].v)));
+    } else box.appendChild(el("div", { class: "card" }, el("b", { text: "Niente da votare oggi." }), el("p", { class: "muted", text: "Si viaggia. Preparate la playlist e la pazienza." })));
+
+    /* le altre possibilità dello stesso giorno, negli altri scenari */
+    const alt = Object.keys(C.SCEN).filter((k) => k !== scen).map((k) => [k, C.dayFor(d, k)]).filter(([, y]) => y.t !== x.t);
+    if (alt.length) box.appendChild(el("div", { class: "card", style: "display:grid;gap:10px" },
+      el("b", { style: "font-size:19px", text: "Le altre possibilità per questo giorno" }),
+      el("ul", { class: "list", style: "box-shadow:none" }, alt.map(([k, y]) => el("li", null, el("button", { type: "button", class: "poi-row", style: "grid-template-columns:1fr", onclick: () => { scen = k; chosenScen = true; render(); window.scrollTo({ top: 0, behavior: "smooth" }); } },
+        el("span", { class: "poi-txt" }, el("b", { text: C.SCEN[k].emoji + " " + C.SCEN[k].nome + ": " + y.t }), el("span", { class: "muted", text: "Dormite: " + y.dorme + " · tocca per vedere questo giro" }))))))));
+    document.getElementById("prev").disabled = i === 0; document.getElementById("next").disabled = i === C.DAYS.length - 1;
+  }
+  document.getElementById("prev").onclick = () => { const i = C.DAYS.findIndex((d) => d.d === sel); if (i > 0) { sel = C.DAYS[i - 1].d; render(); window.scrollTo({ top: document.getElementById("days").offsetTop - 10, behavior: "smooth" }); } };
+  document.getElementById("next").onclick = () => { const i = C.DAYS.findIndex((d) => d.d === sel); if (i < C.DAYS.length - 1) { sel = C.DAYS[i + 1].d; render(); window.scrollTo({ top: document.getElementById("days").offsetTop - 10, behavior: "smooth" }); } };
+
+  async function vote(a, voto) {
+    const me = M.me(); if (!me) return M.askWho();
+    const mine = reaz.find((r) => r.nome === me && r.attivita === a.id);
+    try {
+      if (mine && mine.voto === voto) await db.remove("reazioni", { nome: me, attivita: a.id });
+      else {
+        await db.upsert("reazioni", { nome: me, attivita: a.id, voto }, "nome,attivita");
+        const all = voto === "si" && C.CREW.filter((n) => n !== me).every((n) => reaz.some((r) => r.nome === n && r.attivita === a.id && r.voto === "si"));
+        if (all) M.notify({ ic: "✅", col: "#1d8a3a", app: "Il viaggio", t: "Si fa: " + a.t, x: "Tutti e tre 🔥. Ora qualcuno lo prenota. Non tu, Davide.", href: "sifa.html" });
+        else M.roast(voto === "si" && a.follia >= 4 ? "si_folle" : voto);
+      }
+      await load();
+    } catch (e) { M.err(e); }
+  }
+
+  function render() {
+    if (!scen) scen = "A";
+    history.replaceState(null, "", "#d=" + sel + "&s=" + scen);
+    const y = window.scrollY; scenChips(); strip(); dayPanel(); drawMap(); window.scrollTo(0, y);
+  }
+  async function load() {
+    const d = await db.many(["reazioni", "sondaggi", "persone"]);
+    reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":")); sond = d.sondaggi;
+    if (!chosenScen) { scen = C.scenGruppo(sond).pick; chosenScen = true; }
+    render();
+  }
+  render();
+  load().then(() => { if (target) { const n = document.getElementById(target); if (n) n.scrollIntoView({ block: "center" }); } });
+  db.subscribe(["reazioni", "sondaggi"], load);
+  M.onMe(render);
+})();
+</script>
+</body>
+</html>
