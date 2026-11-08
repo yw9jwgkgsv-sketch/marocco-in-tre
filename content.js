@@ -756,6 +756,23 @@ C.FOTO_POI = {"ketama": "Ketama", "chefchaouen": "Chefchaouen", "agafay": "Agafa
 /* foto(chiave, "500px" o "960px"): l'indirizzo della foto alla grandezza giusta */
 C.foto = function (k, size) { const u = C.WIKI[k]; return u ? u.replace("/330px-", "/" + (size || "500px") + "-") : null; };
 
+/* ---------- Domande veloci: sì o no, in Home e nei popup ----------
+   k: "att" = voto su un'idea (va in reazioni e conta in Il viaggio), "q" = informazione su di voi (va in sondaggi come q-<id>) */
+C.DOMANDE = [
+  { id: "capodanno-deserto", k: "q", tag: "🎆 Capodanno", f: "Erg_Chebbi", t: "Capodanno nel deserto, invece che a Marrakech?", x: "Falò, tamburi e stelle nelle dune. In cambio, niente club." },
+  { id: "rif-ketama", k: "att", tag: "🌿 Il Rif", f: "Ketama", t: "Un giorno nelle valli di Ketama?", x: "Con una guida locale. Si guarda, non si compra." },
+  { id: "patente-a", k: "q", tag: "🏍️ Su di te", f: "Enduro", t: "Hai la patente della moto?", x: "Serve per la KTM e per il tour in moto. Sinceramente, Davide." },
+  { id: "moto-dune", k: "att", tag: "🏍️ Deserto", f: "Merzouga", t: "Enduro sulle dune di Merzouga?", x: "Da un'ora a un giorno intero, con la guida davanti." },
+  { id: "guida", k: "q", tag: "🚗 Su di te", f: "Atlas_Mountains", t: "Te la senti di guidare 4 ore di fila?", x: "Serve per sapere su chi contare nei giorni lunghi." },
+  { id: "oc-imsouane", k: "att", tag: "🏄 Oceano", f: "Imsouane", t: "Lezione di surf a Imsouane?", x: "L'onda lunga e lenta, la migliore per imparare." },
+  { id: "passaporto", k: "q", tag: "🛂 Su di te", f: "Fes", t: "Il tuo passaporto scade dopo luglio 2027?", x: "Deve valere almeno 6 mesi. La carta d'identità non basta." },
+  { id: "rif-chefchaouen", k: "att", tag: "🌿 Il Rif", f: "Chefchaouen", t: "Una notte a Chefchaouen, la città blu?", x: "La base tranquilla per le valli del Rif." },
+  { id: "cit-hammam", k: "att", tag: "🕌 Fes", f: "Fes_el_Bali", t: "Hammam tutti e tre insieme?", x: "Vapore, sapone nero e lo scrub che toglie anche i peccati." },
+  { id: "assicurazione", k: "q", tag: "🛡️ Su di te", f: "Agadir", t: "Hai già un'assicurazione di viaggio?", x: "Sanitaria e valida in Marocco. Se no, la facciamo insieme." },
+  { id: "des-gara", k: "att", tag: "🐪 Deserto", f: "Gara_Medouar", t: "Gara Medouar in 4x4, il cratere di 007?", x: "Mezza giornata, con un autista del posto." },
+  { id: "surf-sai", k: "q", tag: "🏄 Su di te", f: "Taghazout", t: "Sei mai stato in piedi su una tavola da surf?", x: "Anche solo due secondi. Contano." }
+];
+
 /* ---------- Il viaggio: dove siete ogni giorno (tappe del giorno, in ordine) ---------- */
 C.DAYSTOPS = {
   "2026-12-29": { A: ["fes"] },

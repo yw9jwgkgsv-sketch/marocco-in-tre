@@ -44,16 +44,20 @@ begin
   end loop;
 end $$;
 
--- lo spazio per i file: massimo 10 MB a file, solo PDF e immagini
-insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('documenti', 'documenti', true, 10485760, array['application/pdf','image/jpeg','image/png','image/heic','image/heif','image/webp'])
-on conflict (id) do nothing;
-
-drop policy if exists "documenti leggi" on storage.objects;
-drop policy if exists "documenti carica" on storage.objects;
-drop policy if exists "documenti elimina" on storage.objects;
-create policy "documenti leggi" on storage.objects for select to anon using (bucket_id = 'documenti');
-create policy "documenti carica" on storage.objects for insert to anon with check (bucket_id = 'documenti');
-create policy "documenti elimina" on storage.objects for delete to anon using (bucket_id = 'documenti');
+-- lo spazio per i file: massimo 10 MB a file, solo PDF e immagini (se questa parte dà errore, il resto resta salvato)
+do $$
+begin
+  insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+  values ('documenti', 'documenti', true, 10485760, array['application/pdf','image/jpeg','image/png','image/heic','image/heif','image/webp'])
+  on conflict (id) do nothing;
+  drop policy if exists "documenti leggi" on storage.objects;
+  drop policy if exists "documenti carica" on storage.objects;
+  drop policy if exists "documenti elimina" on storage.objects;
+  create policy "documenti leggi" on storage.objects for select to anon using (bucket_id = 'documenti');
+  create policy "documenti carica" on storage.objects for insert to anon with check (bucket_id = 'documenti');
+  create policy "documenti elimina" on storage.objects for delete to anon using (bucket_id = 'documenti');
+exception when others then
+  raise notice 'Spazio file non creato: %', sqlerrm;
+end $$;
 
 notify pgrst, 'reload schema';

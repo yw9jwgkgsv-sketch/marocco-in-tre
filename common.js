@@ -43,14 +43,17 @@ window.M = (function () {
     if (!b) { b = el("div", { id: "upgrade", class: "banner" }); const m = document.querySelector("main"); if (m) m.prepend(b); }
     b.hidden = false; b.className = "banner fixdb"; b.textContent = "";
     const copy = el("button", { type: "button", class: "btn small" }, "1. Copia il codice");
-    copy.addEventListener("click", async () => {
-      try { const t = await (await fetch("schema_v3.sql", { cache: "no-store" })).text(); await navigator.clipboard.writeText(t); copy.textContent = "Copiato ✓"; }
-      catch (e) { window.open("schema_v3.sql", "_blank"); }
+    let sql = null; fetch("schema_v3.sql", { cache: "no-store" }).then((r) => r.text()).then((t) => (sql = t)).catch(() => {});
+    const box = el("textarea", { class: "fixdb-sql", readonly: "readonly", rows: "5", "aria-label": "Codice da copiare", hidden: true });
+    copy.addEventListener("click", () => {
+      const manual = () => { box.value = sql || "Il codice non si è caricato. Ricarica la pagina."; box.hidden = false; box.focus(); box.select(); box.setSelectionRange(0, 999999); copy.textContent = "Tieni premuto qui sotto → Seleziona tutto → Copia"; };
+      if (!sql || !navigator.clipboard) return manual();
+      navigator.clipboard.writeText(sql).then(() => { copy.textContent = "Copiato ✓"; }, manual);
     });
     b.append(
       el("b", { text: "Solo per te, Ale: manca un pezzo del database" }),
       el("p", { text: "Documenti, profili e proposte non si salvano finché non lo attivi. Gli altri non vedono questo avviso. Sono 3 minuti:" }),
-      el("ol", null, el("li", null, copy), el("li", null, el("a", { class: "btn small", href: "https://supabase.com/dashboard/project/dssjsegjucnzvqlmcaaa/sql/new", target: "_blank", rel: "noopener" }, "2. Apri Supabase")), el("li", { text: "3. Incolla tutto nella pagina bianca e premi Run in basso a destra. Poi ricarica il sito." })));
+      el("ol", null, el("li", null, copy, box), el("li", null, el("a", { class: "btn small", href: "https://supabase.com/dashboard/project/dssjsegjucnzvqlmcaaa/sql/new", target: "_blank", rel: "noopener" }, "2. Apri Supabase")), el("li", { text: "3. Nella pagina di Supabase tocca il riquadro vuoto, incolla e premi Run. Deve comparire «Success». Poi ricarica il sito." })));
   }
   function chk(r) { if (r.error) { if (isMissing(r.error)) needUpgrade(); throw r.error; } return r.data; }
 
@@ -120,7 +123,7 @@ window.M = (function () {
       const out = {};
       await Promise.all(tables.map(async (t) => {
         try { out[t] = await db.list(t); }
-        catch (e) { out[t] = []; out._err = out._err || e; if (!isMissing(e)) out._down = true; }
+        catch (e) { out[t] = []; out._err = out._err || e; if (!isMissing(e)) out._down = true; else (out._miss = out._miss || []).push(t); }
       }));
       return out;
     },
@@ -261,6 +264,18 @@ window.M = (function () {
     document.body.appendChild(el("nav", { class: "bottomnav", "aria-label": "Pagine" }, ul));
   }
 
+  /* ---------------- domande veloci ---------------- */
+  function answerOf(q, d, who) {
+    who = who || me; if (!who) return null;
+    if (q.k === "att") { const r = (d.reazioni || []).find((x) => x.nome === who && x.attivita === q.id); return r ? r.voto : null; }
+    const r = (d.sondaggi || []).find((x) => x.nome === who && x.domanda === "q-" + q.id); return r ? r.scelta : null;
+  }
+  async function answer(q, v) {
+    if (!me) return askWho();
+    if (q.k === "att") await db.upsert("reazioni", { nome: me, attivita: q.id, voto: v, aggiornato: new Date().toISOString() }, "nome,attivita");
+    else await db.upsert("sondaggi", { nome: me, domanda: "q-" + q.id, scelta: v }, "nome,domanda");
+  }
+
   /* ---------------- decisione dello scenario ---------------- */
   const GROUP = 3;
   function decide(persone) {
@@ -341,6 +356,7 @@ window.M = (function () {
       el("div", { class: "pop-bd" }, ic, el("span", { class: "pop-app", text: n.app || "Marocco in tre" }), el("b", { text: n.t }), el("p", { text: n.x })),
       el("div", { class: "pop-bt" }, n.a.map((lab, i) => el("button", { type: "button", onclick: () => {
         dim.classList.add("out"); setTimeout(() => dim.remove(), 250);
+        if (n.on) n.on(i);
         const r = n.r && n.r[i]; if (r) setTimeout(() => notify({ ic: n.ic || "🐪", chi: n.chi, col: n.col, app: n.app, t: n.t, x: r, href: n.href }), 350);
       } }, lab))));
     dim.appendChild(card); document.body.appendChild(dim);
@@ -351,29 +367,33 @@ window.M = (function () {
   /* ogni tanto ne arriva una: la prima dopo 5 secondi, poi una ogni 60-90 secondi, al massimo 2 per pagina */
   function ntfLoop(page) {
     if (!window.R || !R.notifs) return;
-    /* poche, sennò rompono: al massimo una notifica ogni 4 minuti e un popup ogni 15, contando tutte le pagine */
+    /* poche: al massimo una notifica ogni 5 minuti e un popup ogni 20, contando tutte le pagine */
     let data = null;
     const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
     const since = (k) => Date.now() - Number(ss.get(k) || 0);
+    async function load() { if (!data) { try { data = await db.many(["persone", "reazioni", "todo", "valigia", "sondaggi", "spese", "muro"]); } catch (e) { data = {}; } } return data; }
     async function next() {
       if (document.hidden || window.INTRO_ACTIVE) return setTimeout(next, 4000);
-      if (since("marocco_ntf_t") < 4 * 60000) return;
-      if (!data) { try { data = await db.many(["persone", "reazioni", "todo", "valigia", "sondaggi", "spese", "muro"]); } catch (e) { data = {}; } }
+      if (since("marocco_ntf_t") < 5 * 60000) return;
+      await load();
       const pool = R.notifs(data, page, me);
       let k = Number(ss.get("marocco_ntf_i") || 0);
       const n = k === 0 ? pool[0] : pool[1 + ((k - 1) % (pool.length - 1))];
       if (notify(n)) { ss.set("marocco_ntf_i", String(k + 1)); ss.set("marocco_ntf_t", String(Date.now())); }
     }
     async function pop() {
-      if (!R.popups) return;
+      if (page === "home" || !me || !C.DOMANDE) return;
       if (document.hidden || window.INTRO_ACTIVE || document.getElementById("ntf-live")) return setTimeout(pop, 5000);
-      if (since("marocco_pop_t") < 15 * 60000) return;
-      const list = R.popups(data || {}, page, me);
-      let k = Number(ss.get("marocco_pop_i") || 0);
-      if (popup(list[k % list.length])) { ss.set("marocco_pop_i", String(k + 1)); ss.set("marocco_pop_t", String(Date.now())); } else setTimeout(pop, 8000);
+      if (since("marocco_pop_t") < 20 * 60000) return;
+      await load();
+      const q = C.DOMANDE.find((x) => !answerOf(x, data));
+      if (!q) return;
+      const n = { ic: q.tag.split(" ")[0], app: "Domanda veloce", t: q.t, x: q.x, a: ["No", "Sì"],
+        on: (i) => answer(q, i ? "si" : "no").then(() => toast(i ? "Segnato: sì. 🔥" : "Segnato: no. 💀")).catch(err) };
+      if (popup(n)) ss.set("marocco_pop_t", String(Date.now())); else setTimeout(pop, 8000);
     }
     setTimeout(next, 6000);
-    setTimeout(pop, 45000 + Math.random() * 15000);
+    setTimeout(pop, 50000 + Math.random() * 20000);
   }
 
   /* ---------------- testata comune ---------------- */
@@ -402,6 +422,6 @@ window.M = (function () {
   }
   function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
 
-  return { setProfiles, profile: (n) => PROF[n] || {}, notify, popup, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
+  return { setProfiles, profile: (n) => PROF[n] || {}, notify, popup, answer, answerOf, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
     me: () => me, setMe, onMe: (f) => meListeners.push(f), askWho, store, isMissing };
 })();

@@ -16,41 +16,35 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="wrap h3">
+<main class="wrap h4">
   <div class="topline hm-top"><span class="eyebrow" id="oggi">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
 
   <div id="upgrade" class="banner" hidden></div>
 
-  <section class="h3-hero">
-    <b class="h3-n" id="cd-d">0</b>
-    <span class="h3-l">giorni al Marocco.</span>
-    <p class="h3-d">Si parte da Fes il 28 dicembre alle 23:30. Si torna da Agadir l'8 gennaio, passando da Londra.</p>
-    <div class="h3-msg"><span class="av" id="dav"></span><p>Ragazzi, quando prendiamo i voli?<small>Davide, ogni giorno, finché non li abbiamo presi</small></p></div>
-    <div class="h3-sand" aria-hidden="true"><span class="h3-camel">🐪</span></div>
-    <a class="h3-cue" href="#come">Come funziona ↓</a>
+  <section class="h4-wid" aria-label="In breve">
+    <div class="h4-w h4-cd"><b id="cd-d">0</b><span>giorni a Fes</span><small>Lunedì 28 dicembre, 23:30</small></div>
+    <button type="button" class="h4-w h4-call" id="call-btn" aria-label="Davide ha richiamato">
+      <span class="h4-ph">📞</span><b id="call-n">600.000</b><span>chiamate di Davide</span><small>Tocca se ha richiamato</small>
+    </button>
   </section>
 
-  <section class="h3-how" id="come" aria-labelledby="h-come">
-    <div class="h3-head"><h2 id="h-come">Come funziona</h2><p>Quattro cose, in quest'ordine. Il sito spunta da solo quelle che hai fatto.</p></div>
-    <div class="h3-prog"><i id="prog-bar"></i></div>
-    <p class="h3-prog-t" id="prog-t">0 di 4 fatte</p>
-    <ol class="h3-steps" id="steps"></ol>
+  <section class="h4-deck" aria-labelledby="h-dk">
+    <div class="h4-dh"><b id="h-dk">Domande veloci</b><span id="dk-n"></span></div>
+    <div class="h4-stack" id="stack"></div>
+    <div class="h4-btns" id="btns">
+      <button type="button" class="h4-no" id="b-no"><span aria-hidden="true">💀</span> No</button>
+      <button type="button" class="h4-si" id="b-si"><span aria-hidden="true">🔥</span> Sì</button>
+    </div>
+    <details class="h4-ans" id="ans-box"><summary>Le risposte di tutti e tre</summary><ul id="ans"></ul></details>
   </section>
 
-  <section class="h3-all" aria-labelledby="h-dec">
-    <h2 id="h-dec">Per decidere</h2>
-    <nav class="h3-grid" data-g="viaggio must scenari soldi sifa organizza documenti"></nav>
+  <section class="h4-apps" aria-label="Tutto il sito">
+    <nav class="h4-grid" id="apps"></nav>
+    <p class="h4-hint">Il pallino rosso è una cosa che ti manca.</p>
   </section>
-
-  <section class="h3-all" aria-labelledby="h-rid">
-    <h2 id="h-rid">Per non perdersi, e per ridere</h2>
-    <nav class="h3-grid" data-g="mappa notte kit profilo tribunale ruota muro"></nav>
-  </section>
-
-  <button type="button" class="h3-call" id="call-btn"><span>📞 Davide ha chiamato <b id="call-n">600.000</b> volte per il viaggio.</span><i>Ha richiamato ＋1</i></button>
 
   <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:#fff">Rivedi l'intro</button>
-  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 21 · 8 nov 2026</footer>
+  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 22 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -64,66 +58,107 @@
   const { el, db } = M;
   M.start("home");
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
-  document.getElementById("dav").replaceWith(M.avatar("Davide"));
+  let D = {}, busy = false;
 
-  /* le pagine del sito */
-  const T = {
-    viaggio: ["viaggio.html", "🧭", "#D6345A", "Il viaggio", "Cosa si fa, zona per zona"],
-    must: ["must.html", "⭐", "#0B7A5C", "I must", "Ketama, surf, moto, deserto"],
-    scenari: ["scenari.html", "🚗", "#1d1d6b", "Scenari e costi", "Come vi muovete, giorno per giorno"],
-    soldi: ["budget.html", "💸", "#1d8a3a", "I soldi", "Quanto spendete a testa"],
-    sifa: ["sifa.html", "🔥", "#E8590C", "Cosa si fa", "Quello deciso da tutti e tre"],
-    organizza: ["organizza.html", "✅", "#FF7A45", "Organizza", "Chi prenota cosa, chi deve soldi"],
-    documenti: ["documenti.html", "📎", "#B35A00", "Documenti", "Carica qui biglietti e prenotazioni"],
-    mappa: ["mappa.html", "📍", "#0F6FB8", "La mappa", "Sorca, surf, tagine, foto"],
-    notte: ["notte.html", "🌙", "#6E2BC2", "La notte", "Club, Capodanno, due di picche"],
-    kit: ["kit.html", "🎒", "#B35A00", "Il kit", "Valigia, darija, prezzi del souk"],
-    profilo: ["profilo.html", "😎", "#C2255C", "Il tuo profilo", "Faccia, soprannome, tormentone"],
-    tribunale: ["tribunale.html", "⚖️", "#6E2BC2", "Il tribunale", "Chi è il più tossico"],
-    ruota: ["ruota.html", "🎡", "#D6345A", "La ruota", "Chi paga il tè"],
-    muro: ["muro.html", "🧱", "#8B5A2B", "Il muro", "Le figure de merda, per sempre"]
-  };
-  document.querySelectorAll(".h3-grid").forEach((g) => g.dataset.g.split(" ").forEach((k) => {
-    const [href, e, c, t, sub] = T[k];
-    g.appendChild(el("a", { href }, el("span", { class: "ic", style: "background:" + c, text: e }), el("b", { text: t }), el("small", { text: sub })));
-  }));
+  /* ---------- le app del sito, come sulla schermata del telefono ---------- */
+  const APPS = [
+    ["viaggio", "viaggio.html", "🧭", "#D6345A", "Viaggio"], ["must", "must.html", "⭐", "#0B7A5C", "I must"], ["scenari", "scenari.html", "🚗", "#1d1d6b", "Scenari"], ["soldi", "budget.html", "💸", "#1d8a3a", "Soldi"],
+    ["sifa", "sifa.html", "🔥", "#E8590C", "Cosa si fa"], ["organizza", "organizza.html", "✅", "#FF7A45", "Organizza"], ["documenti", "documenti.html", "📎", "#B35A00", "Documenti"], ["mappa", "mappa.html", "📍", "#0F6FB8", "Mappa"],
+    ["notte", "notte.html", "🌙", "#6E2BC2", "Notte"], ["kit", "kit.html", "🎒", "#8B5A2B", "Kit"], ["profilo", "profilo.html", "😎", "#C2255C", "Profilo"], ["tribunale", "tribunale.html", "⚖️", "#5B2BA8", "Tribunale"],
+    ["ruota", "ruota.html", "🎡", "#D6345A", "Ruota"], ["muro", "muro.html", "🧱", "#7A4A1E", "Muro"]
+  ];
+  function badges(d) {
+    const me = M.me(), b = {}; if (!me) return b;
+    const miss = d._miss || [];
+    const mine = (d.reazioni || []).filter((r) => r.nome === me && !String(r.attivita).includes(":"));
+    b.viaggio = Object.values(C.AREA_ATT).filter((ids) => !ids.some((id) => mine.some((r) => r.attivita === id))).length;
+    b.must = C.MUST.filter((m) => !(d.sondaggi || []).some((r) => r.nome === me && r.domanda === "must-" + m.id)).length;
+    b.scenari = (d.sondaggi || []).some((r) => r.nome === me && r.domanda === "scenario") ? 0 : 1;
+    if (!miss.includes("documenti")) b.documenti = (d.documenti || []).some((x) => x.nome === me) ? 0 : 1;
+    return b;
+  }
+  function apps(d) {
+    const g = document.getElementById("apps"), b = badges(d); g.textContent = "";
+    APPS.forEach(([k, href, e, c, t]) => g.appendChild(el("a", { href, class: "h4-app" },
+      el("span", { class: "h4-ic", style: "background:" + c }, e, b[k] ? el("i", { class: "h4-bdg", text: String(b[k]), "aria-label": b[k] + " da fare" }) : null),
+      el("span", { class: "h4-lab", text: t }))));
+  }
 
-  /* i giorni: corrono una volta, quando l'intro si chiude */
+  /* ---------- le domande veloci: una alla volta, sì o no ---------- */
+  const Q = C.DOMANDE;
+  const todo = () => Q.filter((q) => !M.answerOf(q, D));
+  function who(q) {
+    return el("div", { class: "h4-who" }, C.CREW.filter((n) => n !== M.me()).map((n) => {
+      const v = M.answerOf(q, D, n);
+      return el("span", { class: "h4-wh" + (v ? " " + v : "") }, M.avatar(n), el("small", { text: v === "si" ? "sì" : v === "no" ? "no" : v ? "forse" : "deve rispondere" }));
+    }));
+  }
+  function card(q) {
+    const u = C.foto(q.f, "960px");
+    return el("article", { class: "h4-card", style: u ? "background-image:linear-gradient(180deg,rgba(8,14,70,.15) 20%,rgba(8,14,70,.92)),url('" + u + "')" : null },
+      el("span", { class: "h4-tag", text: q.tag }),
+      el("div", { class: "h4-q" }, el("h2", { text: q.t }), el("p", { text: q.x }), who(q)),
+      el("span", { class: "h4-stamp si", text: "SÌ" }), el("span", { class: "h4-stamp no", text: "NO" }));
+  }
+  function deck() {
+    const st = document.getElementById("stack"), left = todo(), me = M.me(); st.textContent = "";
+    const done = Q.length - left.length;
+    document.getElementById("dk-n").textContent = me ? (left.length ? (done + 1) + " di " + Q.length : "fatte tutte") : "";
+    document.getElementById("btns").hidden = !me || !left.length;
+    if (!me) {
+      st.appendChild(el("article", { class: "h4-card h4-plain" }, el("span", { class: "h4-tag", text: "🐪 Prima cosa" }),
+        el("div", { class: "h4-q" }, el("h2", { text: "Chi sei dei tre?" }), el("p", { text: "Tocca il tuo nome, una volta sola. Poi rispondi con sì o no." }),
+          el("button", { type: "button", class: "btn", style: "background:#fff;color:#2438C6;justify-self:start", onclick: () => M.askWho() }, "Scegli il tuo nome"))));
+      return;
+    }
+    if (!left.length) {
+      const pending = C.CREW.filter((n) => n !== me && Q.some((q) => !M.answerOf(q, D, n)));
+      st.appendChild(el("article", { class: "h4-card h4-plain" }, el("span", { class: "h4-tag", text: "✅ Fatto" }),
+        el("div", { class: "h4-q" }, el("h2", { text: "Hai risposto a tutto, " + me + "." }),
+          el("p", { text: pending.length ? "Mancano " + pending.join(" e ") + ". Mandagli il link. Davide lo chiami tu, per una volta." : "Avete risposto tutti e tre. Le risposte sono qui sotto." }))));
+      return;
+    }
+    if (left[1]) { const b = card(left[1]); b.classList.add("h4-back"); b.setAttribute("aria-hidden", "true"); st.appendChild(b); }
+    const c = card(left[0]); st.appendChild(c); drag(c, left[0]);
+  }
+  async function pick(q, v, c) {
+    if (busy) return; busy = true;
+    c = c || document.querySelector(".h4-card:not(.h4-back)");
+    if (c && !matchMedia("(prefers-reduced-motion: reduce)").matches) { c.classList.add(v === "si" ? "go-si" : "go-no"); await new Promise((r) => setTimeout(r, 300)); }
+    try {
+      await M.answer(q, v);
+      if (q.k === "att") D.reazioni = (D.reazioni || []).filter((r) => !(r.nome === M.me() && r.attivita === q.id)).concat([{ nome: M.me(), attivita: q.id, voto: v }]);
+      else D.sondaggi = (D.sondaggi || []).filter((r) => !(r.nome === M.me() && r.domanda === "q-" + q.id)).concat([{ nome: M.me(), domanda: "q-" + q.id, scelta: v }]);
+    } catch (e) { M.err(e); }
+    busy = false; deck(); list(); apps(D);
+  }
+  function drag(c, q) {
+    let x0 = null, dx = 0;
+    c.addEventListener("pointerdown", (e) => { if (e.target.closest("button")) return; x0 = e.clientX; dx = 0; c.setPointerCapture(e.pointerId); c.style.transition = "none"; });
+    c.addEventListener("pointermove", (e) => { if (x0 === null) return; dx = e.clientX - x0; c.style.transform = "translateX(" + dx + "px) rotate(" + dx / 18 + "deg)"; c.classList.toggle("lean-si", dx > 40); c.classList.toggle("lean-no", dx < -40); });
+    const up = () => { if (x0 === null) return; x0 = null; c.style.transition = ""; c.style.transform = ""; if (Math.abs(dx) > 90) pick(q, dx > 0 ? "si" : "no", c); else c.classList.remove("lean-si", "lean-no"); };
+    c.addEventListener("pointerup", up); c.addEventListener("pointercancel", up);
+  }
+  document.getElementById("b-si").addEventListener("click", () => { const q = todo()[0]; if (q) pick(q, "si"); });
+  document.getElementById("b-no").addEventListener("click", () => { const q = todo()[0]; if (q) pick(q, "no"); });
+
+  function list() {
+    const ul = document.getElementById("ans"); ul.textContent = "";
+    Q.forEach((q) => ul.appendChild(el("li", null, el("span", { text: q.t }),
+      el("span", { class: "h4-row" }, C.CREW.map((n) => { const v = M.answerOf(q, D, n); return el("span", { class: "h4-mini " + (v || "nd"), title: n }, M.avatar(n), el("i", { text: v === "si" ? "✓" : v === "no" ? "✕" : v ? "?" : "·" })); })))));
+  }
+
+  /* ---------- i giorni: corrono una volta, quando l'intro si chiude ---------- */
   const GG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"], MM = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
   const now = new Date(), gg = Math.max(0, Math.ceil((new Date(2026, 11, 28, 23, 30, 0) - now) / 86400000));
   document.getElementById("oggi").textContent = GG[now.getDay()] + " " + now.getDate() + " " + MM[now.getMonth()];
   const cd = document.getElementById("cd-d");
   function run() {
-    document.querySelector(".h3-hero").classList.add("go");
-    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { cd.textContent = gg; return; }
-    const t0 = performance.now(), D = 1300;
-    (function f(t) { const p = Math.min(1, (t - t0) / D); cd.textContent = Math.round(gg * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); })(t0);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { cd.textContent = gg; return; }
+    const t0 = performance.now(), T = 1100;
+    (function f(t) { const p = Math.min(1, (t - t0) / T); cd.textContent = Math.round(gg * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); })(t0);
   }
   (function wait() { if (window.INTRO_ACTIVE || document.getElementById("intro")) return setTimeout(wait, 300); run(); })();
-
-  /* il tutorial: quattro passi, spuntati da soli */
-  function steps(d) {
-    const me = M.me(), reaz = (d.reazioni || []).filter((r) => !String(r.attivita).includes(":") && r.nome === me);
-    const must = C.MUST.filter((m) => (d.sondaggi || []).some((r) => r.nome === me && r.domanda === "must-" + m.id)).length;
-    const docs = (d.documenti || []).filter((x) => x.nome === me).length;
-    const S = [
-      { ok: !!me, t: "Dicci chi sei", x: "Così il sito sa chi prendere in giro. Tocca il tuo nome, una volta sola.", b: "Scegli", go: () => M.askWho() },
-      { ok: reaz.length >= 5, t: "Vota cosa fare", x: "Apri Il viaggio, scegli una zona e su ogni idea premi 🔥 ci sto, 🤔 forse o 💀 no. Se tutti e tre premete 🔥, si fa.", b: "Vota", href: "viaggio.html", n: reaz.length ? "Hai votato " + reaz.length + " idee" : "" },
-      { ok: must === C.MUST.length, t: "Scegli i must", x: "Ketama, surf, moto e deserto si fanno per forza. Tu scegli come: vince il modo più votato.", b: "Scegli", href: "must.html", n: must ? must + " su " + C.MUST.length : "" },
-      { ok: docs > 0, t: "Carica i documenti", x: "Biglietti e prenotazioni in un posto solo, così li hanno tutti. Basta «me lo rimandi?».", b: "Carica", href: "documenti.html" }
-    ];
-    const n = S.filter((s) => s.ok).length;
-    document.getElementById("prog-bar").style.width = (n / S.length) * 100 + "%";
-    document.getElementById("prog-t").textContent = n === S.length ? "Fatto tutto. Ora Davide non ha più scuse per chiamare." : n + " di " + S.length + " fatte" + (me ? ", " + me : "") + ".";
-    const ol = document.getElementById("steps"); ol.textContent = "";
-    S.forEach((s, i) => {
-      const cta = s.href ? el("a", { class: "h3-go", href: s.href }, s.ok ? "Riapri" : s.b) : el("button", { type: "button", class: "h3-go", onclick: s.go }, s.ok ? "Cambia" : s.b);
-      ol.appendChild(el("li", { class: s.ok ? "ok" : (S.slice(0, i).every((p) => p.ok) ? "now" : "") },
-        el("span", { class: "h3-num", text: s.ok ? "✓" : String(i + 1) }),
-        el("div", { class: "h3-st" }, el("b", { text: s.t }), el("p", { text: s.x }), s.n ? el("small", { text: s.n }) : null),
-        cta));
-    });
-  }
 
   document.getElementById("call-btn").addEventListener("click", async () => {
     const me = M.me(); if (!me) return M.askWho();
@@ -135,14 +170,15 @@
   });
 
   async function load() {
-    const d = await db.many(["reazioni", "sondaggi", "documenti"]);
-    const calls = d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")).length;
+    D = await db.many(["reazioni", "sondaggi", "documenti"]);
+    const calls = D.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")).length;
     document.getElementById("call-n").textContent = String(600000 + calls).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    steps(d);
+    if (!busy) deck();
+    list(); apps(D);
   }
-  steps({}); load();
+  apps({}); deck(); load();
   M.onMe(load);
-  db.subscribe(["reazioni", "sondaggi", "documenti"], load);
+  db.subscribe(["reazioni", "sondaggi", "documenti"], () => { if (!busy) load(); });
 })();
 </script>
 </body>
