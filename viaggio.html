@@ -16,32 +16,21 @@
 <header class="pagehead">
   <div class="wrap">
     <div class="topline"><span class="eyebrow">Il viaggio</span><span class="me-chip" id="me-chip"></span></div>
-    <h1>Giorno per <em>giorno</em></h1>
-    <p class="lead" style="color:#fff">Tocca un giorno: vedi dove siete, cosa si può fare, e votate. 🔥 da tutti e tre e si fa.</p>
+    <h1>Zona per <em>zona</em></h1>
+    <p class="lead" style="color:#fff">Il Marocco in 7 zone, da nord a sud. Scegli una zona, guarda cosa c'è da fare e vota: 🔥 da tutti e tre e si fa.</p>
   </div>
 </header>
 
-<main class="wrap" style="gap:22px">
+<main class="wrap" style="gap:18px">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
 
-  <section class="sec" style="gap:8px">
-    <div class="row-between"><span class="eyebrow" style="color:#fff">Come vi muovete</span><a class="more" href="scenari.html" style="color:#fff;font-weight:600;font-size:15px">Costi e confronto ›</a></div>
-    <div class="hscroll" id="scen" role="tablist" aria-label="Scenario"></div>
-  </section>
+  <section class="vmap-wrap"><div id="amap" role="application" aria-label="Le zone del viaggio sulla mappa"></div></section>
 
-  <div class="dstrip" id="days" role="tablist" aria-label="Giorni"></div>
+  <div class="zgrid" id="zones" role="tablist" aria-label="Zone"></div>
 
-  <section class="vmap-wrap"><div id="vmap" role="img" aria-label="Dove siete quel giorno"></div><span class="vmap-tag" id="vtag"></span></section>
+  <section id="zone" style="display:grid;gap:14px" aria-live="polite"></section>
 
-  <section class="sec" id="day" aria-live="polite" style="gap:16px"></section>
-
-  <div class="row-between" style="gap:10px">
-    <button class="btn" type="button" id="prev">‹ Giorno prima</button>
-    <button class="btn" type="button" id="next">Giorno dopo ›</button>
-  </div>
-
-  <a class="nextlink" href="must.html">I must: cosa si fa per forza ›</a>
-  <footer class="foot">Ore di guida stimate, da controllare su Maps. Il prezzo è quanto aggiunge a testa. Stime all'8 novembre 2026. Foto: Wikipedia.</footer>
+  <footer class="foot">Il prezzo è quanto aggiunge a testa, oltre a dormire e mangiare. Stime all'8 novembre 2026. Foto: Wikipedia. Il giro giorno per giorno è in <a href="scenari.html" style="color:#fff;text-decoration:underline">Scenari</a>.</footer>
 </main>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -55,113 +44,99 @@
   const { el, db, eur } = M;
   M.start("viaggio");
   const ATT = {}; C.ATT.forEach((a) => (ATT[a.id] = a));
+  /* i tipi di attività, per filtrare dentro una zona */
+  const TIPO = { tutto: "Tutto", capodanno: "🎆 Capodanno", moto: "🏍️ Moto", deserto: "🐪 Deserto", montagna: "⛰️ Valli", oceano: "🏄 Surf", citta: "🕌 Città", cibo: "🍢 Mangiare", sfide: "🏆 Sfide" };
   const EMO = { capodanno: "🎆", moto: "🏍️", deserto: "🐪", montagna: "⛰️", oceano: "🏄", citta: "🕌", cibo: "🍢", sfide: "🏆" };
   const VOTI = [["si", "🔥", "Ci sto"], ["forse", "🤔", "Forse"], ["no", "💀", "No"]];
-  const DOW = { Lun: "lun", Mar: "mar", Mer: "mer", Gio: "gio", Ven: "ven", Sab: "sab", Dom: "dom" };
-  let reaz = [], sond = [], scen = null, sel = null, chosenScen = false;
+  let reaz = [], sond = [], zona = "fes", tipo = "tutto", first = true;
 
-  /* che giorno mostrare: quello di oggi se siete in viaggio, altrimenti il primo; oppure quello nell'indirizzo */
-  const hp = new URLSearchParams(location.hash.slice(1));
-  const target = ATT[location.hash.slice(1)] ? location.hash.slice(1) : null;
-  if (C.SCEN[hp.get("s")]) { scen = hp.get("s"); chosenScen = true; }
-  sel = C.DAYS.find((d) => d.d === hp.get("d")) ? hp.get("d") : (C.DAYS.find((d) => d.d === M.todayStr()) || C.DAYS[0]).d;
+  /* dall'indirizzo: #zona oppure #id-attività (i vecchi link di Esplora) */
+  const h = decodeURIComponent(location.hash.slice(1));
+  const target = ATT[h] ? h : null;
+  if (target) zona = C.areaOf(target) || zona; else if (C.AREE.some((a) => a.id === h)) zona = h;
 
-  function attFor(d, s) {
-    const x = C.dayFor(d, s); const ids = (x.att || []).slice();
-    (C.EXTRA_DAY[d.d] || []).forEach((id) => { if (!(s === "D" && d.d === "2027-01-02") && !ids.includes(id)) ids.push(id); });
-    return ids.filter((id) => ATT[id]);
-  }
-  if (target) { const d = C.DAYS.find((d) => attFor(d, scen || "A").includes(target)); if (d) sel = d.d; }
-
-  /* --- scenari --- */
-  function scenChips() {
-    const b = document.getElementById("scen"); b.textContent = "";
-    const g = C.scenGruppo(sond);
-    Object.keys(C.SCEN).forEach((k) => b.appendChild(el("button", { type: "button", class: "chip", "aria-pressed": String(scen === k), onclick: () => { scen = k; chosenScen = true; render(); } }, C.SCEN[k].emoji + " " + C.SCEN[k].nome + (g.voted && g.pick === k ? " ✓" : ""))));
-  }
-
-  /* --- la linea dei giorni --- */
-  function strip() {
-    const b = document.getElementById("days"); b.textContent = "";
-    C.DAYS.forEach((d, i) => {
-      const [wd, n, m] = d.lab.split(" "), st = C.stopsFor(d.d, scen), last = st.length ? C.STOPS[st[st.length - 1]].n.replace("Aeroporto di ", "") : "";
-      const btn = el("button", { type: "button", class: "dpill", role: "tab", "aria-selected": String(d.d === sel), onclick: () => { sel = d.d; render(); } },
-        el("span", { class: "dw", text: (DOW[wd] || wd) }), el("b", { text: n }), el("span", { class: "dm", text: m }), el("span", { class: "dp", text: last }));
-      b.appendChild(btn);
+  /* --- mappa con le 7 zone --- */
+  let map = null, mk = {}, route = null;
+  function initMap() {
+    if (!window.L) { document.getElementById("amap").textContent = "La mappa non si è caricata."; return; }
+    map = L.map("amap", { zoomControl: false, scrollWheelZoom: false, attributionControl: true }).setView([32, -6.5], 5);
+    const A = "https://server.arcgisonline.com/ArcGIS/rest/services/";
+    L.tileLayer(A + "World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 17, attribution: "Satellite © Esri" }).addTo(map);
+    L.tileLayer(A + "Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 17 }).addTo(map);
+    C.AREE.forEach((z, i) => {
+      mk[z.id] = L.marker([z.lat, z.lng], { icon: zIcon(z, i, false), title: z.n }).on("click", () => { zona = z.id; tipo = "tutto"; render(true); }).addTo(map);
     });
-    const on = b.querySelector('[aria-selected="true"]'); if (on) on.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+  }
+  function zIcon(z, i, on) { return L.divIcon({ className: "", iconSize: on ? [170, 34] : [30, 30], iconAnchor: on ? [17, 17] : [15, 15], html: '<span class="zpin' + (on ? " on" : "") + '"><i>' + (i + 1) + "</i>" + (on ? z.n : "") + "</span>" }); }
+  function drawMap(fly) {
+    if (!map) return;
+    C.AREE.forEach((z, i) => { mk[z.id].setIcon(zIcon(z, i, z.id === zona)); mk[z.id].setZIndexOffset(z.id === zona ? 1000 : 0); });
+    if (route) route.remove();
+    const g = C.scenGruppo(sond).pick;
+    route = L.polyline(C.ROUTES[g].map((k) => [C.STOPS[k].lat, C.STOPS[k].lng]), { color: "#fff", weight: 2, opacity: .7, dashArray: "5 7" }).addTo(map);
+    const z = C.AREE.find((a) => a.id === zona);
+    if (first) { map.fitBounds(L.latLngBounds(C.AREE.map((a) => [a.lat, a.lng])).pad(0.15)); first = false; }
+    else if (fly) map.flyTo([z.lat, z.lng], Math.min(z.z, 8), { duration: .7 });
   }
 
-  /* --- la mappa del giorno --- */
-  let map = null, lay = null;
-  function drawMap() {
-    if (!window.L) { document.getElementById("vmap").textContent = "La mappa non si è caricata."; return; }
-    if (!map) {
-      map = L.map("vmap", { zoomControl: false, scrollWheelZoom: false, dragging: true, attributionControl: true }).setView([31.5, -6.5], 6);
-      const A = "https://server.arcgisonline.com/ArcGIS/rest/services/";
-      L.tileLayer(A + "World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 17, attribution: "Satellite © Esri" }).addTo(map);
-      L.tileLayer(A + "Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 17 }).addTo(map);
-    }
-    if (lay) lay.remove(); lay = L.layerGroup().addTo(map);
-    const all = C.ROUTES[scen].map((k) => [C.STOPS[k].lat, C.STOPS[k].lng]);
-    L.polyline(all, { color: "#fff", weight: 2, opacity: .45, dashArray: "4 7" }).addTo(lay);
-    const st = C.stopsFor(sel, scen), pts = st.map((k) => [C.STOPS[k].lat, C.STOPS[k].lng]);
-    if (pts.length > 1) L.polyline(pts, { color: "#ff9f0a", weight: 5, opacity: .95 }).addTo(lay);
-    st.forEach((k, i) => L.marker([C.STOPS[k].lat, C.STOPS[k].lng], { icon: L.divIcon({ className: "", iconSize: [30, 30], iconAnchor: [15, 15], html: '<span class="vpin' + (i === st.length - 1 ? " end" : "") + '">' + (i === st.length - 1 ? "🛏️" : i + 1) + "</span>" }) }).bindTooltip(C.STOPS[k].n, { permanent: i === st.length - 1, direction: "top", offset: [0, -14] }).addTo(lay));
-    if (pts.length === 1) map.flyTo(pts[0], 9, { duration: .8 }); else if (pts.length) map.flyToBounds(L.latLngBounds(pts).pad(0.35), { duration: .8, maxZoom: 10 });
-    const x = C.dayFor(C.DAYS.find((d) => d.d === sel), scen);
-    document.getElementById("vtag").textContent = st.map((k) => C.STOPS[k].n).join(" → ") + (x.ore ? " · " + (x.ore < 1 ? Math.round(x.ore * 60) + " min" : String(x.ore).replace(".", ",") + " ore") + " di guida" : "");
+  /* --- le 7 zone, in griglia --- */
+  function zones() {
+    const box = document.getElementById("zones"); box.textContent = "";
+    const st = C.stato(reaz);
+    C.AREE.forEach((z, i) => {
+      const ids = C.AREA_ATT[z.id], fatte = ids.filter((id) => st[id] && st[id].s === "si").length;
+      box.appendChild(el("button", { type: "button", role: "tab", class: "zbtn", "aria-selected": String(z.id === zona), onclick: () => { zona = z.id; tipo = "tutto"; render(true); } },
+        el("i", { text: i + 1 }), el("b", { text: z.n }), el("span", { text: ids.length + " idee" + (fatte ? " · " + fatte + " ✓" : "") })));
+    });
   }
 
-  /* --- le schede delle attività, come in Esplora --- */
+  /* --- una riga per idea: pulita, foto piccola, tre tasti --- */
   function stato(v) {
-    if (v.no.length) return ["ko", "💀 Bocciata da " + v.no.join(" e ")];
+    if (v.no.length) return ["ko", "Bocciata da " + v.no.join(" e ")];
     if (C.CREW.every((n) => v.si.includes(n))) return ["ok", "✓ Si fa"];
     if (v.si.length) return ["", "Manca " + C.CREW.filter((n) => !v.si.includes(n)).join(" e ")];
-    return ["", "Ancora nessun voto"];
+    return ["", ""];
   }
-  function card(a, v) {
+  function row(a, v) {
     const me = M.me(), mine = reaz.find((r) => r.nome === me && r.attivita === a.id);
     const [cls, txt] = stato(v), c = C.COSTO[a.id] || 0, fk = C.FOTO_ATT[a.id];
-    return el("article", { class: "ecard" + (cls ? " " + cls : ""), id: a.id },
-      fk ? el("img", { class: "ecard-img", src: C.foto(fk, "500px"), alt: a.t, loading: "lazy" }) : el("div", { class: "ecard-img ecard-emo", text: EMO[a.cat] }),
-      el("div", { class: "ecard-body" },
-        el("span", { class: "ecard-st", text: txt }),
-        el("h3", { text: a.t }),
-        el("p", { class: "muted", text: a.dove + " · " + (c ? "+" + eur(c) + " a testa" : "niente in più") }),
-        el("p", { class: "joke", text: a.joke }),
-        el("div", { class: "ecard-vote", role: "group", "aria-label": "Il tuo voto" }, VOTI.map(([k, e, lab]) =>
-          el("button", { type: "button", class: "v-" + k, "aria-pressed": String(!!mine && mine.voto === k), onclick: () => vote(a, k) },
-            el("i", { text: e }), el("span", { text: lab }), el("span", { class: "avs" }, v[k].map((n) => M.avatar(n)))))),
-        el("details", null, el("summary", { text: "Cos'è" }), el("p", { class: "muted", style: "margin-top:6px", text: a.desc }))));
+    const vote3 = el("div", { class: "arow-vote", role: "group", "aria-label": "Il tuo voto" });
+    VOTI.forEach(([k, e, lab]) => vote3.appendChild(el("button", { type: "button", class: "v-" + k, "aria-label": lab, "aria-pressed": String(!!mine && mine.voto === k), onclick: () => vote(a, k) },
+      el("span", { class: "lab" }, el("i", { text: e }), " " + lab), v[k].length ? el("span", { class: "avs" }, v[k].map((n) => M.avatar(n))) : null)));
+    return el("article", { class: "arow" + (cls ? " " + cls : ""), id: a.id },
+      el("div", { class: "arow-top" },
+        fk ? el("img", { src: C.foto(fk, "330px"), alt: "", loading: "lazy" }) : el("span", { class: "arow-emo", text: EMO[a.cat] }),
+        el("div", { class: "arow-txt" },
+          el("b", { text: a.t }),
+          el("span", { class: "muted", text: a.quando + " · " + (c ? "+" + eur(c) : "niente in più") }),
+          txt ? el("span", { class: "arow-st", text: txt }) : null)),
+      el("p", { class: "joke", text: a.joke }),
+      vote3,
+      el("details", null, el("summary", { text: "Cos'è" }), el("p", { class: "muted", style: "margin-top:6px", text: a.desc + " " + a.dove + ", " + a.durata + "." })));
   }
 
-  function dayPanel() {
-    const i = C.DAYS.findIndex((d) => d.d === sel), d = C.DAYS[i], x = C.dayFor(d, scen), box = document.getElementById("day"); box.textContent = "";
-    const st = C.stato(reaz), ids = attFor(d, scen);
-    const ore = x.ore ? (x.ore < 1 ? Math.round(x.ore * 60) + " minuti" : String(x.ore).replace(".", ",") + " ore") : "";
+  function zonePanel() {
+    const i = C.AREE.findIndex((z) => z.id === zona), z = C.AREE[i], box = document.getElementById("zone"); box.textContent = "";
+    const st = C.stato(reaz), ids = C.AREA_ATT[z.id];
+    const tipi = ["tutto"].concat(Object.keys(TIPO).filter((k) => k !== "tutto" && ids.some((id) => ATT[id].cat === k)));
+    if (!tipi.includes(tipo)) tipo = "tutto";
     box.append(
-      el("div", { style: "display:grid;gap:6px" },
-        el("span", { class: "eyebrow", style: "color:#fff", text: "Giorno " + (i + 1) + " di " + C.DAYS.length + " · " + d.lab }),
-        el("h2", { style: "font-size:clamp(32px,9vw,46px)", text: x.t }),
-        el("div", { class: "vfacts" }, el("span", { text: "🛏️ " + x.dorme }), el("span", { text: ore ? "🚗 " + ore + " di guida" : "🛋️ Niente volante" }), ids.length ? el("span", { text: "✨ " + ids.length + (ids.length === 1 ? " cosa da fare" : " cose da fare") }) : null),
-        el("p", { class: "joke", style: "color:rgba(255,255,255,.9);font-size:17px", text: "Rischio del giorno: " + x.rischio.charAt(0).toLowerCase() + x.rischio.slice(1) + " " + R.fill("Favorito: {X}.", d.d + scen) })));
-
-    if (ids.length) {
-      box.appendChild(el("h3", { style: "font-size:24px;margin-top:6px", text: "Cosa si può fare" }));
-      ids.forEach((id) => box.appendChild(card(ATT[id], st[id].v)));
-    } else box.appendChild(el("div", { class: "card" }, el("b", { text: "Niente da votare oggi." }), el("p", { class: "muted", text: "Si viaggia. Preparate la playlist e la pazienza." })));
-
-    /* le altre possibilità dello stesso giorno, negli altri scenari */
-    const alt = Object.keys(C.SCEN).filter((k) => k !== scen).map((k) => [k, C.dayFor(d, k)]).filter(([, y]) => y.t !== x.t);
-    if (alt.length) box.appendChild(el("div", { class: "card", style: "display:grid;gap:10px" },
-      el("b", { style: "font-size:19px", text: "Le altre possibilità per questo giorno" }),
-      el("ul", { class: "list", style: "box-shadow:none" }, alt.map(([k, y]) => el("li", null, el("button", { type: "button", class: "poi-row", style: "grid-template-columns:1fr", onclick: () => { scen = k; chosenScen = true; render(); window.scrollTo({ top: 0, behavior: "smooth" }); } },
-        el("span", { class: "poi-txt" }, el("b", { text: C.SCEN[k].emoji + " " + C.SCEN[k].nome + ": " + y.t }), el("span", { class: "muted", text: "Dormite: " + y.dorme + " · tocca per vedere questo giro" }))))))));
-    document.getElementById("prev").disabled = i === 0; document.getElementById("next").disabled = i === C.DAYS.length - 1;
+      el("div", { class: "zhero", style: "background-image:linear-gradient(180deg,rgba(0,0,0,0) 25%,rgba(10,15,60,.88)),url('" + C.foto(z.foto, "960px") + "')" },
+        el("span", { class: "zhero-n", text: "Zona " + (i + 1) + " di " + C.AREE.length }),
+        el("h2", { text: z.e + " " + z.n }),
+        el("span", { class: "zhero-q", text: "🗓️ " + z.quando }),
+        el("p", { text: z.dir }),
+        el("p", { class: "zhero-j", text: z.j })),
+      el("div", { class: "hscroll", role: "group", "aria-label": "Tipo di attività" }, tipi.map((k) => {
+        const n = k === "tutto" ? ids.length : ids.filter((id) => ATT[id].cat === k).length;
+        return el("button", { type: "button", class: "chip", "aria-pressed": String(tipo === k), onclick: () => { tipo = k; render(false); } }, TIPO[k] + " · " + n);
+      })));
+    ids.filter((id) => tipo === "tutto" || ATT[id].cat === tipo).forEach((id) => box.appendChild(row(ATT[id], st[id].v)));
+    const nx = C.AREE[(i + 1) % C.AREE.length];
+    box.appendChild(el("div", { class: "row-between", style: "gap:10px;margin-top:6px" },
+      el("a", { class: "btn ghost", href: "mappa.html?area=" + z.id, style: "color:#fff;padding-inline:0" }, "📍 I posti della zona sulla mappa"),
+      el("button", { type: "button", class: "btn", onclick: () => { zona = nx.id; tipo = "tutto"; render(true); } }, "Zona dopo ›")));
   }
-  document.getElementById("prev").onclick = () => { const i = C.DAYS.findIndex((d) => d.d === sel); if (i > 0) { sel = C.DAYS[i - 1].d; render(); window.scrollTo({ top: document.getElementById("days").offsetTop - 10, behavior: "smooth" }); } };
-  document.getElementById("next").onclick = () => { const i = C.DAYS.findIndex((d) => d.d === sel); if (i < C.DAYS.length - 1) { sel = C.DAYS[i + 1].d; render(); window.scrollTo({ top: document.getElementById("days").offsetTop - 10, behavior: "smooth" }); } };
 
   async function vote(a, voto) {
     const me = M.me(); if (!me) return M.askWho();
@@ -178,21 +153,20 @@
     } catch (e) { M.err(e); }
   }
 
-  function render() {
-    if (!scen) scen = "A";
-    history.replaceState(null, "", "#d=" + sel + "&s=" + scen);
-    const y = window.scrollY; scenChips(); strip(); dayPanel(); drawMap(); window.scrollTo(0, y);
+  function render(moveMap) {
+    history.replaceState(null, "", "#" + zona);
+    const y = window.scrollY; zones(); zonePanel();
+    if (moveMap) { drawMap(true); document.getElementById("zones").scrollIntoView({ behavior: "smooth", block: "start" }); } else window.scrollTo(0, y);
   }
   async function load() {
     const d = await db.many(["reazioni", "sondaggi", "persone"]);
     reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":")); sond = d.sondaggi;
-    if (!chosenScen) { scen = C.scenGruppo(sond).pick; chosenScen = true; }
-    render();
+    const y = window.scrollY; zones(); zonePanel(); drawMap(false); window.scrollTo(0, y);
   }
-  render();
+  initMap(); zones(); zonePanel(); drawMap(false);
   load().then(() => { if (target) { const n = document.getElementById(target); if (n) n.scrollIntoView({ block: "center" }); } });
   db.subscribe(["reazioni", "sondaggi"], load);
-  M.onMe(render);
+  M.onMe(() => { zones(); zonePanel(); });
 })();
 </script>
 </body>

@@ -22,6 +22,16 @@ C.TIPI = {
 
 /* follia: da 1 (tranquillo) a 5 (lo racconterete ai nipoti) */
 C.ATT = [
+  // IL RIF
+  { id: "rif-ketama", cat: "montagna", t: "Le valli di Ketama", dove: "Rif, circa 4 ore da Fes", quando: "variante del 30 dic", prezzo: "€30–50 la guida", durata: "una giornata", follia: 5, tipo: "esperienza",
+    desc: "Il cuore storico della coltivazione del Rif: terrazze sui monti, villaggi, foreste di cedri. Si va con una guida locale e si guarda. Vedere i campi si può; comprare e fumare è illegale, anche per i turisti.",
+    joke: "Il palermitano dice che è come Corleone, ma con le piante. Nessuno capisce, tutti annuiscono." },
+  { id: "rif-chefchaouen", cat: "citta", t: "Chefchaouen, la città blu", dove: "Rif, circa 3,5 ore da Fes", quando: "variante del 29–30 dic", prezzo: "€20–30 a notte", durata: "una notte", follia: 2, tipo: "classico",
+    desc: "La medina tutta blu sotto le montagne del Rif. La base più tranquilla per le valli intorno, una notte basta.",
+    joke: "Ti offrono roba ogni 40 metri. Tu rispondi «la, shukran» e cammini. Cento volte." },
+  { id: "rif-akchour", cat: "montagna", t: "Cascate di Akchour", dove: "45 minuti da Chefchaouen", quando: "variante del 30 dic", prezzo: "gratis, guida facoltativa", durata: "mezza giornata", follia: 3, tipo: "locale",
+    desc: "Sentiero tra le gole fino alle cascate e al «ponte di Dio», un arco di roccia naturale.",
+    joke: "A dicembre l'acqua è a 8 gradi. Il primo che entra non paga cene per tutto il viaggio." },
   // CAPODANNO
   { id: "cap-club", cat: "capodanno", t: "Club all'Hivernage", dove: "Marrakech", quando: "31 dic", prezzo: "€80–200", durata: "tutta la notte", follia: 4, tipo: "classico",
     desc: "Theatro, dentro il resort Es Saadi, oppure Pacha: DJ, spettacoli, si fa l'alba. Prima cena normale in un ristorante, così spendete solo per la serata.",
@@ -428,6 +438,7 @@ C.BUDGET = {
 /* Costo extra a testa di ogni esperienza, oltre alle spese sicure (stime).
    0 = già dentro le spese sicure (dormire, mangiare, campo standard) oppure gratis. */
 C.COSTO = {
+  "rif-ketama": 40, "rif-chefchaouen": 25, "rif-akchour": 5,
   "cap-club": 140, "cap-agafay": 185, "cap-darna": 320, "cap-rooftop": 45,
   "moto-tour3": 700, "moto-pista": 0, "moto-agafay": 70, "moto-dune": 100, "moto-buggy": 55, "moto-quad": 45, "moto-noleggio": 175,
   "des-campo": 25, "des-chigaga": 45, "des-nomadi": 0, "des-cammello": 22, "des-sandboard": 10, "des-stelle": 0,
@@ -504,11 +515,13 @@ C.POI = [
   { id: "tichka", cat: "zero", n: "Passo del Tizi n'Tichka", dove: "Alto Atlante, 2.260 m", lat: 31.2870, lng: -7.3800, q: "Tizi n'Tichka",
     x: "Il passo di montagna sulla strada per il deserto.", j: "A 2.260 metri a gennaio l'unica cosa calda è il motore della Dacia." },
   // tossici
-  { id: "ketama", cat: "tossico", n: "Valle di Ketama", dove: "Rif, 4 ore a nord di Fes", lat: 34.9170, lng: -4.5670, q: "Ketama Morocco",
-    x: "La valle più famosa del Rif. Non è sul giro, e ci resta fuori.", j: "Guarda questo tossico: ha messo Ketama sul navigatore. No. Ripeto: no. Il giro va a sud.",
-    serio: "Fuori dagli usi medici e industriali, in Marocco la cannabis è illegale e si rischia il carcere, anche da turisti. Sulle strade del Rif ci sono posti di blocco, e le auto a noleggio vengono fermate e perquisite." },
+  { id: "ketama", cat: "tossico", n: "Valle di Ketama", dove: "Rif, circa 4 ore a nord di Fes", lat: 34.9170, lng: -4.5670, q: "Ketama Morocco",
+    x: "La valle più famosa del Rif, il cuore storico della coltivazione. Si vede con una guida locale: è la variante del 30 dicembre.", j: "Guarda questo tossico: ha messo Ketama sul navigatore e ha detto «è per la cultura». Certo.",
+    serio: "In Marocco la cannabis è legale solo per usi medici e industriali, con licenza (legge 13-21 del 2021). Comprarla e fumarla resta illegale, anche per i turisti. Sulle strade del Rif ci sono posti di blocco e le auto a noleggio vengono fermate. Si va a guardare, non a comprare." },
+  { id: "akchour", cat: "vedere", n: "Cascate di Akchour", dove: "45 minuti da Chefchaouen", lat: 35.2400, lng: -5.1700, q: "Akchour waterfalls",
+    x: "Sentiero tra le gole fino alle cascate e al «ponte di Dio». Mezza giornata.", j: "L'acqua a 8 gradi. Il primo che entra non paga cene per tutto il viaggio." },
   { id: "chefchaouen", cat: "tossico", n: "Chefchaouen", dove: "La città blu, 4 ore da Fes", lat: 35.1688, lng: -5.2636, q: "Chefchaouen",
-    x: "La città blu delle foto di Instagram. Bellissima, ma non è sul giro.", j: "Ti offrono roba ogni 40 metri. Tu rispondi «la, shukran» e cammini. Come con le ragazze, ma al contrario." },
+    x: "La città blu sotto le montagne: la base tranquilla per le valli del Rif, nella variante del 29–30 dicembre.", j: "Ti offrono roba ogni 40 metri. Tu rispondi «la, shukran» e cammini. Come con le ragazze, ma al contrario." },
   { id: "fesguide", cat: "tossico", n: "Le guide «amiche» di Fes", dove: "Porte della medina, Fes", lat: 34.0617, lng: -4.9836, q: "Bab Boujloud Fes",
     x: "Ragazzi che si offrono di accompagnarvi e poi propongono di tutto.", j: "«Amico, la strada è chiusa». Non è chiusa. Non è mai chiusa. Bora, si cammina." },
   // capodanno
@@ -610,6 +623,12 @@ C.CITAZIONI = [
 
 /* ---------- Foto vere da Wikipedia (Wikimedia Commons, licenze libere) ---------- */
 C.WIKI = {
+ "Ketama": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Ketama.jpg/330px-Ketama.jpg",
+ "Chefchaouen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/MoroccoChefchaouen_fromhill1.jpg/330px-MoroccoChefchaouen_fromhill1.jpg",
+ "Akchour": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Akchour_waterfall.jpg/330px-Akchour_waterfall.jpg",
+ "Agafay": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Agafay_desert.jpg/330px-Agafay_desert.jpg",
+ "Ouarzazate": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Kasbah_Taourirt_in_Ouarzazate_2011.jpg/330px-Kasbah_Taourirt_in_Ouarzazate_2011.jpg",
+
  "Agadir": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/South_view_sea_side_from_Kasbah_of_Agadir_Oufella_%28cropped%29.jpg/330px-South_view_sea_side_from_Kasbah_of_Agadir_Oufella_%28cropped%29.jpg",
  "Agadir_Oufella": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/AGADIR_OFELLA.jpg/330px-AGADIR_OFELLA.jpg",
  "All-terrain_vehicle": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Four_wheeler.jpg/330px-Four_wheeler.jpg",
@@ -661,8 +680,8 @@ C.WIKI = {
  "Todgha_Gorge": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/%22Ein_beeindruckendes_Naturwunder%22%2C_17.jpg/330px-%22Ein_beeindruckendes_Naturwunder%22%2C_17.jpg",
  "Volubilis": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Volubilis_Longshot_II.jpg/330px-Volubilis_Longshot_II.jpg"
 };
-C.FOTO_ATT = {"cap-rooftop": "Koutoubia_Mosque", "moto-tour3": "Draa_River", "moto-pista": "Dadès_Gorges", "moto-agafay": "Enduro", "moto-dune": "Erg_Chebbi", "moto-buggy": "All-terrain_vehicle", "moto-quad": "All-terrain_vehicle", "moto-noleggio": "Atlas_Mountains", "des-campo": "Merzouga", "des-chigaga": "Erg_Chigaga", "des-cammello": "Dromedary", "des-stelle": "Milky_Way", "mon-tichka": "Tizi_n'Tichka", "mon-benhaddou": "Aït_Benhaddou", "mon-dades": "Kasbah", "mon-todra": "Todgha_Gorge", "mon-arrampicata": "Tinghir", "mon-ourika": "Ourika_Valley", "oc-imsouane": "Imsouane", "oc-taghazout": "Taghazout", "oc-rabat": "Rabat", "oc-paradise": "Paradise_Valley,_Morocco", "cit-fes": "Fes_el_Bali", "cit-merinidi": "Marinid_Tombs", "cit-volubilis": "Volubilis", "cit-oudayas": "Kasbah_of_the_Udayas", "cit-jemaa": "Jemaa_el-Fnaa", "cit-majorelle": "Majorelle_Garden", "cit-benyoussef": "Ben_Youssef_Madrasa", "cibo-tanjia": "Tanjia", "cibo-mechoui": "Mechoui", "cibo-bissara": "Bissara", "cibo-pastilla": "Pastilla", "cibo-pesce": "Moroccan_cuisine", "cibo-corso": "Tajine", "cibo-te": "Maghrebi_mint_tea", "sfida-souk": "Souk", "sfida-noapp": "Bab_Bou_Jeloud", "sfida-darija": "Fes", "sfida-foto": "Chouara_Tannery", "sfida-tagine": "Tajine"};
-C.FOTO_POI = {"erg": "Erg_Chebbi", "fesnotte": "Fes_el_Bali", "tichka": "Tizi_n'Tichka", "fesguide": "Bab_Bou_Jeloud", "jemaa": "Jemaa_el-Fnaa", "anchor": "Taghazout", "imsouane": "Imsouane", "mechoui": "Mechoui", "bissara": "Bissara", "porto": "Agadir", "chouara": "Chouara_Tannery", "benhaddou": "Aït_Benhaddou", "dune": "Merzouga", "majorelle": "Majorelle_Garden", "oudayas": "Kasbah_of_the_Udayas", "tichkaneve": "Atlas_Mountains", "agadirair": "Agadir", "cap-club": "Hivernage"};
+C.FOTO_ATT = {"rif-ketama": "Ketama", "rif-chefchaouen": "Chefchaouen", "rif-akchour": "Akchour", "cap-agafay": "Agafay", "moto-quad": "Agafay", "cap-rooftop": "Koutoubia_Mosque", "moto-tour3": "Draa_River", "moto-pista": "Dadès_Gorges", "moto-agafay": "Enduro", "moto-dune": "Erg_Chebbi", "moto-buggy": "All-terrain_vehicle", "moto-noleggio": "Atlas_Mountains", "des-campo": "Merzouga", "des-chigaga": "Erg_Chigaga", "des-cammello": "Dromedary", "des-stelle": "Milky_Way", "mon-tichka": "Tizi_n'Tichka", "mon-benhaddou": "Aït_Benhaddou", "mon-dades": "Kasbah", "mon-todra": "Todgha_Gorge", "mon-arrampicata": "Tinghir", "mon-ourika": "Ourika_Valley", "oc-imsouane": "Imsouane", "oc-taghazout": "Taghazout", "oc-rabat": "Rabat", "oc-paradise": "Paradise_Valley,_Morocco", "cit-fes": "Fes_el_Bali", "cit-merinidi": "Marinid_Tombs", "cit-volubilis": "Volubilis", "cit-oudayas": "Kasbah_of_the_Udayas", "cit-jemaa": "Jemaa_el-Fnaa", "cit-majorelle": "Majorelle_Garden", "cit-benyoussef": "Ben_Youssef_Madrasa", "cibo-tanjia": "Tanjia", "cibo-mechoui": "Mechoui", "cibo-bissara": "Bissara", "cibo-pastilla": "Pastilla", "cibo-pesce": "Moroccan_cuisine", "cibo-corso": "Tajine", "cibo-te": "Maghrebi_mint_tea", "sfida-souk": "Souk", "sfida-noapp": "Bab_Bou_Jeloud", "sfida-darija": "Fes", "sfida-foto": "Chouara_Tannery", "sfida-tagine": "Tajine"};
+C.FOTO_POI = {"ketama": "Ketama", "chefchaouen": "Chefchaouen", "agafay": "Agafay", "akchour": "Akchour", "erg": "Erg_Chebbi", "fesnotte": "Fes_el_Bali", "tichka": "Tizi_n'Tichka", "fesguide": "Bab_Bou_Jeloud", "jemaa": "Jemaa_el-Fnaa", "anchor": "Taghazout", "imsouane": "Imsouane", "mechoui": "Mechoui", "bissara": "Bissara", "porto": "Agadir", "chouara": "Chouara_Tannery", "benhaddou": "Aït_Benhaddou", "dune": "Merzouga", "majorelle": "Majorelle_Garden", "oudayas": "Kasbah_of_the_Udayas", "tichkaneve": "Atlas_Mountains", "agadirair": "Agadir", "cap-club": "Hivernage"};
 /* foto(chiave, "500px" o "960px"): l'indirizzo della foto alla grandezza giusta */
 C.foto = function (k, size) { const u = C.WIKI[k]; return u ? u.replace("/330px-", "/" + (size || "500px") + "-") : null; };
 
@@ -686,13 +705,13 @@ C.EXTRA_DAY = { "2026-12-29": ["cit-hammam", "cibo-corso", "sfida-souk", "sfida-
 
 /* ---------- I must: si fanno per forza, si decide solo come ---------- */
 C.MUST = [
-  { id: "valli", e: "⛰️", t: "Le valli", foto: "Dadès_Gorges",
-    why: "Undici giorni in Marocco senza una gola è come Roma senza Colosseo. Il romano lo sa.",
+  { id: "valli", e: "🌿", t: "Le valli del Rif", foto: "Ketama",
+    why: "Le valli di Ketama, dove c'è la produzione. Il motivo segreto per cui il tossico ha comprato il biglietto. Si guarda, non si compra.",
+    serio: "Cannabis legale solo per usi medici e industriali con licenza; comprarla e fumarla è illegale anche per i turisti. Posti di blocco sulle strade del Rif. E il Rif è a nord, il resto del giro a sud: costa un giorno.",
     opz: [
-      { id: "dades", t: "Dadès e Todra in auto", x: "2 e 3 gennaio, nel giro A. Si dorme in kasbah, le gole si fanno a piedi.", e: 0, att: "mon-todra" },
-      { id: "ourika", t: "Valle dell'Ourika in giornata", x: "Il 1° gennaio da Marrakech: villaggi berberi e cascate. Il recupero perfetto dopo Capodanno.", e: 30, att: "mon-ourika" },
-      { id: "rose", t: "Valle delle Rose a piedi", x: "Kelaat M'Gouna, mezza giornata con una guida.", e: 22, att: "mon-rose" },
-      { id: "tour", t: "Col tour organizzato", x: "Nel giro C: minibus, guida, tutto compreso. Comodo, pensionato.", e: 0 } ] },
+      { id: "ketama", t: "Ketama con una guida locale", x: "Un giorno nelle valli della coltivazione, il 30 dicembre. Si salta Rabat e il 31 sono 6–8 ore di strada fino a Marrakech.", e: 40, att: "rif-ketama" },
+      { id: "chaouen", t: "Chefchaouen e le valli intorno", x: "La città blu come base, una notte, le cascate di Akchour. Più turistico e più tranquillo.", e: 35, att: "rif-chefchaouen" },
+      { id: "atlante", t: "Niente Rif: le valli dell'Atlante", x: "Dadès e Todra, già nel giro. Niente piante, solo rocce. E il 31 arrivate riposati.", e: 0, att: "mon-todra" } ] },
   { id: "surf", e: "🏄", t: "Il surf", foto: "Imsouane",
     why: "Sei mesi a San Paolo e manco un'onda presa. Ora basta, tossici.",
     opz: [
@@ -717,3 +736,25 @@ C.MUST = [
 ];
 /* gli altri must: cose che se tornate senza averle fatte, non siete stati in Marocco */
 C.MUST_ALTRI = ["cit-jemaa", "mon-benhaddou", "des-stelle", "cit-hammam", "cibo-te", "sfida-souk", "sfida-tagine", "cit-fes", "cap-rooftop"];
+
+/* ---------- Il viaggio: il Marocco diviso in zone, da nord a sud ---------- */
+C.AREE = [
+  { id: "rif", n: "Il Rif e Ketama", e: "🌿", foto: "Chefchaouen", lat: 35.0, lng: -4.9, z: 8, quando: "Non è nel giro: variante del 29–30 dicembre", dir: "Montagne, valli della coltivazione, la città blu.", j: "La zona preferita del Tossico Supremo. Si guarda, non si compra." },
+  { id: "fes", n: "Fes e Meknès", e: "🕌", foto: "Fes_el_Bali", lat: 34.0, lng: -5.2, z: 9, quando: "29 e 30 dicembre", dir: "La medina più grande del mondo, Volubilis, le porte di Meknès.", j: "Ci si perde entro 11 minuti. Il record è di Davide: 4 minuti, al telefono." },
+  { id: "rabat", n: "Rabat", e: "🏛️", foto: "Kasbah_of_the_Udayas", lat: 34.02, lng: -6.83, z: 12, quando: "30 dicembre, solo nel giro A", dir: "La capitale sull'oceano: la kasbah bianca e blu, la torre Hassan.", j: "Capitale, gente giovane, prezzi umani. Una birra e via, domani si guida." },
+  { id: "marrakech", n: "Marrakech e Agafay", e: "🎆", foto: "Jemaa_el-Fnaa", lat: 31.6, lng: -8.0, z: 10, quando: "31 dicembre e 1° gennaio", dir: "Capodanno, la piazza, i souk, il deserto di pietra a 40 minuti.", j: "La notte giusta è qui. Se non succede a Marrakech, non succede. Daje." },
+  { id: "atlante", n: "Atlante e valli", e: "⛰️", foto: "Dadès_Gorges", lat: 31.3, lng: -6.4, z: 8, quando: "2 e 3 gennaio", dir: "Il passo a 2.260 metri, Aït Benhaddou, le gole del Dadès e del Todra.", j: "Sei ore di curve. Chi soffre la macchina sta davanti, e soffre lo stesso." },
+  { id: "deserto", n: "Il deserto", e: "🐪", foto: "Erg_Chebbi", lat: 30.6, lng: -4.9, z: 7, quando: "3 e 4 gennaio", dir: "Le dune di Merzouga, la notte nel campo, moto e buggy sulla sabbia.", j: "Freddo, stelle, zero sorca. Bellissimo lo stesso." },
+  { id: "oceano", n: "L'oceano", e: "🏄", foto: "Imsouane", lat: 30.65, lng: -9.7, z: 9, quando: "dal 5 all'8 gennaio", dir: "Imsouane, Taghazout, il surf, il pesce, l'ultimo tramonto ad Agadir.", j: "Due secondi in piedi sulla tavola, venti minuti a raccontarlo. Caralho." }
+];
+/* a quale zona appartiene ogni idea */
+C.AREA_ATT = {
+  rif: ["rif-ketama", "rif-chefchaouen", "rif-akchour"],
+  fes: ["cit-fes", "cit-merinidi", "cit-volubilis", "cit-hammam", "cibo-bissara", "cibo-pastilla", "sfida-noapp", "sfida-darija", "sfida-foto"],
+  rabat: ["cit-oudayas", "oc-rabat"],
+  marrakech: ["cap-club", "cap-agafay", "cap-darna", "cap-rooftop", "moto-agafay", "moto-quad", "cit-jemaa", "cit-majorelle", "cit-benyoussef", "mon-ourika", "cibo-tanjia", "cibo-mechoui", "cibo-corso", "cibo-te", "sfida-souk"],
+  atlante: ["mon-tichka", "mon-benhaddou", "mon-dades", "mon-todra", "mon-arrampicata", "mon-rose", "moto-pista", "moto-noleggio"],
+  deserto: ["des-campo", "des-cammello", "des-stelle", "des-sandboard", "des-nomadi", "des-chigaga", "moto-dune", "moto-buggy", "moto-tour3"],
+  oceano: ["oc-imsouane", "oc-taghazout", "oc-tamraght", "oc-paradise", "cibo-pesce", "sfida-tagine"]
+};
+C.areaOf = function (id) { for (const k in C.AREA_ATT) if (C.AREA_ATT[k].includes(id)) return k; return null; };

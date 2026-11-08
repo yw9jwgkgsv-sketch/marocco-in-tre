@@ -16,7 +16,7 @@
   <div class="wrap">
     <div class="topline"><span class="eyebrow">I must</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Si fanno. <em>Punto.</em></h1>
-    <p class="lead" style="color:#fff">Valli, surf, moto e deserto non si discutono. Si decide solo come: ognuno sceglie il suo modo, vince il più votato.</p>
+    <p class="lead" style="color:#fff">Le valli di Ketama, il surf, la moto e il deserto non si discutono. Si decide solo come: ognuno sceglie il suo modo, vince il più votato.</p>
   </div>
 </header>
 
@@ -52,7 +52,7 @@
   const EMO = { capodanno: "🎆", moto: "🏍️", deserto: "🐪", montagna: "⛰️", oceano: "🏄", citta: "🕌", cibo: "🍢", sfide: "🏆" };
   const VOTI = [["si", "🔥", "Ci sto"], ["forse", "🤔", "Forse"], ["no", "💀", "No"]];
   const REAZ = {
-    valli: ["Ottima scelta. Il saluzzese approva: gratis.", "Valli scelte. Chi soffre la macchina si prenoti il posto davanti."],
+    valli: ["Scelto. Si guarda, non si compra. Ripetilo tre volte.", "Valli scelte. Avvisiamo tua madre che è «per la cultura»."],
     surf: ["Scelto. Due secondi in piedi e venti di racconto. Caralho.", "Ok. Avvisate la muta: soffrirà."],
     moto: ["Moto scelta. Avvisiamo le mamme.", "Brum brum, tossico. Il casco non è un optional."],
     deserto: ["Deserto scelto. A -2° il piumino è un amico.", "Fatto. Fatima la cammella vi aspetta."]
@@ -96,7 +96,7 @@
       const v = votes(m), w = winner(m), mine = sond.find((r) => r.nome === me && r.domanda === "must-" + m.id);
       const hero = el("div", { class: "mcard-hero", style: "background-image:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(10,15,60,.85)),url('" + C.foto(m.foto, "960px") + "')" },
         el("span", { class: "mcard-n", text: (i + 1) + " di " + C.MUST.length }), el("h2", { text: m.e + " " + m.t }), el("p", { text: m.why }));
-      const body = el("div", { class: "mcard-body" }, el("b", { style: "font-size:17px", text: w ? "Per ora vince: " + w.t : "Come lo facciamo? Tocca la tua scelta." }));
+      const body = el("div", { class: "mcard-body" }, m.serio ? el("p", { class: "banner", style: "font-size:14px", text: "Da sapere: " + m.serio }) : null, el("b", { style: "font-size:17px", text: w ? "Per ora vince: " + w.t : "Come lo facciamo? Tocca la tua scelta." }));
       m.opz.forEach((o) => body.appendChild(option(m, o, v, mine)));
       box.appendChild(el("article", { class: "mcard", id: m.id }, hero, body));
     });

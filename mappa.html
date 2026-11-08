@@ -201,7 +201,8 @@
   };
 
   chips(); routes();
-  if (init()) { draw(); fit(); drawRoute(); } else renderList();
+  const qa = C.AREE ? C.AREE.find((a) => a.id === new URLSearchParams(location.search).get("area")) : null;
+  if (init()) { draw(); if (qa) map.setView([qa.lat, qa.lng], qa.z); else fit(); drawRoute(); } else renderList();
   const h = decodeURIComponent(location.hash.slice(1)); if (h && C.POI.some((p) => p.id === h)) setTimeout(() => select(h, true), 300);
 
   db.many(["sondaggi", "persone"]).then((d) => { const g = C.scenGruppo(d.sondaggi); if (g.voted && !C.SCEN[qg]) { scen = g.pick; routes(); drawRoute(); } R.bar("mappa", d, M.me()); });

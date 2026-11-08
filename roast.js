@@ -246,7 +246,7 @@ window.R = (function () {
       { chi: "Alessandro", app: "I 4 tossici", t: "Alessandro", x: "Ho fatto un sito intero. Votate, tossici.", href: "esplora.html" },
       { ic: "🥶", col: "#0F6FB8", app: "Meteo", t: "Merzouga, stanotte", x: "-2°. Il piumino l'hai preso? No. Lo sapevo.", href: "kit.html" },
       { ic: "💃", col: "#d70015", app: "Mappa", t: "Sorca nelle vicinanze", x: "Nessun risultato nel raggio di 2.000 km. Mancano " + giorni + " giorni.", href: "mappa.html" },
-      { ic: "🌿", col: "#1d8a3a", app: "Mappa", t: "Ketama", x: "Hai cercato Ketama. Il giro va a sud, tossico.", href: "mappa.html#ketama" },
+      { ic: "🌿", col: "#1d8a3a", app: "Mappa", t: "Ketama", x: "Ketama aggiunta ai must. Il navigatore ha chiesto il permesso alla mamma.", href: "must.html#valli" },
       { ic: "💸", col: "#B35A00", app: "Banca", t: "Il saluzzese", x: "Ha controllato il conto del viaggio per la terza volta oggi. Esageruma nen.", href: "budget.html" },
       { ic: "🔥", col: "#D6345A", app: "Esplora", t: "Votazione aperta", x: "Capodanno nel deserto aspetta il tuo voto. Il deserto no, quello aspetta da sempre.", href: "esplora.html#cap-agafay" },
       { ic: "⚖️", col: "#6E2BC2", app: "Tribunale", t: "Avv. Davide", x: "Ha fatto ricorso contro il titolo di Tossico Supremo. Respinto.", href: "tribunale.html" },
@@ -270,7 +270,7 @@ window.R = (function () {
 
   /* -------- il tasto «non ho capito un cazzo» -------- */
   const SPIEGA = {
-    viaggio: "In alto scegli come vi muovete. Poi tocca un giorno sulla linea: la mappa ti mostra dove siete, sotto ci sono le cose da fare quel giorno. Premi 🔥, 🤔 o 💀.",
+    viaggio: "Il Marocco è diviso in 7 zone. Tocca una zona, sulla mappa o nei riquadri. Sotto vedi le cose da fare lì: puoi filtrarle per tipo e votarle con 🔥, 🤔 o 💀.",
     must: "Valli, surf, moto e deserto si fanno per forza. Per ognuno tocca il modo che preferisci: vince quello scelto da più persone. In fondo, gli altri must da votare.",
     home: "Scorri: ogni blocco spiega una parte del sito, con un link per entrarci. In basso c'è la barra con le pagine principali.",
     mappa: "Sopra scegli cosa vedere: sorca, surf, mangiare… Tocca un pallino per sapere cos'è e premere «Portami qui». «Dove sono io?» ti dice cosa hai vicino. Sotto la mappa puoi accendere il giro di uno scenario.",

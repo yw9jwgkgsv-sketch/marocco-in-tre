@@ -45,8 +45,8 @@ window.Intro = (function () {
       const q = E("p", "in-quote", null, 1200); q.append(E("span", null, "«Uno de Roma, uno de Saluzzo, uno de Palermo.»"), E("small", null, "Indovinate chi è chi")); s.appendChild(q);
       return s;
     } },
-    { bg: "#D6345A", make: slide({ eye: "Il viaggio", title: "Giorno per giorno.", line: "Tocca un giorno: dove siete e cosa si può fare. Su ogni idea premi uno dei tre.", mock: votes, q: ["Dio fa, ma votate!", "il piemontese"] }) },
-    { bg: "#0B7A5C", make: slide({ eye: "I must", title: "Valli, surf, moto, deserto.", line: "Si fanno per forza. Si decide solo come.", q: ["Nun se discute. Stacce.", "il romano"] }) },
+    { bg: "#D6345A", make: slide({ eye: "Il viaggio", title: "Zona per zona.", line: "Il Marocco in 7 zone, dal Rif all'oceano. Su ogni idea premi uno dei tre.", mock: votes, q: ["Dio fa, ma votate!", "il piemontese"] }) },
+    { bg: "#0B7A5C", make: slide({ eye: "I must", title: "Ketama, surf, moto, deserto.", line: "Si fanno per forza. Si decide solo come.", q: ["Nun se discute. Stacce.", "il romano"] }) },
     { bg: "#0F6FB8", make: slide({ eye: "Mappa", title: "Dove c'è la sorca.", line: "Locali, surf, tagine e posti da foto. Ketama c'è, ma per dirvi di no.", q: ["Talìa, unn'è 'a sorca?", "il palermitano"] }) },
     { bg: "#6E2BC2", make: slide({ eye: "La notte", title: "Rimorchio: non chiedete.", line: "Club, Capodanno e ostelli veri. E il registro dei due di picche.", q: ["Me cojoni, n'antro due de picche.", "il romano"] }) },
     { bg: "#B35A00", make: slide({ eye: "Kit", title: "Per non fare figure de merda.", line: "Valigia, frasi in darija, prezzi giusti nel souk.", q: ["Amunì, picciotti. La, shukran.", "il palermitano al souk"] }) },
