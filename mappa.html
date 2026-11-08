@@ -87,7 +87,7 @@
   }
 
   /* --- mappa --- */
-  const dark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+  const dark = false;
   function pinIcon(p, big) {
     return L.divIcon({ className: "", iconSize: [36, 36], iconAnchor: [18, 18], html: '<span class="pin' + (big ? " sel" : "") + '" style="--c:' + CAT[p.cat].c + '">' + CAT[p.cat].e + "</span>" });
   }

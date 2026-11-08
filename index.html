@@ -16,91 +16,40 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="wrap" style="gap:12px;padding-top:0">
-  <div class="topline" style="padding-top:calc(env(safe-area-inset-top,0px) + 14px)"><span class="eyebrow">Da Ale, per due tossici</span><span class="me-chip" id="me-chip"></span></div>
+<main class="wrap" style="gap:28px;padding-top:0">
+  <div class="topline" style="padding-top:calc(env(safe-area-inset-top,0px) + 14px)"><span class="eyebrow">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
 
-  <section class="lhero">
-    <span class="eyebrow">29 dicembre → 8 gennaio</span>
-    <h1>Marocco<br>in tre.</h1>
-    <p class="lead">Il sito che organizza il viaggio. E vi prende per il culo mentre lo fa.</p>
-    <div class="count" aria-label="Conto alla rovescia alla partenza">
-      <div><b id="cd-d">—</b><span>giorni</span></div>
-      <div><b id="cd-h">—</b><span>ore</span></div>
-      <div><b id="cd-m">—</b><span>minuti</span></div>
-    </div>
-    <p class="muted" style="font-size:15px;margin-top:6px">Fes · Marrakech · deserto · oceano · Agadir → Londra → Roma</p>
+  <section class="hhero">
+    <h1>Ahó, tossici.</h1>
+    <p class="lead">Il sito per organizzare il Marocco. E per prendervi per il culo.</p>
+    <p class="hcount"><b id="cd-d">—</b> giorni alla partenza</p>
   </section>
 
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
 
-  <section class="lsec" style="--cat:var(--c-moto)">
-    <span class="eyebrow">Esplora</span>
-    <h2 id="h-esp">49 cose da fare.<br>Ne farete sei.</h2>
-    <p class="sub">Ogni idea del viaggio, divisa per tema. Premete 🔥, 🤔 o 💀. Se dite tutti e tre 🔥, si fa.</p>
-    <a class="more" href="esplora.html">Vota le idee</a>
-    <div class="demo card" id="demo-esp"></div>
-  </section>
+  <section class="hquote" id="quote" aria-label="Citazione del giorno"></section>
 
-  <section class="lsec dark">
-    <span class="eyebrow" style="color:#ff6482">Mappa</span>
-    <h2>Dove c'è la sorca.<br>E dove c'è Ketama.</h2>
-    <p class="sub">Locali, surf, tagine e posti da foto, tutti su una mappa. Un tasto vi dice la sorca più vicina. Ketama è segnata per dirvi di no.</p>
-    <a class="more" href="mappa.html">Apri la mappa</a>
-    <div class="demo" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center" id="demo-map"></div>
-  </section>
+  <nav class="hlist" aria-label="Cosa c'è nel sito" id="list"></nav>
 
-  <section class="lsec" style="--cat:var(--c-capodanno)">
-    <span class="eyebrow">La notte</span>
-    <h2>Serata: 75%.<br>Rimorchio: non chiedete.</h2>
-    <p class="sub">Club, feste di Capodanno e ostelli veri, città per città. E il registro ufficiale dei due di picche.</p>
-    <a class="more" href="notte.html">Dove si va stasera</a>
-    <div class="demo card meter" id="demo-notte"></div>
-  </section>
+  <a class="hmoney" href="budget.html"><span>Per ora spendete</span><b id="soldi">€830</b><span>a testa ›</span></a>
 
-  <section class="lsec" style="--cat:var(--c-oceano)">
-    <span class="eyebrow">Scenari</span>
-    <h2>Dacia, moto,<br>treno o zaino.</h2>
-    <p class="sub">Quattro modi di fare lo stesso giro: percorso, dove dormite, quanto si guida e quanto costa. Votate, vince il più votato.</p>
-    <a class="more" href="scenari.html">Scegli lo scenario</a>
-    <div class="demo ltiles" id="demo-scen"></div>
-  </section>
-
-  <section class="lsec" style="--cat:var(--c-citta)">
-    <span class="eyebrow">Soldi</span>
-    <h2 id="h-soldi">€830 a testa.<br>Per ora.</h2>
-    <p class="sub">Spese sicure, più lo scenario, più le esperienze che votate. Si aggiorna da solo. Il saluzzese l'ha già letto tre volte.</p>
-    <a class="more" href="budget.html">Guarda i conti</a>
-    <a class="demo card money-mini" href="budget.html" aria-label="Spesa prevista">
-      <div class="mbar" aria-hidden="true"><i class="m-s" id="mm-s"></i><i class="m-sc" id="mm-sc"></i><i class="m-d" id="mm-d"></i><i class="m-b" id="mm-b"></i></div>
-      <span class="muted" id="mm-note" style="font-size:15px"></span>
-    </a>
-  </section>
-
-  <section class="lsec dark">
-    <span class="eyebrow" style="color:#ff6482">Contatore ufficiale</span>
-    <h2 id="call-n" style="font-variant-numeric:tabular-nums">600.000</h2>
-    <p class="sub">chiamate WhatsApp di Davide per organizzare il viaggio. L'avvocato non si ferma mai.</p>
-    <button class="btn" type="button" id="call-btn" style="background:#2997ff;color:#000">Ha chiamato di nuovo</button>
+  <section class="hcall">
+    <span class="eyebrow">Chiamate WhatsApp di Davide</span>
+    <b id="call-n">600.000</b>
+    <button class="btn" type="button" id="call-btn">Ha chiamato di nuovo</button>
     <p class="muted" id="call-last" style="font-size:14px"></p>
   </section>
 
-  <section class="lsec">
-    <span class="eyebrow">Il sito vi giudica</span>
-    <h2>Guarda questi tossici.</h2>
-    <p class="sub">Legge quello che fate e ve lo rinfaccia. In romano, saluzzese, palermitano e brasiliano.</p>
-    <div class="demo feed-card"><ul class="feed" id="feed"></ul><button class="btn" type="button" id="feed-more">Prendimi per il culo</button></div>
-    <div class="demo grid" id="pagella" style="gap:10px"></div>
+  <section class="hjudge">
+    <h2>Il sito vi giudica</h2>
+    <ul class="feed" id="feed"></ul>
+    <button class="btn ghost" type="button" id="feed-more">Un'altra ›</button>
   </section>
 
-  <section class="lsec">
-    <span class="eyebrow">E poi</span>
-    <h2>Il resto.</h2>
-    <p class="sub">Per non restare a terra, non fare figure de merda e non litigare su chi paga il tè.</p>
-    <div class="ltiles" id="tiles"></div>
-  </section>
+  <p class="hmore">Anche: <a href="ruota.html">la ruota</a> · <a href="tribunale.html">il tribunale</a> · <a href="muro.html">il muro</a> · <a href="sifa.html">cosa si fa</a> · <a href="organizza.html">organizza</a></p>
 
-  <button type="button" id="replay" class="btn ghost small" style="justify-self:center">Rivedi il caricamento</button>
-  <footer class="foot" style="text-align:center">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br>Versione 13 · 8 nov 2026</footer>
+  <button type="button" id="replay" class="btn ghost small" style="justify-self:start">Rivedi l'intro</button>
+  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 14 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -119,64 +68,31 @@
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
 
   const dep = new Date(2026, 11, 28, 23, 30, 0);
-  function tick() {
-    let s = Math.max(0, Math.floor((dep - new Date()) / 1000));
-    const d = Math.floor(s / 86400); s -= d * 86400; const h = Math.floor(s / 3600); s -= h * 3600;
-    document.getElementById("cd-d").textContent = d; document.getElementById("cd-h").textContent = h; document.getElementById("cd-m").textContent = Math.floor(s / 60);
-  }
-  tick(); setInterval(tick, 30000);
-  document.getElementById("h-esp").innerHTML = C.ATT.length + " cose da fare.<br>Ne farete sei.";
+  function tick() { document.getElementById("cd-d").textContent = Math.max(0, Math.ceil((dep - new Date()) / 86400000)); }
+  tick(); setInterval(tick, 60000);
 
-  /* demo: un'idea a caso da votare */
-  const folli = C.ATT.filter((a) => a.follia >= 4), pickA = folli[Math.floor(Math.random() * folli.length)];
-  document.getElementById("demo-esp").append(
-    el("span", { class: "lab", text: C.CATS[pickA.cat].nome + " · " + pickA.dove }),
-    el("div", { class: "erow-top", style: "margin-top:4px" }, el("h3", { style: "font-size:20px", text: pickA.t }),
-      el("a", { class: "vote3", href: "esplora.html#" + pickA.id, "aria-label": "Vota questa idea", style: "text-decoration:none" }, ["🔥", "🤔", "💀"].map((e) => el("span", { style: "width:42px;height:42px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:20px", text: e })))),
-    el("p", { class: "joke", style: "margin-top:8px", text: pickA.joke }));
+  /* la citazione del giorno */
+  const day = Math.floor(Date.now() / 86400000);
+  const [frase, vuol, da] = C.CITAZIONI[day % C.CITAZIONI.length];
+  document.getElementById("quote").append(el("span", { class: "eyebrow", text: "La frase del giorno" }), el("b", { text: "«" + frase + "»" }), el("span", { class: "muted", text: da + ": " + vuol }));
 
-  /* demo: i pallini della mappa */
-  const dm = document.getElementById("demo-map");
-  Object.keys(C.POICAT).forEach((k) => dm.appendChild(el("a", { class: "chip", href: "mappa.html", style: "background:#1c1c1e;color:#f5f5f7" }, C.POICAT[k].e + " " + C.POICAT[k].n)));
-
-  /* demo: le probabilità di serata */
-  const dn = document.getElementById("demo-notte");
-  [["Marrakech, 31 dicembre", 75], ["Ostelli di Taghazout", 55], ["Campo nel deserto", 0]].forEach(([t, p]) =>
-    dn.appendChild(el("div", { class: "meter-row" }, el("span", { text: t }), el("div", { class: "bar" }, el("i", { style: "width:" + Math.max(p, 2) + "%;background:var(--c-capodanno)" })), el("b", { class: "mono", text: p + "%" }))));
-
-  /* demo: gli scenari */
-  function scenTiles(g) {
-    const ds = document.getElementById("demo-scen"); ds.textContent = "";
-    Object.keys(C.SCEN).forEach((k) => ds.appendChild(el("a", { class: "tile", href: "scenari.html#" + k },
-      el("span", { style: "font-size:28px", text: C.SCEN[k].emoji }), el("b", { text: C.SCEN[k].nome }), el("span", { text: "da " + eur(C.SCEN[k].costo) + (g && g.voted && g.pick === k ? " · votato ✓" : "") }))));
-  }
-  scenTiles(null);
-
-  /* le altre pagine */
-  const TILES = [
-    ["organizza.html", "organizza", "Organizza", "Per non restare a terra"],
-    ["kit.html", "kit", "Kit", "Per non fare figure de merda"],
-    ["ruota.html", "ruota", "La ruota", "Per non litigare su chi paga il tè"],
-    ["tribunale.html", "crew", "Tribunale", "Chi è il più tossico"],
-    ["sifa.html", "sifa", "Si fa", "Quello che avete deciso"],
-    ["muro.html", "muro", "Il muro", "Le figure de merda, per sempre"]
+  /* cosa c'è nel sito: una riga per pagina */
+  const LIST = [
+    ["esplora.html", "esplora", "Esplora", "Votate cosa fare. Se dite tutti 🔥, si fa."],
+    ["mappa.html", "mappa", "Mappa", "Dov'è la sorca, il surf, il tagine. E Ketama, per dirvi di no."],
+    ["notte.html", "notte", "La notte", "Club, Capodanno, ostelli. E i due di picche."],
+    ["scenari.html", "scenari", "Scenari", "Come muovervi e quanto costa a testa."],
+    ["kit.html", "kit", "Kit", "Valigia, darija, prezzi giusti del souk."]
   ];
-  const tiles = document.getElementById("tiles");
-  TILES.forEach(([href, ic, t, sub]) => tiles.appendChild(el("a", { class: "tile", href }, icon(ic), el("b", { text: t }), el("span", { text: sub }))));
+  const list = document.getElementById("list");
+  LIST.forEach(([href, ic, t, sub]) => list.appendChild(el("a", { href }, icon(ic), el("span", null, el("b", { text: t }), el("span", { text: sub })), el("i", { text: "›" }))));
 
   let lastD = { persone: [], reazioni: [], todo: [], valigia: [] };
-  function renderRoast(d) {
-    const f = document.getElementById("feed"); f.textContent = "";
-    R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t })));
-    const pg = document.getElementById("pagella"); pg.textContent = "";
-    R.titles(d).slice(0, 3).forEach((t) => pg.appendChild(el("article", { class: "pagella" },
-      el("div", { style: "display:flex;gap:10px;align-items:center" }, M.avatar(t.n), el("span", { class: "tit", text: t.t })),
-      el("p", { class: "muted", style: "font-size:15px", text: t.f }))));
-  }
+  function renderRoast(d) { const f = document.getElementById("feed"); f.textContent = ""; R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t }))); }
   document.getElementById("feed-more").addEventListener("click", () => {
     const f = document.getElementById("feed");
     f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:600" }), f.firstChild);
-    while (f.children.length > 4) f.removeChild(f.lastChild);
+    while (f.children.length > 3) f.removeChild(f.lastChild);
   });
 
   function renderCalls(calls) {
@@ -193,22 +109,15 @@
     } catch (e) { M.err(e); }
   });
 
-  function money(d) {
-    const g = C.scenGruppo(d.sondaggi), reaz = (d.reazioni || []).filter((r) => !String(r.attivita).includes(":"));
-    const s = C.spesa(reaz, g.pick), max = Math.max(s.max, 1), w = (id, n) => (document.getElementById(id).style.width = (n / max) * 100 + "%");
-    document.getElementById("h-soldi").innerHTML = eur(s.tot) + " a testa.<br>Per ora.";
-    w("mm-s", s.sicuri); w("mm-sc", s.scen); w("mm-d", s.decise); w("mm-b", s.ballo);
-    document.getElementById("mm-note").textContent = eur(s.sicuri) + " sicure + " + eur(s.scen) + " di scenario " + g.pick + (g.voted ? "" : " (nessuno l'ha ancora votato)") + (s.decise ? " + " + eur(s.decise) + " di esperienze" : "") + (s.ballo ? " · in ballo altri " + eur(s.ballo) : "") + ".";
-    scenTiles(g);
-  }
-
   async function load() {
     const d = await db.many(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"]);
     lastD = d;
     renderCalls(d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")));
-    renderRoast(d); money(d);
+    renderRoast(d);
+    const g = C.scenGruppo(d.sondaggi);
+    document.getElementById("soldi").textContent = eur(C.spesa(d.reazioni.filter((r) => !String(r.attivita).includes(":")), g.pick).tot);
   }
-  renderRoast(lastD); money({ sondaggi: [], reazioni: [] });
+  renderRoast(lastD);
   load();
   db.subscribe(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"], load);
 })();

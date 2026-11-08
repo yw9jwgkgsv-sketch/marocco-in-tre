@@ -554,3 +554,28 @@ C.POI = [
   { id: "agadirair", cat: "occhio", n: "Aeroporto di Agadir", dove: "Agadir Al Massira", lat: 30.3250, lng: -9.4131, q: "Agadir Al Massira Airport",
     x: "L'8 si riparte: Agadir → Londra → Roma. Dacia da riconsegnare qui con il pieno.", j: "Niente regalini del Rif in valigia: a Londra i cani all'arrivo fanno il loro lavoro. Benissimo." }
 ];
+
+/* ---------- Citazioni: una al giorno in Home, e nell'intro ---------- */
+/* [frase, cosa vuol dire, da dove viene] */
+C.CITAZIONI = [
+  ["Dio fa!", "va bene per tutto: stupore, rabbia, conto del ristorante", "piemontese"],
+  ["Esageruma nen.", "non esageriamo", "piemontese"],
+  ["Bogia nen.", "non ti muovere. Il motto del Piemonte, e di chi non prenota", "piemontese"],
+  ["Fa nen 'l fol.", "non fare lo scemo", "piemontese"],
+  ["Va a ciapé ij rat.", "vai a prendere i topi. Cioè: sparisci", "piemontese"],
+  ["Bôja fauss!", "accidenti!", "piemontese"],
+  ["Talìa!", "guarda!", "palermitano"],
+  ["Amunì!", "andiamo!", "palermitano"],
+  ["Chi fa, babbìi?", "che fai, scherzi?", "palermitano"],
+  ["Bedda matri!", "madonna santa!", "palermitano"],
+  ["Nun fari u babbu.", "non fare lo scemo", "palermitano"],
+  ["Chi camurrìa!", "che rottura!", "palermitano"],
+  ["Daje!", "forza, andiamo", "romano"],
+  ["Me cojoni!", "accidenti, che roba", "romano"],
+  ["Stacce.", "fattene una ragione", "romano"],
+  ["Ma che stai a dì?", "ma cosa dici?", "romano"],
+  ["Nun ce sta niente da fa'.", "non c'è niente da fare", "romano"],
+  ["Sto a rosicà.", "sono invidioso", "romano"],
+  ["Bora!", "andiamo! Ricordo di San Paolo", "brasiliano"],
+  ["Tá de brincadeira?", "stai scherzando?", "brasiliano"]
+];
