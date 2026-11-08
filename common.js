@@ -268,7 +268,7 @@ window.M = (function () {
     const budgets = persone.map((r) => Number(r.budget)).filter((n) => n > 0);
     const bmin = budgets.length ? Math.min(...budgets) : null;
     const riders = persone.filter((r) => r.patente === "si" && r.fuoristrada && r.fuoristrada !== "mai").length;
-    const votes = { A: 0, B: 0, C: 0, D: 0 };
+    const votes = {}; Object.keys(C.SCEN).forEach((k) => (votes[k] = 0));
     persone.forEach((r) => { if (votes[r.scenario] !== undefined) votes[r.scenario]++; });
     const maxV = Math.max(...Object.values(votes));
     const top = maxV > 0 ? Object.keys(votes).filter((k) => votes[k] === maxV) : [];
@@ -351,28 +351,29 @@ window.M = (function () {
   /* ogni tanto ne arriva una: la prima dopo 5 secondi, poi una ogni 60-90 secondi, al massimo 2 per pagina */
   function ntfLoop(page) {
     if (!window.R || !R.notifs) return;
-    let data = null, shown = 0;
+    /* poche, sennò rompono: al massimo una notifica ogni 4 minuti e un popup ogni 15, contando tutte le pagine */
+    let data = null;
     const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
+    const since = (k) => Date.now() - Number(ss.get(k) || 0);
     async function next() {
-      if (shown >= 2) return;
       if (document.hidden || window.INTRO_ACTIVE) return setTimeout(next, 4000);
+      if (since("marocco_ntf_t") < 4 * 60000) return;
       if (!data) { try { data = await db.many(["persone", "reazioni", "todo", "valigia", "sondaggi", "spese", "muro"]); } catch (e) { data = {}; } }
       const pool = R.notifs(data, page, me);
       let k = Number(ss.get("marocco_ntf_i") || 0);
       const n = k === 0 ? pool[0] : pool[1 + ((k - 1) % (pool.length - 1))];
-      if (notify(n)) { ss.set("marocco_ntf_i", String(k + 1)); shown++; }
-      setTimeout(next, 60000 + Math.random() * 30000);
+      if (notify(n)) { ss.set("marocco_ntf_i", String(k + 1)); ss.set("marocco_ntf_t", String(Date.now())); }
     }
-    /* e una volta per pagina, dopo una trentina di secondi, un popup a cui rispondere */
     async function pop() {
       if (!R.popups) return;
       if (document.hidden || window.INTRO_ACTIVE || document.getElementById("ntf-live")) return setTimeout(pop, 5000);
+      if (since("marocco_pop_t") < 15 * 60000) return;
       const list = R.popups(data || {}, page, me);
       let k = Number(ss.get("marocco_pop_i") || 0);
-      if (popup(list[k % list.length])) ss.set("marocco_pop_i", String(k + 1)); else setTimeout(pop, 8000);
+      if (popup(list[k % list.length])) { ss.set("marocco_pop_i", String(k + 1)); ss.set("marocco_pop_t", String(Date.now())); } else setTimeout(pop, 8000);
     }
-    setTimeout(next, 4500);
-    setTimeout(pop, 28000 + Math.random() * 10000);
+    setTimeout(next, 6000);
+    setTimeout(pop, 45000 + Math.random() * 15000);
   }
 
   /* ---------------- testata comune ---------------- */

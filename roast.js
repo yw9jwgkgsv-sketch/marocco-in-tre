@@ -207,7 +207,7 @@ window.R = (function () {
     if (page === "viaggio") return fill(pick(["Undici giorni, una Dacia, zero piani. Votate, tossici. {END}", "Il giorno più a rischio è il 2 gennaio: sei ore di guida e {X} che chiede «quanto manca?». {END}"], seed), seed);
     if (page === "must") return fill(pick(["I must non si discutono. Si discute solo come. {X}, scegli. {END}", "Se tornate senza aver fatto la moto, {X} paga la cena a tutti. {END}"], seed), seed);
     if (page === "mappa") return pick(["Ketama è segnata sulla mappa solo per dirvi di no. Tossici avvisati.", "La sorca più vicina ve la dice il tasto «Dove sono io?». Il risultato vi offenderà.", "Ogni pallino è un posto vero. Gli unici finti siete voi tre quando dite «domani prenotiamo»."], seed);
-    if (page === "scenari") return fill(pick(["Quattro scenari, tre tossici, zero decisioni. {X}, vota e non rompere. {END}", "Il più votato vince. Se non votate, decide {X} da solo. Pensateci. {END}", "Scenario B: chi ha la patente A? {X} ha detto «più o meno». {TOX}"], seed), seed);
+    if (page === "scenari") return fill(pick(["Cinque scenari, tre tossici, zero decisioni. {X}, vota e non rompere. {END}", "Scenario E: Capodanno nel deserto invece che in discoteca. {X} ha già comprato il piumino. {END}", "Il più votato vince. Se non votate, decide {X} da solo. Pensateci. {END}", "Scenario B: chi ha la patente A? {X} ha detto «più o meno». {TOX}"], seed), seed);
     if (page === "giro") return fill("Il giro è deciso. Resta da capire chi lo rovinerà per primo: le quote danno favorito {X}. {END}", seed);
     return fill(pick(FILL, seed), seed);
   }
@@ -295,7 +295,7 @@ window.R = (function () {
     mappa: "Sopra scegli cosa vedere: sorca, surf, mangiare… Tocca un pallino per sapere cos'è e premere «Portami qui». «Dove sono io?» ti dice cosa hai vicino. Sotto la mappa puoi accendere il giro di uno scenario.",
     scenari: "In alto vedi chi ha votato cosa. Tocca uno scenario: c'è quanto costa, come vi muovete, dove dormite e il giro giorno per giorno. Premi «Voto questo»: vince il più votato.",
     esplora: "Tocca un tema, poi su ogni idea premi 🔥 se ci stai, 🤔 se forse, 💀 se neanche morto. Quando tutti e tre premete 🔥, sotto compare «Si fa» e il costo va nei soldi.",
-    giro: "In alto scegli lo scenario: A, B, C o D. Sotto vedi la mappa e cosa si fa ogni giorno, dove si dorme e quante ore si guida.",
+    giro: "In alto scegli lo scenario: A, B, C, D o E. Sotto vedi la mappa e cosa si fa ogni giorno, dove si dorme e quante ore si guida.",
     crew: "Compila il tuo profilo: budget, patente, fuoristrada e scenario preferito. Lo scenario del viaggio si decide da solo. Più sotto c'è il tribunale: si vota chi è più probabile che faccia una figura di merda.",
     organizza: "Prenotazioni: premi Me ne occupo io su quello che prenoti tu, e Fatto quando hai finito. Cassa: segna quello che paghi per tutti, il sito calcola chi deve dare soldi a chi.",
     kit: "La valigia la spunti tu e gli altri vedono a che punto sei. Sotto ci sono le frasi in darija, i prezzi giusti per trattare e il convertitore euro-dirham.",

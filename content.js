@@ -193,7 +193,29 @@ C.ATT = [
     joke: "Prima: freschi. Dopo: bruciati dal sole, stanchi, felici." },
   { id: "sfida-tagine", cat: "sfide", t: "Classifica dei tagine", dove: "ovunque", quando: "tutto il viaggio", prezzo: "quanto mangiate", durata: "11 giorni", follia: 1, tipo: "esperienza",
     desc: "Ogni tagine che mangiate prende un voto da 1 a 10 da ognuno di voi. Segnateli sul Muro: l'ultimo giorno si proclama il vincitore.",
-    joke: "Alla fine vincerà il primo, perché avevate fame." }
+    joke: "Alla fine vincerà il primo, perché avevate fame." },
+  // DAL PLAYBOOK «WILD & RAW» (scenario E)
+  { id: "fes-tihal", cat: "cibo", t: "Tihal e griglie a Place Rcif", dove: "Medina di Fes, Place Rcif", quando: "30 dic sera", prezzo: "€1–3", durata: "una cena", follia: 3, tipo: "locale",
+    desc: "Il tihal è milza ripiena cotta sulla piastra: il cibo di strada di chi lavora nella medina. Si va dopo le 19, quando i gruppi di turisti se ne sono andati e arrivano i banchi per la gente del posto.",
+    joke: "Il saluzzese lo assaggia, dice «bon» e poi non parla per un'ora." },
+  { id: "mon-azrou", cat: "montagna", t: "Le bertucce di Azrou", dove: "Foresta di cedri, un'ora a sud di Fes", quando: "31 dic, scenario E", prezzo: "gratis", durata: "20 minuti", follia: 1, tipo: "classico",
+    desc: "Scimmie libere nella foresta di cedri del Medio Atlante, sulla strada per il deserto. Sosta corta: il 31 c'è da guidare.",
+    joke: "Tre primati che guardano altri primati. Indovinate chi è il più educato." },
+  { id: "des-capodanno", cat: "capodanno", t: "Capodanno nel bivacco tra le dune", dove: "Erg Chebbi, Merzouga", quando: "31 dic, scenario E", prezzo: "da €60, da confermare", durata: "la notte del 31", follia: 4, tipo: "esperienza",
+    desc: "Un campo piccolo in mezzo alle dune: cena berbera, falò, tamburi e le stelle a mezzanotte. Il prezzo del 31 fatevelo scrivere: a Capodanno molti campi cambiano listino. Chiedete se si può portare da bere e compratelo a Fes.",
+    joke: "Mezzanotte a meno due gradi, abbracciati a un cammello. Il romano dice che è come il Circo Massimo. Non è vero." },
+  { id: "des-khamlia", cat: "deserto", t: "La musica gnawa di Khamlia", dove: "Khamlia, 7 km da Merzouga", quando: "1 gen", prezzo: "offerta libera", durata: "un'ora", follia: 2, tipo: "locale",
+    desc: "Il villaggio gnawa del deserto: tamburi e qraqeb, le nacchere di ferro, suonati per chi passa, con il tè.",
+    joke: "Dopo dieci minuti Davide balla. Dopo venti chiama qualcuno per farglielo sentire." },
+  { id: "des-gara", cat: "deserto", t: "Gara Medouar, il cratere di 007", dove: "Circa 40 km da Merzouga, su pista", quando: "1 gen", prezzo: "4x4 con autista, prezzo dal campo", durata: "mezza giornata", follia: 3, tipo: "locale",
+    desc: "Una montagna ad anello in mezzo al nulla, usata nel film di 007 Spectre. Ci si arriva su pista: con un 4x4 e un autista del posto, non con l'auto a noleggio, che sulle piste di solito non è assicurata.",
+    joke: "La base segreta del cattivo di 007. Il cattivo è Augusto con il foglio delle spese." },
+  { id: "des-rissani", cat: "cibo", t: "Medfouna a Rissani", dove: "Rissani, 40 km da Merzouga", quando: "2 gen", prezzo: "€4–8", durata: "un pranzo", follia: 1, tipo: "locale",
+    desc: "La «pizza berbera»: pane ripieno di carne, cipolla e spezie, cotto nel forno a legna. Il souk grande, con il parcheggio degli asini, c'è martedì, giovedì e domenica. Il 2 gennaio è sabato.",
+    joke: "Il palermitano dice che lo sfincione è meglio. Poi ne ordina un'altra." },
+  { id: "oc-timlaline", cat: "oceano", t: "Le dune di Timlaline sull'oceano", dove: "Vicino a Tamri, 40 minuti a nord di Taghazout", quando: "5 gen", prezzo: "gratis, sandboard €5–10", durata: "un'ora", follia: 2, tipo: "locale",
+    desc: "Dune di sabbia chiara a due passi dall'oceano, lungo la strada per Imsouane. Ci si ferma, si sale, si scende col sandboard o di sedere.",
+    joke: "L'unica duna del viaggio dove nessuno si lamenta del freddo." }
 ];
 
 /* Tappe con coordinate (approssimative) per la mappa */
@@ -214,14 +236,25 @@ C.STOPS = {
   taroudant: { n: "Taroudant", lat: 30.4703, lng: -8.877 },
   imsouane: { n: "Imsouane", lat: 30.8406, lng: -9.8227 },
   taghazout: { n: "Taghazout", lat: 30.5446, lng: -9.7088 },
-  agadir: { n: "Aeroporto di Agadir", lat: 30.325, lng: -9.4131 }
+  agadir: { n: "Aeroporto di Agadir", lat: 30.325, lng: -9.4131 },
+  ketama: { n: "Ketama", lat: 34.917, lng: -4.567 },
+  chefchaouen: { n: "Chefchaouen", lat: 35.1714, lng: -5.2697 },
+  akchour: { n: "Akchour", lat: 35.24, lng: -5.17 },
+  azrou: { n: "Azrou", lat: 33.4417, lng: -5.2247 },
+  midelt: { n: "Midelt", lat: 32.68, lng: -4.73 },
+  gara: { n: "Gara Medouar", lat: 31.3008, lng: -4.4006 },
+  rissani: { n: "Rissani", lat: 31.2859, lng: -4.2751 },
+  taliouine: { n: "Taliouine", lat: 30.5328, lng: -7.9256 },
+  tamraght: { n: "Tamraght", lat: 30.513, lng: -9.68 },
+  timlaline: { n: "Dune di Timlaline", lat: 30.668, lng: -9.838 }
 };
 
 C.ROUTES = {
   A: ["fes", "meknes", "volubilis", "rabat", "marrakech", "agafay", "marrakech", "tichka", "benhaddou", "dades", "todra", "merzouga", "ouarzazate", "taroudant", "imsouane", "taghazout", "agadir"],
   B: ["fes", "meknes", "volubilis", "rabat", "marrakech", "agafay", "marrakech", "tichka", "benhaddou", "ouarzazate", "dades", "todra", "mhamid", "ouarzazate", "taghazout", "imsouane", "taghazout", "agadir"],
   C: ["fes", "marrakech", "agafay", "marrakech", "benhaddou", "dades", "todra", "merzouga", "marrakech", "taghazout", "agadir"],
-  D: ["fes", "marrakech", "merzouga", "marrakech", "taghazout", "agadir"]
+  D: ["fes", "marrakech", "merzouga", "marrakech", "taghazout", "agadir"],
+  E: ["fes", "ketama", "chefchaouen", "akchour", "chefchaouen", "fes", "azrou", "midelt", "merzouga", "gara", "merzouga", "rissani", "todra", "dades", "ouarzazate", "benhaddou", "taliouine", "tamraght", "timlaline", "imsouane", "taghazout", "agadir"]
 };
 
 C.SCEN = {
@@ -248,49 +281,65 @@ C.SCEN = {
     muovete: "Bus CTM e Supratours, due notti sul bus per il deserto e ritorno.", dormite: "Ostelli in camerata e un campo standard.", guida: "Zero. In compenso due notti seduti.",
     perchi: "Per chi vuole spendere poco e conoscere gente negli ostelli.", prezzo: "Due notti in bus. La schiena presenta il conto il 5 gennaio.",
     costi: [["Bus per tutto il giro", 75, "Fes → Marrakech, notturni per Merzouga e ritorno, Taghazout."], ["Ostelli per 8 notti", 135, "Capodanno compreso, che costa il doppio."], ["Campo standard a Merzouga", 25, "Con cena e cammello."]],
-    include: ["des-campo", "des-cammello"] }
+    include: ["des-campo", "des-cammello"] },
+  E: { nome: "Capodanno nelle dune", emoji: "🔥", motto: "Ketama, il falò nel Sahara, l'onda più lunga d'Africa.", sub: "Si parte dal Rif e da Ketama, Capodanno intorno al fuoco nel deserto, cinque giorni di oceano. Niente Marrakech.",
+    joke: "Il Capodanno più bello della vostra vita, o otto ore di Dacia per festeggiare in un autogrill di Midelt. Dipende dalla neve.",
+    muovete: "Dacia da Fes, riconsegna all'aeroporto di Agadir.", dormite: "Riad, ostello a Chefchaouen, bivacco nelle dune il 31, kasbah, ostelli surf.", guida: "Circa 30 ore in 11 giorni. Il 31 sono 8 ore: si parte alle 7.",
+    perchi: "Per chi vuole Ketama, il deserto e il surf, e a Capodanno preferisce il fuoco al club.", prezzo: "Niente Marrakech e niente club. E il giorno più lungo di guida è proprio il 31, su un passo dove a volte nevica.",
+    costi: [["Auto per 11 giorni, divisa per tre", 200, "Dacia Duster con assicurazione completa e riconsegna ad Agadir."], ["Benzina", 60, "Circa 2.000 km in tre."], ["Dormire: 10 notti normali", 170, "Riad, kasbah e ostelli surf, circa €17 a testa a notte."], ["Bivacco nelle dune la notte del 31", 60, "Cena, cammello, colazione. Il prezzo di Capodanno va confermato per scritto."]],
+    include: ["des-capodanno", "des-campo", "des-cammello"] }
 };
 
 
 /* Giorno per giorno. ore = ore di guida stimate. att = id delle attività consigliate. */
 C.DAYS = [
   { d: "2026-12-29", lab: "Mar 29 dic",
-    A: { t: "Fes, la medina", dorme: "Riad a Fes", ore: 0, att: ["cit-fes", "cibo-bissara", "cit-merinidi", "cibo-pastilla", "sfida-noapp"], rischio: "Perdersi nella medina entro 11 minuti." } },
+    A: { t: "Fes, la medina", dorme: "Riad a Fes", ore: 0, att: ["cit-fes", "cibo-bissara", "cit-merinidi", "cibo-pastilla", "sfida-noapp"], rischio: "Perdersi nella medina entro 11 minuti." },
+    E: { t: "Ketama e Chefchaouen", dorme: "Ostello a Chefchaouen", ore: 6, att: ["rif-ketama", "rif-chefchaouen"], rischio: "Atterrate a mezzanotte e la mattina vi aspettano 6 ore di curve nel Rif, con 5 ore di sonno." } },
   { d: "2026-12-30", lab: "Mer 30 dic",
     A: { t: "Volubilis, Meknès, Rabat", dorme: "Rabat", ore: 3, att: ["cit-volubilis", "oc-rabat", "cit-oudayas"], rischio: "Fare surf il 30 dicembre e pentirsene per 4 secondi." },
-    C: { t: "Treno per Marrakech", dorme: "Marrakech", ore: 0, att: [], rischio: "Sette ore di treno con le stesse due facce." } },
+    C: { t: "Treno per Marrakech", dorme: "Marrakech", ore: 0, att: [], rischio: "Sette ore di treno con le stesse due facce." },
+    E: { t: "Chefchaouen all'alba, Akchour, ritorno a Fes", dorme: "Riad a Fes", ore: 4.5, att: ["rif-akchour", "fes-tihal"], rischio: "Foto alle 7:30 nei vicoli blu. Il romano dorme fino alle 10. Si parte senza di lui." } },
   { d: "2026-12-31", lab: "Gio 31 dic",
     A: { t: "Marrakech e Capodanno", dorme: "Hivernage, Marrakech", ore: 3.5, att: ["cap-club", "cap-agafay", "cap-darna", "cap-rooftop"], rischio: "Addormentarsi alle 23:58." },
-    C: { t: "Marrakech e Capodanno", dorme: "Hivernage, Marrakech", ore: 0, att: ["cap-club", "cap-agafay", "cap-darna", "cap-rooftop"], rischio: "Addormentarsi alle 23:58." } },
+    C: { t: "Marrakech e Capodanno", dorme: "Hivernage, Marrakech", ore: 0, att: ["cap-club", "cap-agafay", "cap-darna", "cap-rooftop"], rischio: "Addormentarsi alle 23:58." },
+    E: { t: "Fes → Sahara, Capodanno nelle dune", dorme: "Bivacco nell'Erg Chebbi", ore: 8, att: ["mon-azrou", "des-capodanno", "des-stelle"], rischio: "Otto ore con un passo a 2.178 metri. Se nevica, il Capodanno lo fate in macchina." } },
   { d: "2027-01-01", lab: "Ven 1 gen",
-    A: { t: "Recupero, poi Agafay", dorme: "Hivernage, Marrakech", ore: 1, att: ["moto-quad", "moto-agafay", "cibo-mechoui", "cit-majorelle", "mon-ourika"], rischio: "Ricordarsi cosa è successo ieri sera." } },
+    A: { t: "Recupero, poi Agafay", dorme: "Hivernage, Marrakech", ore: 1, att: ["moto-quad", "moto-agafay", "cibo-mechoui", "cit-majorelle", "mon-ourika"], rischio: "Ricordarsi cosa è successo ieri sera." },
+    E: { t: "Moto, Khamlia e Gara Medouar", dorme: "Auberge a Merzouga", ore: 1, att: ["moto-dune", "des-khamlia", "des-gara", "moto-buggy"], rischio: "Salire su una KTM 450 il 1° gennaio alle 9. Dopo il Capodanno." } },
   { d: "2027-01-02", lab: "Sab 2 gen",
     A: { t: "Atlante, Aït Benhaddou, Dadès", dorme: "Kasbah nel Dadès", ore: 6, att: ["mon-tichka", "mon-benhaddou", "mon-dades"], rischio: "Neve al passo e un passeggero che chiede «quanto manca?» 40 volte." },
     B: { t: "Atlante e Aït Benhaddou", dorme: "Ouarzazate", ore: 4.5, att: ["mon-tichka", "mon-benhaddou"], rischio: "Guardare le moto in vetrina e cambiare idea su tutto." },
     C: { t: "Tour giorno 1: Aït Benhaddou e Dadès", dorme: "Dadès", ore: 0, att: ["mon-benhaddou", "mon-dades"], rischio: "Il minibus parte alle 7. Ripeto: alle 7." },
-    D: { t: "Bus notturno per Merzouga", dorme: "sul bus", ore: 0, att: [], rischio: "Dormire seduti accanto a uno sconosciuto che russa." } },
+    D: { t: "Bus notturno per Merzouga", dorme: "sul bus", ore: 0, att: [], rischio: "Dormire seduti accanto a uno sconosciuto che russa." },
+    E: { t: "Rissani, Todra, Ouarzazate", dorme: "Ouarzazate", ore: 6, att: ["des-rissani", "mon-todra", "mon-dades"], rischio: "Il souk di Rissani è martedì, giovedì e domenica. Oggi è sabato. Bravi." } },
   { d: "2027-01-03", lab: "Dom 3 gen",
     A: { t: "Todra e il deserto", dorme: "Campo nelle dune", ore: 4, att: ["mon-todra", "mon-arrampicata", "des-cammello", "des-campo", "des-stelle"], rischio: "Notte sotto zero e un sacco a pelo per due." },
     B: { t: "Moto giorno 1: gole del Dadès e del Todra", dorme: "Gite o kasbah", ore: 0, att: ["moto-tour3", "moto-pista", "mon-todra"], rischio: "La prima caduta. Statisticamente oggi." },
     C: { t: "Tour giorno 2: Todra e deserto", dorme: "Campo a Merzouga", ore: 0, att: ["mon-todra", "des-cammello", "des-campo"], rischio: "Il cammello di qualcuno sarà più alto degli altri. Gelosie." },
-    D: { t: "Merzouga", dorme: "Campo standard", ore: 0, att: ["des-cammello", "des-campo", "des-stelle"], rischio: "Sabbia ovunque. Ovunque." } },
+    D: { t: "Merzouga", dorme: "Campo standard", ore: 0, att: ["des-cammello", "des-campo", "des-stelle"], rischio: "Sabbia ovunque. Ovunque." },
+    E: { t: "Aït Benhaddou, poi l'oceano", dorme: "Ostello surf a Tamraght", ore: 6.5, att: ["mon-benhaddou", "oc-tamraght"], rischio: "Arrivare al tramonto e voler entrare in acqua lo stesso." } },
   { d: "2027-01-04", lab: "Lun 4 gen",
     A: { t: "Dune all'alba, enduro, Ouarzazate", dorme: "Ouarzazate", ore: 5, att: ["moto-dune", "des-sandboard", "moto-buggy"], rischio: "Svegliarsi alle 6 per l'alba e trovare le nuvole." },
     B: { t: "Moto giorno 2: piste del Draa", dorme: "Bivacco nel deserto", ore: 0, att: ["moto-tour3", "des-chigaga", "des-stelle"], rischio: "Bivacco a 90 km dalla strada. Nessuno torna indietro a prendere il caricatore." },
     C: { t: "Tour giorno 3: rientro a Marrakech", dorme: "Marrakech", ore: 0, att: [], rischio: "Nove ore di minibus. Playlist da preparare prima." },
-    D: { t: "Dune, poi bus notturno", dorme: "sul bus", ore: 0, att: ["des-sandboard"], rischio: "Secondo bus notturno. La schiena presenta il conto." } },
+    D: { t: "Dune, poi bus notturno", dorme: "sul bus", ore: 0, att: ["des-sandboard"], rischio: "Secondo bus notturno. La schiena presenta il conto." },
+    E: { t: "Surf a Taghazout", dorme: "Ostello surf a Tamraght", ore: 0, att: ["oc-taghazout", "oc-tamraght", "sfida-tagine"], rischio: "Scottarsi a gennaio. Sì, succede." } },
   { d: "2027-01-05", lab: "Mar 5 gen",
     A: { t: "Taroudant e l'oceano", dorme: "Imsouane", ore: 6, att: ["cibo-pesce"], rischio: "La tappa più lunga. Chi guida sceglie la musica, gli altri subiscono." },
     B: { t: "Moto giorno 3: rientro a Ouarzazate", dorme: "Ouarzazate", ore: 0, att: ["moto-tour3"], rischio: "Restituire la moto e piangere un po'." },
     C: { t: "Bus per Taghazout", dorme: "Surf camp", ore: 0, att: ["oc-taghazout"], rischio: "Prima onda, primo bevuto." },
-    D: { t: "Bus per Taghazout", dorme: "Ostello sul mare", ore: 0, att: ["oc-taghazout"], rischio: "Prima onda, primo bevuto." } },
+    D: { t: "Bus per Taghazout", dorme: "Ostello sul mare", ore: 0, att: ["oc-taghazout"], rischio: "Prima onda, primo bevuto." },
+    E: { t: "Dune sull'oceano, poi Imsouane", dorme: "Imsouane", ore: 1.5, att: ["oc-timlaline", "oc-imsouane"], rischio: "Sandboard sulla duna, poi in acqua con la sabbia ovunque." } },
   { d: "2027-01-06", lab: "Mer 6 gen",
     A: { t: "Surf a Imsouane", dorme: "Imsouane", ore: 0, att: ["oc-imsouane", "cibo-pesce"], rischio: "Stare in piedi sulla tavola per 2 secondi e raccontarne 20." },
     B: { t: "In auto verso l'oceano", dorme: "Taghazout o Tamraght", ore: 5, att: ["oc-tamraght"], rischio: "Arrivare al tramonto e voler entrare in acqua lo stesso." },
-    C: { t: "Surf", dorme: "Surf camp", ore: 0, att: ["oc-taghazout", "oc-paradise"], rischio: "Scottarsi a gennaio. Sì, succede." } },
+    C: { t: "Surf", dorme: "Surf camp", ore: 0, att: ["oc-taghazout", "oc-paradise"], rischio: "Scottarsi a gennaio. Sì, succede." },
+    E: { t: "Imsouane: surf e pesce al porto", dorme: "Imsouane", ore: 0, att: ["oc-imsouane", "cibo-pesce"], rischio: "Stare in piedi sulla tavola per 2 secondi e raccontarne 20." } },
   { d: "2027-01-07", lab: "Gio 7 gen",
     A: { t: "Taghazout, ultima sera", dorme: "Taghazout o Tamraght", ore: 1.5, att: ["oc-taghazout", "oc-tamraght", "oc-paradise", "sfida-tagine"], rischio: "Promettere di tornare l'anno prossimo." },
-    B: { t: "Surf, o gita a Imsouane", dorme: "Taghazout o Tamraght", ore: 0, att: ["oc-imsouane", "oc-paradise", "sfida-tagine"], rischio: "Promettere di tornare l'anno prossimo." } },
+    B: { t: "Surf, o gita a Imsouane", dorme: "Taghazout o Tamraght", ore: 0, att: ["oc-imsouane", "oc-paradise", "sfida-tagine"], rischio: "Promettere di tornare l'anno prossimo." },
+    E: { t: "Ultima surfata, ultima sera a Taghazout", dorme: "Taghazout o Tamraght", ore: 1.5, att: ["oc-taghazout", "sfida-tagine"], rischio: "Promettere di tornare l'anno prossimo." } },
   { d: "2027-01-08", lab: "Ven 8 gen",
     A: { t: "Surf la mattina, poi Agadir → Londra → Roma", dorme: "sull'aereo", ore: 0.7, att: ["sfida-foto"], rischio: "Passare dai 22 gradi di Taghazout ai 7 di Londra in mutande da surf." } }
 ];
@@ -516,7 +565,7 @@ C.POI = [
     x: "Il passo di montagna sulla strada per il deserto.", j: "A 2.260 metri a gennaio l'unica cosa calda è il motore della Dacia." },
   // tossici
   { id: "ketama", cat: "tossico", n: "Valle di Ketama", dove: "Rif, circa 4 ore a nord di Fes", lat: 34.9170, lng: -4.5670, q: "Ketama Morocco",
-    x: "La valle più famosa del Rif, il cuore storico della coltivazione. Si vede con una guida locale: è la variante del 30 dicembre.", j: "Guarda questo tossico: ha messo Ketama sul navigatore e ha detto «è per la cultura». Certo.",
+    x: "La valle più famosa del Rif, il cuore storico della coltivazione. Si vede con una guida locale: il 29 nello scenario E, la variante del 30 negli altri.", j: "Guarda questo tossico: ha messo Ketama sul navigatore e ha detto «è per la cultura». Certo.",
     serio: "In Marocco la cannabis è legale solo per usi medici e industriali, con licenza (legge 13-21 del 2021). Comprarla e fumarla resta illegale, anche per i turisti. Sulle strade del Rif ci sono posti di blocco e le auto a noleggio vengono fermate. Si va a guardare, non a comprare." },
   { id: "akchour", cat: "vedere", n: "Cascate di Akchour", dove: "45 minuti da Chefchaouen", lat: 35.2400, lng: -5.1700, q: "Akchour waterfalls",
     x: "Sentiero tra le gole fino alle cascate e al «ponte di Dio». Mezza giornata.", j: "L'acqua a 8 gradi. Il primo che entra non paga cene per tutto il viaggio." },
@@ -593,7 +642,24 @@ C.POI = [
   { id: "tichkaneve", cat: "occhio", n: "Neve sul Tichka", dove: "Alto Atlante", lat: 31.2700, lng: -7.3500, q: "Tizi n'Tichka road",
     x: "A gennaio può nevicare e chiudono la strada per qualche ora. Controllate la mattina stessa.", j: "Chi guida qui non è quello che ha fatto serata il 31. Ce lo diciamo adesso." },
   { id: "agadirair", cat: "occhio", n: "Aeroporto di Agadir", dove: "Agadir Al Massira", lat: 30.3250, lng: -9.4131, q: "Agadir Al Massira Airport",
-    x: "L'8 si riparte: Agadir → Londra → Roma. Dacia da riconsegnare qui con il pieno.", j: "Niente regalini del Rif in valigia: a Londra i cani all'arrivo fanno il loro lavoro. Benissimo." }
+    x: "L'8 si riparte: Agadir → Londra → Roma. Dacia da riconsegnare qui con il pieno.", j: "Niente regalini del Rif in valigia: a Londra i cani all'arrivo fanno il loro lavoro. Benissimo." },
+  // dal playbook (scenario E)
+  { id: "rcif", cat: "mangiare", n: "Place Rcif, le griglie della sera", dove: "Medina di Fes", lat: 34.0618, lng: -4.9726, q: "Place R'cif Fes",
+    x: "Dopo le 19 arrivano i banchi per la gente del posto: tihal, spiedini, harira. Si mangia con pochi dirham.", j: "Tutto molto igienico. Davvero. Più o meno." },
+  { id: "azrou", cat: "foto", n: "Le bertucce di Azrou", dove: "Foresta di cedri, Medio Atlante", lat: 33.415, lng: -5.175, q: "Cèdre Gouraud Azrou", w: "Barbary_macaque",
+    x: "Scimmie libere tra i cedri, sulla strada Fes → deserto.", j: "La foto più bella del viaggio ha una scimmia. E non è Augusto." },
+  { id: "colzad", cat: "occhio", n: "Neve sulla strada del deserto", dove: "Col du Zad e Midelt, statale N13", lat: 32.98, lng: -5.06, q: "Col du Zad",
+    x: "Da Fes a Merzouga si passa a 2.178 metri. A gennaio 2026 la neve ha chiuso la N13 tra Timahdite e Aït Oufella. Nello scenario E ci passate il 31: controllate la mattina, partite alle 7, gomme buone.", j: "Capodanno a Midelt con le catene montate da un saluzzese. Esageruma nen." },
+  { id: "gara", cat: "foto", n: "Gara Medouar", dove: "A nord-ovest di Merzouga, su pista", lat: 31.3008, lng: -4.4006, q: "Gara Medouar", w: "Gara_Medouar",
+    x: "Montagna ad anello usata nel film di 007 Spectre. Si va in 4x4 con autista: l'auto a noleggio sulla pista di solito non è assicurata.", j: "Tre tossici nella base del cattivo di Bond. Il cattivo vero è il conto del 4x4." },
+  { id: "khamlia", cat: "vedere", n: "Khamlia, il villaggio gnawa", dove: "7 km a sud di Merzouga", lat: 31.0351, lng: -4.0073, q: "Khamlia", w: "Khamlia",
+    x: "Tamburi e nacchere di ferro suonati per chi passa, con il tè. Offerta libera.", j: "Davide balla. Nessuno lo ferma. Nessuno lo filma, purtroppo per lui." },
+  { id: "rissani", cat: "mangiare", n: "Rissani e la medfouna", dove: "40 km da Merzouga", lat: 31.2859, lng: -4.2751, q: "Rissani medfouna", w: "Medfouna",
+    x: "La pizza berbera cotta nel forno a legna. Il souk grande è martedì, giovedì e domenica.", j: "Il palermitano la chiama sfincione. Lo correggono in quattro lingue." },
+  { id: "timlaline", cat: "foto", n: "Dune di Timlaline", dove: "Vicino a Tamri, sulla costa", lat: 30.668, lng: -9.838, q: "Timlaline dunes",
+    x: "Dune chiare che finiscono nell'oceano, sulla strada Taghazout → Imsouane.", j: "Il deserto, ma a 20 gradi. Il freddone di Saluzzo qui non serve." },
+  { id: "tifnit", cat: "occhio", n: "Tifnit non c'è più", dove: "Parco di Souss-Massa, a sud di Agadir", lat: 30.19, lng: -9.64, q: "Tifnit",
+    x: "Il villaggio di pescatori dei vecchi video è stato raso al suolo tra fine 2023 e inizio 2024. Anche a Imsouane hanno demolito le case sul mare a gennaio 2024: oggi è aperta, ma prima di pagare un ostello controllate che abbia recensioni recenti.", j: "Se un video dice «posto segreto», è del 2019 e il posto non esiste più." }
 ];
 
 /* ---------- Citazioni: una al giorno in Home, e nell'intro ---------- */
@@ -678,9 +744,14 @@ C.WIKI = {
  "Tinghir": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Tinghir_DSC_0092_%2841274419445%29.jpg/330px-Tinghir_DSC_0092_%2841274419445%29.jpg",
  "Tizi_n'Tichka": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Tizi_n%27Tichka.jpg/330px-Tizi_n%27Tichka.jpg",
  "Todgha_Gorge": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/%22Ein_beeindruckendes_Naturwunder%22%2C_17.jpg/330px-%22Ein_beeindruckendes_Naturwunder%22%2C_17.jpg",
- "Volubilis": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Volubilis_Longshot_II.jpg/330px-Volubilis_Longshot_II.jpg"
+ "Volubilis": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Volubilis_Longshot_II.jpg/330px-Volubilis_Longshot_II.jpg",
+ "Barbary_macaque": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Macaca_sylvanus.Mother_and_baby.jpg/330px-Macaca_sylvanus.Mother_and_baby.jpg",
+ "Khamlia": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Khamlia_village.jpg/330px-Khamlia_village.jpg",
+ "Gara_Medouar": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Capel_1_Vue_g%C3%A9n%C3%A9rale_du_Jebel_Mudawwar_depuis_le_sud-ouest.jpg/330px-Capel_1_Vue_g%C3%A9n%C3%A9rale_du_Jebel_Mudawwar_depuis_le_sud-ouest.jpg",
+ "Medfouna": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Medfouna_or_Berber_Pizza_at_a_local_restaurant_near_Merzouga%2C_Errachidia%2C_Morocco.jpg/330px-Medfouna_or_Berber_Pizza_at_a_local_restaurant_near_Merzouga%2C_Errachidia%2C_Morocco.jpg",
+ "Midelt": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Midelt_ayachi.jpg/330px-Midelt_ayachi.jpg"
 };
-C.FOTO_ATT = {"rif-ketama": "Ketama", "rif-chefchaouen": "Chefchaouen", "rif-akchour": "Akchour", "cap-agafay": "Agafay", "moto-quad": "Agafay", "cap-rooftop": "Koutoubia_Mosque", "moto-tour3": "Draa_River", "moto-pista": "Dadès_Gorges", "moto-agafay": "Enduro", "moto-dune": "Erg_Chebbi", "moto-buggy": "All-terrain_vehicle", "moto-noleggio": "Atlas_Mountains", "des-campo": "Merzouga", "des-chigaga": "Erg_Chigaga", "des-cammello": "Dromedary", "des-stelle": "Milky_Way", "mon-tichka": "Tizi_n'Tichka", "mon-benhaddou": "Aït_Benhaddou", "mon-dades": "Kasbah", "mon-todra": "Todgha_Gorge", "mon-arrampicata": "Tinghir", "mon-ourika": "Ourika_Valley", "oc-imsouane": "Imsouane", "oc-taghazout": "Taghazout", "oc-rabat": "Rabat", "oc-paradise": "Paradise_Valley,_Morocco", "cit-fes": "Fes_el_Bali", "cit-merinidi": "Marinid_Tombs", "cit-volubilis": "Volubilis", "cit-oudayas": "Kasbah_of_the_Udayas", "cit-jemaa": "Jemaa_el-Fnaa", "cit-majorelle": "Majorelle_Garden", "cit-benyoussef": "Ben_Youssef_Madrasa", "cibo-tanjia": "Tanjia", "cibo-mechoui": "Mechoui", "cibo-bissara": "Bissara", "cibo-pastilla": "Pastilla", "cibo-pesce": "Moroccan_cuisine", "cibo-corso": "Tajine", "cibo-te": "Maghrebi_mint_tea", "sfida-souk": "Souk", "sfida-noapp": "Bab_Bou_Jeloud", "sfida-darija": "Fes", "sfida-foto": "Chouara_Tannery", "sfida-tagine": "Tajine"};
+C.FOTO_ATT = {"rif-ketama": "Ketama", "rif-chefchaouen": "Chefchaouen", "rif-akchour": "Akchour", "cap-agafay": "Agafay", "moto-quad": "Agafay", "cap-rooftop": "Koutoubia_Mosque", "moto-tour3": "Draa_River", "moto-pista": "Dadès_Gorges", "moto-agafay": "Enduro", "moto-dune": "Erg_Chebbi", "moto-buggy": "All-terrain_vehicle", "moto-noleggio": "Atlas_Mountains", "des-campo": "Merzouga", "des-chigaga": "Erg_Chigaga", "des-cammello": "Dromedary", "des-stelle": "Milky_Way", "mon-tichka": "Tizi_n'Tichka", "mon-benhaddou": "Aït_Benhaddou", "mon-dades": "Kasbah", "mon-todra": "Todgha_Gorge", "mon-arrampicata": "Tinghir", "mon-ourika": "Ourika_Valley", "oc-imsouane": "Imsouane", "oc-taghazout": "Taghazout", "oc-rabat": "Rabat", "oc-paradise": "Paradise_Valley,_Morocco", "cit-fes": "Fes_el_Bali", "cit-merinidi": "Marinid_Tombs", "cit-volubilis": "Volubilis", "cit-oudayas": "Kasbah_of_the_Udayas", "cit-jemaa": "Jemaa_el-Fnaa", "cit-majorelle": "Majorelle_Garden", "cit-benyoussef": "Ben_Youssef_Madrasa", "cibo-tanjia": "Tanjia", "cibo-mechoui": "Mechoui", "cibo-bissara": "Bissara", "cibo-pastilla": "Pastilla", "cibo-pesce": "Moroccan_cuisine", "cibo-corso": "Tajine", "cibo-te": "Maghrebi_mint_tea", "sfida-souk": "Souk", "sfida-noapp": "Bab_Bou_Jeloud", "sfida-darija": "Fes", "sfida-foto": "Chouara_Tannery", "sfida-tagine": "Tajine", "mon-azrou": "Barbary_macaque", "des-capodanno": "Erg_Chebbi", "des-khamlia": "Khamlia", "des-gara": "Gara_Medouar", "des-rissani": "Medfouna"};
 C.FOTO_POI = {"ketama": "Ketama", "chefchaouen": "Chefchaouen", "agafay": "Agafay", "akchour": "Akchour", "erg": "Erg_Chebbi", "fesnotte": "Fes_el_Bali", "tichka": "Tizi_n'Tichka", "fesguide": "Bab_Bou_Jeloud", "jemaa": "Jemaa_el-Fnaa", "anchor": "Taghazout", "imsouane": "Imsouane", "mechoui": "Mechoui", "bissara": "Bissara", "porto": "Agadir", "chouara": "Chouara_Tannery", "benhaddou": "Aït_Benhaddou", "dune": "Merzouga", "majorelle": "Majorelle_Garden", "oudayas": "Kasbah_of_the_Udayas", "tichkaneve": "Atlas_Mountains", "agadirair": "Agadir", "cap-club": "Hivernage"};
 /* foto(chiave, "500px" o "960px"): l'indirizzo della foto alla grandezza giusta */
 C.foto = function (k, size) { const u = C.WIKI[k]; return u ? u.replace("/330px-", "/" + (size || "500px") + "-") : null; };
@@ -699,6 +770,7 @@ C.DAYSTOPS = {
   "2027-01-07": { A: ["imsouane", "taghazout"], B: ["taghazout"] },
   "2027-01-08": { A: ["taghazout", "agadir"] }
 };
+Object.entries({ "2026-12-29": ["fes", "ketama", "chefchaouen"], "2026-12-30": ["chefchaouen", "akchour", "fes"], "2026-12-31": ["fes", "azrou", "midelt", "merzouga"], "2027-01-01": ["merzouga", "gara", "merzouga"], "2027-01-02": ["merzouga", "rissani", "todra", "dades", "ouarzazate"], "2027-01-03": ["ouarzazate", "benhaddou", "taliouine", "tamraght"], "2027-01-04": ["tamraght", "taghazout"], "2027-01-05": ["tamraght", "timlaline", "imsouane"], "2027-01-06": ["imsouane"], "2027-01-07": ["imsouane", "taghazout"] }).forEach(([d, t]) => (C.DAYSTOPS[d].E = t));
 C.stopsFor = function (d, s) { const x = C.DAYSTOPS[d] || {}; return x[s] || (s === "B" && x.A) || (s === "D" && x.C) || x.A || []; };
 /* idee che non stanno in un giorno preciso: le mettiamo dove si può farle */
 C.EXTRA_DAY = { "2026-12-29": ["cit-hammam", "cibo-corso", "sfida-souk", "sfida-darija", "cibo-te"], "2027-01-01": ["cit-jemaa", "cit-benyoussef", "cibo-tanjia"], "2027-01-02": ["mon-rose", "moto-noleggio"], "2027-01-03": ["des-nomadi"] };
@@ -709,7 +781,7 @@ C.MUST = [
     why: "Le valli di Ketama, dove c'è la produzione. Il motivo segreto per cui il tossico ha comprato il biglietto. Si guarda, non si compra.",
     serio: "Cannabis legale solo per usi medici e industriali con licenza; comprarla e fumarla è illegale anche per i turisti. Posti di blocco sulle strade del Rif. E il Rif è a nord, il resto del giro a sud: costa un giorno.",
     opz: [
-      { id: "ketama", t: "Ketama con una guida locale", x: "Un giorno nelle valli della coltivazione, il 30 dicembre. Si salta Rabat e il 31 sono 6–8 ore di strada fino a Marrakech.", e: 40, att: "rif-ketama" },
+      { id: "ketama", t: "Ketama con una guida locale", x: "Un giorno nelle valli della coltivazione, il 30 dicembre. Si salta Rabat e il 31 sono 6–8 ore di strada fino a Marrakech. Oppure lo scenario E, che parte proprio da qui.", e: 40, att: "rif-ketama" },
       { id: "chaouen", t: "Chefchaouen e le valli intorno", x: "La città blu come base, una notte, le cascate di Akchour. Più turistico e più tranquillo.", e: 35, att: "rif-chefchaouen" },
       { id: "atlante", t: "Niente Rif: le valli dell'Atlante", x: "Dadès e Todra, già nel giro. Niente piante, solo rocce. E il 31 arrivate riposati.", e: 0, att: "mon-todra" } ] },
   { id: "surf", e: "🏄", t: "Il surf", foto: "Imsouane",
@@ -739,22 +811,22 @@ C.MUST_ALTRI = ["cit-jemaa", "mon-benhaddou", "des-stelle", "cit-hammam", "cibo-
 
 /* ---------- Il viaggio: il Marocco diviso in zone, da nord a sud ---------- */
 C.AREE = [
-  { id: "rif", n: "Il Rif e Ketama", e: "🌿", foto: "Chefchaouen", lat: 35.0, lng: -4.9, z: 8, quando: "Non è nel giro: variante del 29–30 dicembre", dir: "Montagne, valli della coltivazione, la città blu.", j: "La zona preferita del Tossico Supremo. Si guarda, non si compra." },
+  { id: "rif", n: "Il Rif e Ketama", e: "🌿", foto: "Chefchaouen", lat: 35.0, lng: -4.9, z: 8, quando: "29–30 dicembre nello scenario E, variante negli altri", dir: "Montagne, valli della coltivazione, la città blu.", j: "La zona preferita del Tossico Supremo. Si guarda, non si compra." },
   { id: "fes", n: "Fes e Meknès", e: "🕌", foto: "Fes_el_Bali", lat: 34.0, lng: -5.2, z: 9, quando: "29 e 30 dicembre", dir: "La medina più grande del mondo, Volubilis, le porte di Meknès.", j: "Ci si perde entro 11 minuti. Il record è di Davide: 4 minuti, al telefono." },
   { id: "rabat", n: "Rabat", e: "🏛️", foto: "Kasbah_of_the_Udayas", lat: 34.02, lng: -6.83, z: 12, quando: "30 dicembre, solo nel giro A", dir: "La capitale sull'oceano: la kasbah bianca e blu, la torre Hassan.", j: "Capitale, gente giovane, prezzi umani. Una birra e via, domani si guida." },
-  { id: "marrakech", n: "Marrakech e Agafay", e: "🎆", foto: "Jemaa_el-Fnaa", lat: 31.6, lng: -8.0, z: 10, quando: "31 dicembre e 1° gennaio", dir: "Capodanno, la piazza, i souk, il deserto di pietra a 40 minuti.", j: "La notte giusta è qui. Se non succede a Marrakech, non succede. Daje." },
+  { id: "marrakech", n: "Marrakech e Agafay", e: "🎆", foto: "Jemaa_el-Fnaa", lat: 31.6, lng: -8.0, z: 10, quando: "31 dicembre e 1° gennaio, non nello scenario E", dir: "Capodanno, la piazza, i souk, il deserto di pietra a 40 minuti.", j: "La notte giusta è qui. Se non succede a Marrakech, non succede. Daje." },
   { id: "atlante", n: "Atlante e valli", e: "⛰️", foto: "Dadès_Gorges", lat: 31.3, lng: -6.4, z: 8, quando: "2 e 3 gennaio", dir: "Il passo a 2.260 metri, Aït Benhaddou, le gole del Dadès e del Todra.", j: "Sei ore di curve. Chi soffre la macchina sta davanti, e soffre lo stesso." },
-  { id: "deserto", n: "Il deserto", e: "🐪", foto: "Erg_Chebbi", lat: 30.6, lng: -4.9, z: 7, quando: "3 e 4 gennaio", dir: "Le dune di Merzouga, la notte nel campo, moto e buggy sulla sabbia.", j: "Freddo, stelle, zero sorca. Bellissimo lo stesso." },
+  { id: "deserto", n: "Il deserto", e: "🐪", foto: "Erg_Chebbi", lat: 30.6, lng: -4.9, z: 7, quando: "3 e 4 gennaio, o Capodanno nello scenario E", dir: "Le dune di Merzouga, la notte nel campo, moto e buggy sulla sabbia.", j: "Freddo, stelle, zero sorca. Bellissimo lo stesso." },
   { id: "oceano", n: "L'oceano", e: "🏄", foto: "Imsouane", lat: 30.65, lng: -9.7, z: 9, quando: "dal 5 all'8 gennaio", dir: "Imsouane, Taghazout, il surf, il pesce, l'ultimo tramonto ad Agadir.", j: "Due secondi in piedi sulla tavola, venti minuti a raccontarlo. Caralho." }
 ];
 /* a quale zona appartiene ogni idea */
 C.AREA_ATT = {
   rif: ["rif-ketama", "rif-chefchaouen", "rif-akchour"],
-  fes: ["cit-fes", "cit-merinidi", "cit-volubilis", "cit-hammam", "cibo-bissara", "cibo-pastilla", "sfida-noapp", "sfida-darija", "sfida-foto"],
+  fes: ["cit-fes", "cit-merinidi", "cit-volubilis", "cit-hammam", "cibo-bissara", "cibo-pastilla", "sfida-noapp", "sfida-darija", "sfida-foto", "fes-tihal"],
   rabat: ["cit-oudayas", "oc-rabat"],
   marrakech: ["cap-club", "cap-agafay", "cap-darna", "cap-rooftop", "moto-agafay", "moto-quad", "cit-jemaa", "cit-majorelle", "cit-benyoussef", "mon-ourika", "cibo-tanjia", "cibo-mechoui", "cibo-corso", "cibo-te", "sfida-souk"],
-  atlante: ["mon-tichka", "mon-benhaddou", "mon-dades", "mon-todra", "mon-arrampicata", "mon-rose", "moto-pista", "moto-noleggio"],
-  deserto: ["des-campo", "des-cammello", "des-stelle", "des-sandboard", "des-nomadi", "des-chigaga", "moto-dune", "moto-buggy", "moto-tour3"],
-  oceano: ["oc-imsouane", "oc-taghazout", "oc-tamraght", "oc-paradise", "cibo-pesce", "sfida-tagine"]
+  atlante: ["mon-tichka", "mon-benhaddou", "mon-dades", "mon-todra", "mon-arrampicata", "mon-rose", "moto-pista", "moto-noleggio", "mon-azrou"],
+  deserto: ["des-campo", "des-cammello", "des-stelle", "des-sandboard", "des-nomadi", "des-chigaga", "moto-dune", "moto-buggy", "moto-tour3", "des-capodanno", "des-khamlia", "des-gara", "des-rissani"],
+  oceano: ["oc-imsouane", "oc-taghazout", "oc-tamraght", "oc-paradise", "cibo-pesce", "sfida-tagine", "oc-timlaline"]
 };
 C.areaOf = function (id) { for (const k in C.AREA_ATT) if (C.AREA_ATT[k].includes(id)) return k; return null; };

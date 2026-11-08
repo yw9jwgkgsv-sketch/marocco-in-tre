@@ -16,7 +16,7 @@
   <div class="wrap">
     <div class="topline"><span class="eyebrow">Scenari</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Come ci <em>muoviamo</em></h1>
-    <span class="sticker">Quattro modi di fare lo stesso viaggio. Uno solo vi lascia amici.</span>
+    <span class="sticker">Cinque modi di fare lo stesso viaggio. Uno solo vi lascia amici.</span>
     <p class="lead">Tocca uno scenario: il giro, dove dormite, quanto si guida e quanto costa. Poi votate.</p>
   </div>
 </header>
@@ -78,7 +78,7 @@
     const mine = sond.find((r) => r.nome === me && r.domanda === "scenario");
     try {
       if (mine && mine.scelta === k) { await db.remove("sondaggi", { nome: me, domanda: "scenario" }); M.toast("Voto tolto. Indeciso come sempre."); }
-      else { await db.upsert("sondaggi", { nome: me, domanda: "scenario", scelta: k }, "nome,domanda"); M.toast({ A: "Dacia. Chi guida il 2 gennaio? Non guardate me.", B: "Moto. Avvisiamo le mamme.", C: "Treno e tour. Comodo, pensionato.", D: "Zaino. Come in Erasmus, ma con la schiena di adesso." }[k]); }
+      else { await db.upsert("sondaggi", { nome: me, domanda: "scenario", scelta: k }, "nome,domanda"); M.toast({ A: "Dacia. Chi guida il 2 gennaio? Non guardate me.", B: "Moto. Avvisiamo le mamme.", C: "Treno e tour. Comodo, pensionato.", D: "Zaino. Come in Erasmus, ma con la schiena di adesso.", E: "Capodanno nelle dune. Pregate che non nevichi a Midelt." }[k]); }
       await load();
     } catch (e) { M.err(e); }
   }
