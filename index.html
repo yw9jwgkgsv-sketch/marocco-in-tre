@@ -19,17 +19,24 @@
 <main class="wrap h4">
   <div class="topline hm-top"><span class="eyebrow" id="oggi">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
 
+  <header class="h4-head">
+    <h1>Marocco in tre</h1>
+    <p>Il sito del viaggio. Qui decidiamo cosa fare, quanto si spende e chi porta cosa.</p>
+    <button type="button" class="h4-how" data-i="home"><i class="h4-i" aria-hidden="true">i</i>Come funziona</button>
+  </header>
+
   <div id="upgrade" class="banner" hidden></div>
 
   <section class="h4-wid" aria-label="In breve">
-    <div class="h4-w h4-cd"><b id="cd-d">0</b><span>giorni a Fes</span><small>Lunedì 28 dicembre, 23:30</small></div>
-    <button type="button" class="h4-w h4-call" id="call-btn" aria-label="Davide ha richiamato">
+    <div class="h4-wb"><div class="h4-w h4-cd"><b id="cd-d">0</b><span>giorni a Fes</span><small>Lunedì 28 dicembre, 23:30</small></div>
+      <button type="button" class="h4-i h4-wi" data-i="giorni" aria-label="A cosa serve: giorni a Fes">i</button></div>
+    <div class="h4-wb"><button type="button" class="h4-w h4-call" id="call-btn" aria-label="Davide ha richiamato: aggiungi una chiamata">
       <span class="h4-ph">📞</span><b id="call-n">600.000</b><span>chiamate di Davide</span><small>Tocca se ha richiamato</small>
-    </button>
+    </button><button type="button" class="h4-i h4-wi" data-i="davide" aria-label="A cosa serve: chiamate di Davide">i</button></div>
   </section>
 
   <section class="h4-deck" aria-labelledby="h-dk">
-    <div class="h4-dh"><b id="h-dk">Domande veloci</b><span id="dk-n"></span></div>
+    <div class="h4-dh"><b id="h-dk">Domande veloci</b><button type="button" class="h4-i" data-i="domande" aria-label="A cosa servono le domande veloci">i</button><span id="dk-n"></span></div>
     <div class="h4-stack" id="stack"></div>
     <div class="h4-btns" id="btns">
       <button type="button" class="h4-no" id="b-no"><span aria-hidden="true">💀</span> No</button>
@@ -38,13 +45,14 @@
     <details class="h4-ans" id="ans-box"><summary>Le risposte di tutti e tre</summary><ul id="ans"></ul></details>
   </section>
 
-  <section class="h4-apps" aria-label="Tutto il sito">
+  <section class="h4-apps" aria-labelledby="h-apps">
+    <div class="h4-dh"><b id="h-apps">Le app del viaggio</b><button type="button" class="h4-pill" data-i="apps"><i class="h4-i" aria-hidden="true">i</i>A cosa serve ognuna</button></div>
     <nav class="h4-grid" id="apps"></nav>
     <p class="h4-hint">Il pallino rosso è una cosa che ti manca.</p>
   </section>
 
   <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:#fff">Rivedi l'intro</button>
-  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 22 · 8 nov 2026</footer>
+  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 23 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -83,6 +91,39 @@
       el("span", { class: "h4-ic", style: "background:" + c }, e, b[k] ? el("i", { class: "h4-bdg", text: String(b[k]), "aria-label": b[k] + " da fare" }) : null),
       el("span", { class: "h4-lab", text: t }))));
   }
+
+  /* ---------- le ⓘ: cosa fa ogni cosa ---------- */
+  const COSA = {
+    viaggio: ["Tutto quello che si può fare in Marocco, diviso per zona, con la mappa.", "Apri una zona e vota ogni idea: 🔥 ci sto, 🤔 forse, 💀 no. Puoi proporne di nuove."],
+    must: ["Le quattro cose che si fanno per forza: valli del Rif, surf, moto, deserto.", "Per ognuna scegli come farla. Vince il modo più votato."],
+    scenari: ["Cinque modi di fare il giro: dove si dorme, quante ore si guida, quanto costa.", "Leggili e vota il tuo. Uno solo vince."],
+    soldi: ["Quanto spende ognuno: spese sicure, scenario scelto e cose decise.", "Guarda il totale a testa. Si aggiorna da solo."],
+    sifa: ["Le idee che hanno avuto tre 🔥: quelle sono decise.", "Niente da fare: si riempie con i vostri voti."],
+    organizza: ["Chi prenota cosa e chi deve soldi a chi.", "Prenditi un compito e segna le spese che anticipi."],
+    documenti: ["Biglietti, prenotazioni e assicurazione, in un posto per tutti e tre.", "Carica i tuoi PDF o le foto. Niente passaporti."],
+    mappa: ["Tutti i posti: sorca, surf, cibo, foto, e quelli dove stare attenti.", "Tocca un pallino, leggi, poi «Portami qui» apre Google Maps."],
+    notte: ["Club, Capodanno e posti per uscire, con le prese in giro.", "Leggi e scegli dove si va la sera."],
+    kit: ["Valigia, parole in darija, prezzi giusti nel souk, numeri utili.", "Spunta cosa hai messo in valigia. Durante il viaggio ti dice cosa si fa oggi."],
+    profilo: ["La tua faccia, il colore, il soprannome e il tormentone.", "Sceglili una volta: il tormentone arriva agli altri come notifica."],
+    tribunale: ["Chi è il più tossico, chi si perde, chi cade dalla moto: si vota.", "Vota. Il verdetto è definitivo, purtroppo per Davide."],
+    ruota: ["Quando non decidete, gira la ruota.", "Girala per chi paga il tè, chi guida, chi chiama il riad."],
+    muro: ["Le figure di merda del viaggio, per sempre.", "Scrivine una. Anonimato non garantito."]
+  };
+  const INFO = {
+    home: { ic: "🐪", col: "#2438C6", t: "Come funziona", x: [["1.", "Rispondi alle domande veloci: sì o no, una alla volta."], ["2.", "Apri le app col pallino rosso: è quello che ti manca."], ["3.", "Se non capisci una cosa, tocca la i accanto."], "Tutto quello che fate si aggiorna da solo per tutti e tre."] },
+    giorni: { ic: "✈️", col: "#2438C6", t: "Giorni a Fes", x: ["Il conto alla rovescia per l'andata: si atterra a Fes lunedì 28 dicembre alle 23:30.", "Il ritorno è venerdì 8 gennaio da Agadir, passando da Londra. Tutti e due i voli sono già presi."] },
+    davide: { ic: "📞", col: "#ff3b30", t: "Le chiamate di Davide", x: ["Davide chiama per il viaggio in continuazione. Ogni volta che lo fa, toccate il riquadro: il numero sale per tutti e tre.", "A fine viaggio si legge il totale ad alta voce. Davanti a lui."] },
+    domande: { ic: "⚡", col: "#E8590C", t: "Domande veloci", x: [["Come:", "scorri la carta a destra per sì, a sinistra per no, oppure usa i due tasti."], ["Le idee", "con tre sì entrano nel viaggio e finiscono in «Cosa si fa»."], ["Le domande su di te", "servono a organizzare: chi guida, chi va in moto, chi ha il passaporto a posto."], "Sulla carta vedi cosa hanno risposto gli altri due."] }
+  };
+  function infoApps() {
+    const b = badges(D);
+    M.info({ ic: "📱", col: "#2438C6", t: "A cosa serve ogni app", x: ["Il pallino rosso dice quante cose ti mancano lì dentro."],
+      body: el("ul", { class: "sh-list" }, APPS.map(([k, href, e, c, t]) => el("li", null, el("a", { href },
+        el("span", { class: "h4-ic sm", style: "background:" + c }, e, b[k] ? el("i", { class: "h4-bdg", text: String(b[k]) }) : null),
+        el("span", null, el("b", { text: t }), el("span", { text: COSA[k][0] }), el("small", { text: "Tu: " + COSA[k][1].charAt(0).toLowerCase() + COSA[k][1].slice(1) })),
+        el("span", { class: "sh-chev", "aria-hidden": "true", text: "›" }))))) });
+  }
+  document.querySelectorAll("[data-i]").forEach((x) => x.addEventListener("click", (e) => { e.stopPropagation(); const k = x.dataset.i; if (k === "apps") infoApps(); else M.info(INFO[k]); }));
 
   /* ---------- le domande veloci: una alla volta, sì o no ---------- */
   const Q = C.DOMANDE;

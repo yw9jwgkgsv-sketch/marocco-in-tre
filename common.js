@@ -264,6 +264,25 @@ window.M = (function () {
     document.body.appendChild(el("nav", { class: "bottomnav", "aria-label": "Pagine" }, ul));
   }
 
+  /* ---------------- ⓘ: il foglio che spiega a cosa serve una cosa ---------------- */
+  function info(o) {
+    const dim = el("div", { class: "sh-dim", role: "dialog", "aria-modal": "true", "aria-label": o.t });
+    const close = () => { dim.classList.remove("in"); setTimeout(() => dim.remove(), 260); document.removeEventListener("keydown", esc); };
+    const esc = (e) => { if (e.key === "Escape") close(); };
+    const ok = el("button", { type: "button", class: "btn sh-ok", onclick: close }, o.ok || "Ho capito");
+    const sheet = el("div", { class: "sh" },
+      el("span", { class: "sh-grab", "aria-hidden": "true" }),
+      el("div", { class: "sh-hd" }, o.ic ? el("span", { class: "sh-ic", style: o.col ? "background:" + o.col : null, text: o.ic }) : null, el("h2", { text: o.t })),
+      (o.x || []).map((p) => Array.isArray(p) ? el("p", null, el("b", { text: p[0] + " " }), p[1]) : el("p", { text: p })),
+      o.body || null,
+      el("div", { class: "sh-bt" }, o.href ? el("a", { class: "btn", href: o.href }, o.cta || "Apri") : null, ok));
+    dim.addEventListener("click", (e) => { if (e.target === dim) close(); });
+    document.addEventListener("keydown", esc);
+    dim.appendChild(sheet); document.body.appendChild(dim);
+    requestAnimationFrame(() => dim.classList.add("in")); ok.focus({ preventScroll: true });
+    return close;
+  }
+
   /* ---------------- domande veloci ---------------- */
   function answerOf(q, d, who) {
     who = who || me; if (!who) return null;
@@ -422,6 +441,6 @@ window.M = (function () {
   }
   function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
 
-  return { setProfiles, profile: (n) => PROF[n] || {}, notify, popup, answer, answerOf, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
+  return { setProfiles, profile: (n) => PROF[n] || {}, notify, popup, info, answer, answerOf, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
     me: () => me, setMe, onMe: (f) => meListeners.push(f), askWho, store, isMissing };
 })();
