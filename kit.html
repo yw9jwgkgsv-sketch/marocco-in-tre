@@ -4,23 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Il kit · Marocco in tre</title>
-<meta name="theme-color" content="#1A2272">
+<meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="pagehead zellige">
+<header class="pagehead">
   <div class="wrap">
     <div class="topline"><span class="eyebrow">Il kit</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Il <em>kit</em></h1>
     <span class="sticker">Per non fare figure de merda</span>
-    <p class="lead">Spunta la valigia. Sotto: frasi, prezzi giusti, cambio.</p>
+    <p class="lead">Quello che serve davvero: oggi dove siete, la valigia, le frasi, i prezzi giusti, il cambio e la mappa.</p>
   </div>
 </header>
 
@@ -28,13 +25,22 @@
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per la valigia condivisa: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
   <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
+  <section class="card" id="oggi" style="display:grid;gap:6px" aria-live="polite"></section>
+
+  <a class="card" href="mappa.html" style="display:grid;gap:4px;text-decoration:none;color:var(--ink)">
+    <span class="eyebrow" style="color:#d70015">La mappa</span>
+    <b style="font-size:24px;letter-spacing:-.02em">Sorca, Ketama, tagine e surf</b>
+    <span class="muted">Tutti i posti su una mappa, con il tasto «Dove sono io?» e «Portami qui».</span>
+    <span class="more" style="color:var(--accent);font-weight:600">Apri la mappa ›</span>
+  </a>
+
   <nav class="hscroll" aria-label="Sezioni del kit">
     <a class="chip" href="#valigia">Valigia</a><a class="chip" href="#darija">Darija</a><a class="chip" href="#quiz">Quiz</a><a class="chip" href="#prezzi">Prezzi giusti</a><a class="chip" href="#cambio">Cambio</a><a class="chip" href="#meteo">Meteo</a><a class="chip" href="#info">Info utili</a>
   </nav>
 
   <section class="sec" id="valigia" aria-labelledby="h-val">
-    <div class="sec-head"><h2 id="h-val">La valigia</h2><p>Ognuno spunta la sua. Gli altri vedono a che punto sei, quindi niente bugie.</p></div>
-    <div class="grid g3" id="val-crew"></div>
+    <div class="sec-head"><h2 id="h-val">La valigia</h2><p id="val-sub">Ognuno spunta la sua. Gli altri vedono a che punto sei, quindi niente bugie.</p></div>
+    <div class="meter" id="val-crew"></div>
     <div class="grid g2" id="val-list"></div>
   </section>
 
@@ -48,7 +54,7 @@
     <div class="card" style="display:grid;gap:12px;text-align:center;justify-items:center;padding:26px 16px">
       <span class="eyebrow" style="color:var(--muted)">Come si dice</span>
       <h3 id="qz-it" style="font-size:34px">—</h3>
-      <p id="qz-ans" class="hand" style="font-size:34px;color:var(--blu);min-height:1.2em"></p>
+      <p id="qz-ans" style="font-size:34px;font-weight:700;letter-spacing:-.02em;color:var(--accent);min-height:1.2em"></p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
         <button class="btn" type="button" id="qz-show">Fammi vedere</button>
         <button class="btn ghost" type="button" id="qz-next">Un'altra</button>
@@ -88,8 +94,8 @@
     </div>
   </section>
 
-  <a class="nextlink" href="giro.html">Ora guarda il giro →</a>
-  <footer class="foot">Prezzi, cambio e meteo sono stime al 7 novembre 2026.</footer>
+  <a class="nextlink" href="mappa.html">Ora guarda la mappa ›</a>
+  <footer class="foot">Prezzi, cambio e meteo sono stime all'8 novembre 2026.</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -117,18 +123,21 @@
     const me = M.me();
     const names = [...new Set(C.CREW.concat(S.pers.map((p) => p.nome)).concat(me ? [me] : []))].sort();
     const crew = document.getElementById("val-crew"); crew.textContent = "";
+    const pcts = {};
     names.forEach((n) => {
       const done = S.val.filter((v) => v.nome === n && v.fatto && ALL.includes(v.item)).length;
-      const pct = Math.round((done / ALL.length) * 100);
-      crew.appendChild(el("div", { class: "kpi", style: "gap:8px" },
-        el("div", { style: "display:flex;gap:8px;align-items:center" }, M.avatar(n), el("b", { style: "font-size:20px", text: n + (n === me ? " (tu)" : "") })),
-        el("div", { class: "bar" }, el("i", { style: "width:" + pct + "%;background:" + M.colorFor(n) })),
-        el("span", { text: done + " su " + ALL.length + (pct === 100 ? " · pronto" : pct === 0 ? " · non ha neanche aperto l'armadio" : "") })));
+      const pct = Math.round((done / ALL.length) * 100); pcts[n] = pct;
+      crew.appendChild(el("div", { class: "meter-row" },
+        el("span", { style: "display:flex;gap:8px;align-items:center" }, M.avatar(n), n + (n === me ? " (tu)" : "")),
+        el("div", { class: "bar" }, el("i", { style: "width:" + Math.max(pct, 2) + "%;background:" + M.colorFor(n) })),
+        el("b", { class: "mono", text: pct + "%" })));
     });
+    const last = names.filter((n) => C.CREW.includes(n)).sort((a, b) => pcts[a] - pcts[b])[0];
+    document.getElementById("val-sub").textContent = !last ? "" : pcts[last] === 0 ? last + " non ha neanche aperto l'armadio. Partirà in ciabatte." : pcts[last] === 100 ? "Tutti pronti. Ora qualcuno dimentica il passaporto, statisticamente." : last + " è il più indietro, al " + pcts[last] + "%. Nel deserto di notte si va sotto zero, eh.";
     const mine = new Set(S.val.filter((v) => v.nome === me && v.fatto).map((v) => v.item));
     const list = document.getElementById("val-list"); list.textContent = "";
     C.VALIGIA.forEach((g) => list.appendChild(el("div", { class: "card", style: "display:grid;gap:8px" },
-      el("b", { style: "font-family:var(--f-display);font-size:19px", text: g.g }),
+      el("b", { style: "font-size:19px", text: g.g }),
       g.items.map((it, i) => {
         const id = "v-" + g.g.replace(/\W/g, "") + i;
         const cb = el("input", { type: "checkbox", id, checked: mine.has(it) || null, style: "width:20px;height:20px;accent-color:var(--verde);flex:none" });
@@ -141,10 +150,10 @@
   const dj = document.getElementById("dj");
   C.DARIJA.forEach((f) => dj.appendChild(el("div", { class: "card", style: "display:grid;gap:4px" },
     el("span", { class: "muted", style: "font-size:13px", text: f.it }),
-    el("b", { style: "font-family:var(--f-display);font-size:24px", text: f.dj }),
+    el("b", { style: "font-size:24px", text: f.dj }),
     el("span", { class: "mono muted", style: "font-size:12.5px", text: f.pr }),
     el("span", { style: "font-size:13px;font-weight:600;color:var(--verde)", text: "A San Paolo: " + f.br }),
-    el("span", { class: "hand", style: "color:var(--rosa);font-size:19px", text: f.uso }))));
+    el("span", { class: "joke", text: f.uso }))));
 
   // quiz
   let cur = null, seen = 0, known = 0;
@@ -179,7 +188,7 @@
     note.textContent = n ? "In verde le previsioni vere di Open-Meteo per il giorno in cui sarete lì." : "Per ora sono medie. Da metà dicembre qui compaiono da sole le previsioni vere, giorno per giorno.";
   })();
   const inf = document.getElementById("inf");
-  C.INFO.forEach((i) => inf.appendChild(el("div", { class: "card", style: "display:grid;gap:4px" }, el("b", { style: "font-family:var(--f-display);font-size:19px", text: i.t }), el("p", { text: i.x }))));
+  C.INFO.forEach((i) => inf.appendChild(el("div", { class: "card", style: "display:grid;gap:4px" }, el("b", { style: "font-size:19px", text: i.t }), el("p", { text: i.x }))));
   const num = document.getElementById("num");
   C.NUMERI.forEach((n) => num.appendChild(el("div", { class: "kpi" }, el("b", { text: n.n }), el("span", { text: n.cosa }))));
 
@@ -198,10 +207,28 @@
   }
   fromE(); renderQuick();
 
-  async function load() {
-    const d = await db.many(["valigia", "persone"]);
-    S.val = d.valigia; S.pers = d.persone; renderVal(); R.bar("kit", d, M.me());
+  function oggi(sond) {
+    const box = document.getElementById("oggi"); box.textContent = "";
+    const g = C.scenGruppo(sond), t = M.todayStr();
+    const day = C.DAYS.find((d) => d.d === t);
+    if (day) {
+      const x = C.dayFor(day, g.pick);
+      box.append(el("span", { class: "eyebrow", text: "Oggi, " + day.lab }), el("b", { style: "font-size:26px;letter-spacing:-.02em", text: x.t }),
+        el("span", { class: "muted", text: "Dormite: " + x.dorme + (x.ore ? " · guida circa " + String(x.ore).replace(".", ",") + " ore" : "") }),
+        el("p", { class: "joke", text: "Rischio del giorno: " + x.rischio.charAt(0).toLowerCase() + x.rischio.slice(1) }));
+    } else if (t < C.DAYS[0].d) {
+      const n = M.daysBetween(t, "2026-12-28");
+      box.append(el("span", { class: "eyebrow", text: "Mancano " + n + (n === 1 ? " giorno" : " giorni") }),
+        el("b", { style: "font-size:26px;letter-spacing:-.02em", text: "Il 28 a mezzanotte atterrate a Fes" }),
+        el("span", { class: "muted", text: "Durante il viaggio qui compare cosa si fa ogni giorno, dove dormite e quanto si guida. Scenario " + g.pick + ": " + C.SCEN[g.pick].nome + "." }),
+        el("p", { class: "joke", text: n > 30 ? "Intanto la valigia. Sì, anche tu, tossico." : "Meno di un mese. Il piumino l'hai comprato? No. Lo sapevo." }));
+    } else box.append(el("span", { class: "eyebrow", text: "Finito" }), el("b", { style: "font-size:26px", text: "Siete tornati. Più poveri, più abbronzati, sempre single." }));
   }
+  async function load() {
+    const d = await db.many(["valigia", "persone", "sondaggi"]);
+    S.val = d.valigia; S.pers = d.persone; renderVal(); oggi(d.sondaggi); R.bar("kit", d, M.me());
+  }
+  oggi([]);
   M.onMe(renderVal);
   renderVal(); load();
   db.subscribe(["valigia", "persone"], load);

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>La mappa · Marocco in tre</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">La mappa</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>La <em>mappa</em></h1>
+    <span class="sticker">Sorca, Ketama, tagine e il nulla. Tutto segnato.</span>
+    <p class="lead">Tocca un pallino: ti dice cos'è, perché andarci (o perché no) e ti ci porta con Maps.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+
+  <section class="sec" style="gap:12px">
+    <div class="hscroll" id="cats" role="group" aria-label="Cosa vedere sulla mappa"></div>
+    <div class="pmap-wrap">
+      <div id="pmap" role="application" aria-label="Mappa interattiva del Marocco"></div>
+      <button class="pmap-me" type="button" id="b-me">📍 Dove sono io?</button>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Il giro sulla mappa" id="routes"></div>
+    <p class="muted" id="near" style="font-size:16px" aria-live="polite"></p>
+  </section>
+
+  <section class="sec" id="sheet" hidden aria-live="polite"></section>
+
+  <section class="sec" aria-labelledby="h-all">
+    <div class="sec-head"><h2 id="h-all">Tutti i punti</h2><p>Tocca un nome e la mappa ci vola sopra.</p></div>
+    <div id="all" class="grid" style="gap:28px"></div>
+  </section>
+
+  <section class="sec">
+    <div class="card serio">
+      <span class="eyebrow" style="color:var(--accent)">Due regole serie</span>
+      <h3 style="font-size:22px">Sulla zona tossici</h3>
+      <p>Fuori dagli usi medici e industriali, in Marocco la cannabis è illegale e si rischia il carcere anche da turisti. Sulle strade del Rif ci sono posti di blocco e le auto a noleggio vengono fermate. Chi vi offre roba per strada spesso lavora con chi poi vi ferma.</p>
+      <p>Niente in valigia, mai: a Fes, ad Agadir e allo scalo di Londra i controlli ci sono e i cani pure. Il rientro deve essere noioso.</p>
+    </div>
+  </section>
+
+  <a class="nextlink" href="notte.html">E stasera dove si va? La notte ›</a>
+  <footer class="foot">Coordinate approssimate. Per arrivare usate «Portami qui», che cerca il posto per nome su Google Maps. Controllato l'8 novembre 2026.</footer>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("mappa");
+  const CAT = C.POICAT, CATS = Object.keys(CAT);
+  const on = new Set(CATS);
+  const qg = (new URLSearchParams(location.search).get("giro") || "").toUpperCase();
+  let map = null, markers = {}, routeLayer = null, meMarker = null, selId = null, scen = C.SCEN[qg] ? qg : "A";
+
+  /* --- filtri --- */
+  const cb = document.getElementById("cats");
+  function chips() {
+    cb.textContent = "";
+    const all = on.size === CATS.length;
+    cb.appendChild(el("button", { type: "button", class: "chip", "aria-pressed": String(all), onclick: () => { CATS.forEach((k) => on.add(k)); chips(); draw(); } }, "Tutto"));
+    CATS.forEach((k) => {
+      const n = C.POI.filter((p) => p.cat === k).length;
+      cb.appendChild(el("button", { type: "button", class: "chip", "aria-pressed": String(!all && on.has(k)), onclick: () => {
+        if (all) { on.clear(); on.add(k); } else if (on.has(k)) { on.delete(k); if (!on.size) CATS.forEach((c) => on.add(c)); } else on.add(k);
+        chips(); draw(); fit();
+      } }, CAT[k].e + " " + CAT[k].n + " · " + n));
+    });
+  }
+
+  /* --- mappa --- */
+  const dark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+  function pinIcon(p, big) {
+    return L.divIcon({ className: "", iconSize: [36, 36], iconAnchor: [18, 18], html: '<span class="pin' + (big ? " sel" : "") + '" style="--c:' + CAT[p.cat].c + '">' + CAT[p.cat].e + "</span>" });
+  }
+  function init() {
+    if (!window.L) { document.getElementById("pmap").textContent = "La mappa non si è caricata. Controlla la connessione e ricarica."; return false; }
+    map = L.map("pmap", { scrollWheelZoom: false, zoomControl: true, tap: true }).setView([31.8, -6.8], 6);
+    const E = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_" + (dark ? "Dark" : "Light") + "_Gray_";
+    L.tileLayer(E + "Base/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16, attribution: "Mappa © Esri, HERE, Garmin, © OpenStreetMap" }).addTo(map);
+    L.tileLayer(E + "Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16 }).addTo(map);
+    C.POI.forEach((p) => { markers[p.id] = L.marker([p.lat, p.lng], { icon: pinIcon(p), title: p.n, keyboard: true }).on("click", () => select(p.id, false)); });
+    return true;
+  }
+  function draw() {
+    if (!map) return;
+    C.POI.forEach((p) => { const m = markers[p.id]; if (on.has(p.cat)) m.addTo(map); else m.remove(); });
+    renderList();
+  }
+  function fit() {
+    if (!map) return;
+    const pts = C.POI.filter((p) => on.has(p.cat)).map((p) => [p.lat, p.lng]);
+    if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.12), { maxZoom: 12 });
+  }
+
+  /* --- il giro di uno scenario, come linea tratteggiata --- */
+  const rb = document.getElementById("routes");
+  function routes() {
+    rb.textContent = "";
+    rb.appendChild(el("button", { type: "button", role: "tab", "aria-selected": String(scen === "-"), onclick: () => { scen = "-"; routes(); drawRoute(); } }, "Niente giro"));
+    Object.keys(C.SCEN).forEach((k) => rb.appendChild(el("button", { type: "button", role: "tab", "aria-selected": String(scen === k), onclick: () => { scen = k; routes(); drawRoute(); } }, C.SCEN[k].emoji + " " + k)));
+  }
+  function drawRoute() {
+    if (!map) return;
+    if (routeLayer) routeLayer.remove();
+    if (scen === "-") return;
+    routeLayer = L.layerGroup().addTo(map);
+    const pts = C.ROUTES[scen].map((k) => [C.STOPS[k].lat, C.STOPS[k].lng]);
+    L.polyline(pts, { color: dark ? "#f5f5f7" : "#1d1d1f", weight: 3, opacity: .7, dashArray: "6 8" }).addTo(routeLayer);
+    [...new Set(C.ROUTES[scen])].forEach((k) => L.circleMarker([C.STOPS[k].lat, C.STOPS[k].lng], { radius: 4, color: dark ? "#000" : "#fff", weight: 2, fillColor: dark ? "#f5f5f7" : "#1d1d1f", fillOpacity: 1 }).bindTooltip(C.STOPS[k].n, { direction: "top" }).addTo(routeLayer));
+  }
+
+  /* --- scheda del punto --- */
+  function gmaps(p) { return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.q || p.n); }
+  function select(id, fly) {
+    const p = C.POI.find((x) => x.id === id); if (!p) return;
+    if (selId && markers[selId]) { const o = C.POI.find((x) => x.id === selId); markers[selId].setIcon(pinIcon(o)); }
+    selId = id; if (markers[id]) markers[id].setIcon(pinIcon(p, true)).setZIndexOffset(1000);
+    if (fly && map) { on.add(p.cat); chips(); draw(); map.flyTo([p.lat, p.lng], Math.max(map.getZoom(), 12), { duration: .8 }); }
+    const s = document.getElementById("sheet"); s.hidden = false; s.textContent = "";
+    s.appendChild(el("article", { class: "card place", style: "gap:10px" },
+      el("span", { class: "eyebrow", style: "color:" + CAT[p.cat].c }, CAT[p.cat].e + " " + CAT[p.cat].n),
+      el("h2", { style: "font-size:30px", text: p.n }),
+      el("span", { class: "muted", text: p.dove + (here ? " · " + km(here, p) + " da te" : "") }),
+      el("p", { text: p.x }),
+      el("p", { class: "joke", text: p.j }),
+      p.serio ? el("p", { class: "banner", text: p.serio }) : null,
+      el("div", { style: "display:flex;gap:8px;flex-wrap:wrap" },
+        el("a", { class: "btn", href: gmaps(p), target: "_blank", rel: "noopener" }, "Portami qui"),
+        el("button", { class: "btn ghost", type: "button", onclick: () => share(p) }, "Mandalo agli altri"))));
+    if (!fly) s.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  async function share(p) {
+    const txt = p.n + " (" + p.dove + "): " + p.j;
+    try { if (navigator.share) await navigator.share({ title: p.n, text: txt, url: location.origin + location.pathname + "#" + p.id }); else { await navigator.clipboard.writeText(txt + " " + location.href.split("#")[0] + "#" + p.id); M.toast("Copiato. Incollalo nel gruppo."); } } catch (e) {}
+  }
+
+  /* --- elenco sotto la mappa --- */
+  function renderList() {
+    const box = document.getElementById("all"); box.textContent = "";
+    CATS.filter((k) => on.has(k)).forEach((k) => {
+      const ps = C.POI.filter((p) => p.cat === k);
+      box.appendChild(el("div", { class: "catblock" },
+        el("h2", { style: "font-size:24px" }, CAT[k].e + " " + CAT[k].n),
+        el("ul", { class: "list" }, ps.map((p) => el("li", null, el("button", { type: "button", class: "poi-row", onclick: () => { select(p.id, true); document.getElementById("pmap").scrollIntoView({ behavior: "smooth", block: "center" }); } },
+          el("b", { text: p.n }), el("span", { class: "muted", text: p.dove + (here ? " · " + km(here, p) : "") }), el("span", { class: "joke", text: p.j })))))));
+    });
+  }
+
+  /* --- dove sono io --- */
+  let here = null;
+  function dist(a, b) { const R = 6371, r = Math.PI / 180, dl = (b.lat - a.lat) * r, dg = (b.lng - a.lng) * r; const x = Math.sin(dl / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dg / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); }
+  function km(a, b) { const d = dist(a, b); return d < 1 ? Math.round(d * 1000) + " m" : String(d < 10 ? d.toFixed(1) : Math.round(d)).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " km"; }
+  function nearest(cat) { return C.POI.filter((p) => p.cat === cat).map((p) => [p, dist(here, p)]).sort((a, b) => a[1] - b[1])[0]; }
+  document.getElementById("b-me").onclick = () => {
+    const out = document.getElementById("near");
+    if (!navigator.geolocation) { out.textContent = "Questo telefono non vuole dirti dove sei. Come Davide quando lo chiami."; return; }
+    out.textContent = "Ti sto cercando…";
+    navigator.geolocation.getCurrentPosition((pos) => {
+      here = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      if (map) { if (meMarker) meMarker.remove(); meMarker = L.circleMarker([here.lat, here.lng], { radius: 9, color: "#fff", weight: 3, fillColor: "#0071e3", fillOpacity: 1 }).bindTooltip("Tu, tossico").addTo(map); }
+      const s = nearest("sorca"), k = C.POI.find((p) => p.id === "ketama"), cibo = nearest("mangiare");
+      const inMa = here.lat > 27 && here.lat < 36.5 && here.lng > -13.5 && here.lng < -1;
+      const giorni = Math.max(0, M.daysBetween(M.todayStr(), "2026-12-28"));
+      out.textContent = inMa
+        ? "La sorca più vicina: " + s[0].n + ", a " + km(here, s[0]) + ". Il tagine più vicino: " + cibo[0].n + ", a " + km(here, cibo[0]) + ". Ketama è a " + km(here, k) + " e lì resta."
+        : "Sei a " + km(here, s[0]) + " dalla sorca più vicina (" + s[0].n + "). Sei ancora a casa, tossico" + (giorni ? ": mancano " + giorni + " giorni." : ".");
+      if (map) map.flyTo([here.lat, here.lng], inMa ? 12 : 5, { duration: .9 });
+      renderList();
+    }, () => { out.textContent = "Niente posizione: devi dare il permesso al browser. Oppure ti stai nascondendo. Sospetto."; }, { enableHighAccuracy: true, timeout: 10000 });
+  };
+
+  chips(); routes();
+  if (init()) { draw(); fit(); drawRoute(); } else renderList();
+  const h = decodeURIComponent(location.hash.slice(1)); if (h && C.POI.some((p) => p.id === h)) setTimeout(() => select(h, true), 300);
+
+  db.many(["sondaggi", "persone"]).then((d) => { const g = C.scenGruppo(d.sondaggi); if (g.voted && !C.SCEN[qg]) { scen = g.pick; routes(); drawRoute(); } R.bar("mappa", d, M.me()); });
+})();
+</script>
+</body>
+</html>

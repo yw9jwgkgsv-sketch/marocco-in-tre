@@ -4,18 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>La notte · Marocco in tre</title>
-<meta name="theme-color" content="#1A2272">
+<meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="pagehead zellige">
+<header class="pagehead">
   <div class="wrap">
     <div class="topline"><span class="eyebrow">La notte</span><span class="me-chip" id="me-chip"></span></div>
     <h1>La <em>notte</em></h1>
@@ -73,7 +70,7 @@
     <p class="muted" style="font-size:12.5px">Controllati l'8 novembre 2026. Programmi e prezzi di Capodanno escono a dicembre.</p>
   </section>
 
-  <a class="nextlink" href="index.html">Torna alla Home →</a>
+  <a class="nextlink" href="mappa.html">Dov'è tutto questo? La mappa ›</a>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -123,7 +120,7 @@
   function showCity() {
     [...cb.children].forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === sel)));
     const c = CITY.find((x) => x.id === sel); const box = document.getElementById("city"); box.textContent = "";
-    box.append(el("div", { class: "sec-head" }, el("h2", { text: c.n }), el("span", { class: "mono muted", text: c.d })), el("p", { class: "hand", style: "color:var(--rosa)", text: c.joke }));
+    box.append(el("div", { class: "sec-head" }, el("h2", { text: c.n }), el("span", { class: "mono muted", text: c.d })), el("p", { class: "joke", text: c.joke }), el("a", { class: "more", href: "mappa.html", text: "Vedi tutti i posti sulla mappa ›" }));
     const g = el("div", { class: "grid g2" });
     c.posti.forEach(([t, k, x]) => g.appendChild(el("article", { class: "card place" }, el("span", { class: "tipo " + (k === "Capodanno" ? "esperienza" : k === "Ostello" ? "locale" : "classico"), text: k }), el("b", { text: t }), el("p", { class: "muted", text: x }))));
     box.appendChild(g);
@@ -133,7 +130,7 @@
 
   const MAI = [["Il campo nel deserto", "Solo cammelli, stelle e un tedesco di 60 anni con la frontale."], ["L'hammam", "Uomini da una parte, donne dall'altra. Ti resta l'omino del kessa."], ["Fes dopo le 22", "La medina chiude. Pure voi."], ["Tamraght", "Paese senza bar. Bello per il surf, morto per tutto il resto."], ["Le gole del Todra alle 8", "Un pullman di pensionati francesi. Bellissimi, ma no."], ["In macchina con voi tre", "Dopo sei ore di guida l'odore dice tutto. Nessuna salirebbe."]];
   const m = document.getElementById("mai");
-  MAI.forEach(([t, x]) => m.appendChild(el("div", { class: "card cuore no" }, el("div", { class: "row-between" }, el("b", { style: "font-family:var(--f-display);font-size:18px", text: t }), el("b", { class: "mono", text: "0%" })), el("p", { class: "muted", style: "font-size:14px", text: x }))));
+  MAI.forEach(([t, x]) => m.appendChild(el("div", { class: "card cuore no" }, el("div", { class: "row-between" }, el("b", { style: "font-size:18px", text: t }), el("b", { class: "mono", text: "0%" })), el("p", { class: "muted", style: "font-size:14px", text: x }))));
 
   let reaz = [];
   function render() {

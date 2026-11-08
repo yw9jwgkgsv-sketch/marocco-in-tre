@@ -215,11 +215,32 @@ C.ROUTES = {
 };
 
 C.SCEN = {
-  A: { nome: "Auto e riad", costo: 1500, sub: "Massima libertà: valli, dune vere, due posti per il surf. Tanta guida dal 2 al 5.", joke: "Serve un autista con i nervi saldi e due passeggeri che tengono la bocca chiusa. Auguri." },
-  B: { nome: "Auto e moto", costo: 2000, sub: "Tour in moto dal 3 al 5 con notte in bivacco. Serve almeno uno con patente A ed esperienza.", joke: "Il viaggio che racconterete ai nipoti. Lividi compresi, tossici." },
-  C: { nome: "Treno e tour", costo: 1300, sub: "Nessuno guida: treno, tour organizzato nel deserto, surf camp.", joke: "Comodo come un pensionato in gita. Il minibus con dodici tedeschi è incluso." },
-  D: { nome: "Zaino in spalla", costo: 950, sub: "Bus, ostelli, campo standard, due notti in bus.", joke: "Si risparmia tutto, tranne la dignità. Come in Erasmus, ma senza la scusa dei vent'anni." }
+  A: { nome: "Auto e riad", emoji: "🚗", motto: "Tre tossici, una Dacia, 2.000 km.", sub: "Massima libertà: valli, dune vere, due posti per il surf. Tanta guida dal 2 al 5.",
+    joke: "Serve un autista con i nervi saldi e due passeggeri che tengono la bocca chiusa. Auguri.",
+    muovete: "Dacia a noleggio da Fes, riconsegna all'aeroporto di Agadir.", dormite: "Riad, kasbah e una notte nelle dune.", guida: "Circa 30 ore in 11 giorni. Il 2 e il 5 sono da 6 ore.",
+    perchi: "Per chi vuole vedere tutto e fermarsi dove gli pare.", prezzo: "Qualcuno guida sei ore mentre gli altri dormono. E poi se ne parla per anni.",
+    costi: [["Auto per 10 giorni, divisa per tre", 190, "Dacia con assicurazione completa e riconsegna ad Agadir."], ["Benzina e autostrade", 60, "Circa 2.000 km in tre."], ["Dormire: 8 notti normali", 165, "Riad e kasbah in tripla, circa €20 a testa a notte."], ["Notti del 31 e del 1° a Marrakech", 90, "A Capodanno i prezzi raddoppiano."], ["Campo nelle dune, 1 notte", 45, "Standard, con cena e colazione."]],
+    include: ["des-campo"] },
+  B: { nome: "Auto e moto", emoji: "🏍️", motto: "Il Marocco in sella. Lividi compresi.", sub: "Tour in moto dal 3 al 5 con notte in bivacco. Serve almeno uno con patente A ed esperienza.",
+    joke: "Il viaggio che racconterete ai nipoti. Lividi compresi, tossici.",
+    muovete: "Dacia fino a Ouarzazate, poi tre giorni di moto con guida, poi di nuovo Dacia fino all'oceano.", dormite: "Riad, una kasbah, un bivacco nel deserto del Draa.", guida: "Circa 20 ore di auto e tre giorni di moto su pista.",
+    perchi: "Per chi ha la patente A e non ha paura di cadere nella sabbia.", prezzo: "Il più caro. E chi non va in moto passa tre giorni a fare il passeggero.",
+    costi: [["Auto per 10 giorni, divisa per tre", 190, "Resta parcheggiata a Ouarzazate durante il tour."], ["Benzina e autostrade", 55, ""], ["Dormire: 6 notti normali", 120, "Le notti del tour sono nel prezzo della moto."], ["Notti del 31 e del 1° a Marrakech", 90, "A Capodanno i prezzi raddoppiano."], ["Tour in moto di 3 giorni con guida e bivacco", 650, "Moto, guida, benzina, dormire e pasti del tour."]],
+    include: ["moto-tour3", "des-chigaga", "des-campo"] },
+  C: { nome: "Treno e tour", emoji: "🚆", motto: "Nessuno guida. Nessuno litiga. Forse.", sub: "Nessuno guida: treno, tour organizzato nel deserto, surf camp.",
+    joke: "Comodo come un pensionato in gita. Il minibus con dodici tedeschi è incluso.",
+    muovete: "Treno Fes → Marrakech, minibus del tour per il deserto, bus per Taghazout.", dormite: "Riad, tre notti del tour, surf camp sul mare.", guida: "Zero. Il volante lo tiene qualcun altro.",
+    perchi: "Per chi vuole dormire in viaggio e non decidere niente.", prezzo: "Orari fissi, minibus alle 7 e zero libertà. Il deserto lo vedete dal finestrino.",
+    costi: [["Treno Fes → Marrakech", 22, "Sette ore, seconda classe."], ["Dormire a Fes e Marrakech", 180, "Con le notti di Capodanno a prezzo doppio."], ["Tour di 3 giorni nel deserto", 140, "Minibus, campo, cammello, cene."], ["Bus per Taghazout e taxi per l'aeroporto", 22, ""], ["Surf camp di 3 notti con lezioni", 220, "Letto, colazione, tavola e maestro."]],
+    include: ["des-campo", "des-cammello", "oc-taghazout"] },
+  D: { nome: "Zaino in spalla", emoji: "🎒", motto: "Come in Erasmus. Ma senza la scusa dei vent'anni.", sub: "Bus, ostelli, campo standard, due notti in bus.",
+    joke: "Si risparmia tutto, tranne la dignità. Come in Erasmus, ma senza la scusa dei vent'anni.",
+    muovete: "Bus CTM e Supratours, due notti sul bus per il deserto e ritorno.", dormite: "Ostelli in camerata e un campo standard.", guida: "Zero. In compenso due notti seduti.",
+    perchi: "Per chi vuole spendere poco e conoscere gente negli ostelli.", prezzo: "Due notti in bus. La schiena presenta il conto il 5 gennaio.",
+    costi: [["Bus per tutto il giro", 75, "Fes → Marrakech, notturni per Merzouga e ritorno, Taghazout."], ["Ostelli per 8 notti", 135, "Capodanno compreso, che costa il doppio."], ["Campo standard a Merzouga", 25, "Con cena e cammello."]],
+    include: ["des-campo", "des-cammello"] }
 };
+
 
 /* Giorno per giorno. ore = ore di guida stimate. att = id delle attività consigliate. */
 C.DAYS = [
@@ -261,7 +282,7 @@ C.DAYS = [
     A: { t: "Taghazout, ultima sera", dorme: "Taghazout o Tamraght", ore: 1.5, att: ["oc-taghazout", "oc-tamraght", "oc-paradise", "sfida-tagine"], rischio: "Promettere di tornare l'anno prossimo." },
     B: { t: "Surf, o gita a Imsouane", dorme: "Taghazout o Tamraght", ore: 0, att: ["oc-imsouane", "oc-paradise", "sfida-tagine"], rischio: "Promettere di tornare l'anno prossimo." } },
   { d: "2027-01-08", lab: "Ven 8 gen",
-    A: { t: "Surf la mattina, volo la sera", dorme: "a casa", ore: 0.7, att: ["sfida-foto"], rischio: "Sabbia nel passaporto al controllo." } }
+    A: { t: "Surf la mattina, poi Agadir → Londra → Roma", dorme: "sull'aereo", ore: 0.7, att: ["sfida-foto"], rischio: "Passare dai 22 gradi di Taghazout ai 7 di Londra in mutande da surf." } }
 ];
 
 C.dayFor = function (day, scen) {
@@ -367,7 +388,7 @@ C.INFO = [
 ];
 
 C.SEED_TODO = [
-  ["Volo di ritorno da Agadir l'8/1 sera", "2026-11-10"],
+  ["Volo di ritorno: Agadir → Londra → Roma, l'8/1 sera", "2026-11-10"],
   ["Prima notte a Fes dal 28 al 29, con transfer dall'aeroporto", "2026-11-10"],
   ["Serata del 31: club o festa nel deserto di Agafay", "2026-11-20"],
   ["Alloggio all'Hivernage per le notti del 31 e del 1°", "2026-11-20"],
@@ -381,15 +402,10 @@ C.SEED_TODO = [
 ];
 
 /* ---------- Budget: per una volta siamo seri ---------- */
-/* Stime a testa al 7 novembre 2026, andata esclusa (già pagata). */
+/* Stime a testa all'8 novembre 2026. Voli di andata e ritorno esclusi: già pagati.
+   Le spese sicure sono solo quelle che ci sono in ogni scenario: auto, benzina e dormire stanno negli scenari. */
 C.BUDGET = {
   fissi: [
-    { t: "Volo di ritorno Agadir → Italia", e: 130, nota: "8 gennaio sera, low cost. Sale ogni settimana che aspettate." },
-    { t: "Auto per 10 giorni, divisa per tre", e: 190, nota: "Dacia con assicurazione completa e riconsegna ad Agadir." },
-    { t: "Benzina e autostrade", e: 60, nota: "Circa 2.000 km in tre." },
-    { t: "Dormire: 8 notti normali", e: 165, nota: "Riad e kasbah semplici in tripla, circa €20 a testa a notte." },
-    { t: "Dormire: notti del 31 e del 1° a Marrakech", e: 90, nota: "A Capodanno i prezzi raddoppiano." },
-    { t: "Campo nel deserto, 1 notte", e: 45, nota: "Standard, con cena e colazione." },
     { t: "Mangiare per 11 giorni", e: 200, nota: "Tagine a €6–10, pesce sull'oceano a €15." },
     { t: "Varie", e: 50, nota: "SIM, mance, parcheggi, ingressi." },
     { t: "Assicurazione di viaggio", e: 30, nota: "Che copra moto e fuoristrada." }
@@ -422,6 +438,7 @@ C.COSTO = {
   "sfida-souk": 10, "sfida-noapp": 0, "sfida-darija": 0, "sfida-foto": 0, "sfida-tagine": 0
 };
 C.SICURI = C.BUDGET.fissi.reduce((a, f) => a + f.e, 0);
+Object.keys(C.SCEN).forEach((k) => { const s = C.SCEN[k]; s.logistica = s.costi.reduce((a, c) => a + c[1], 0); s.costo = C.SICURI + s.logistica; });
 /* stato di ogni attività per la crew: "si" (tre 🔥), "quasi" (due 🔥 e nessun 💀), "no" (almeno un 💀), "aperta" */
 C.stato = function (reaz) {
   const by = {};
@@ -433,8 +450,107 @@ C.stato = function (reaz) {
   });
   return out;
 };
-C.spesa = function (reaz) {
-  const st = C.stato(reaz); let dec = 0, ballo = 0; const decise = [], inballo = [];
-  C.ATT.forEach((a) => { const c = C.COSTO[a.id] || 0; if (st[a.id].s === "si") { dec += c; decise.push([a, c]); } else if (st[a.id].s === "quasi") { ballo += c; inballo.push([a, c]); } });
-  return { sicuri: C.SICURI, decise: dec, ballo, tot: C.SICURI + dec, max: C.SICURI + dec + ballo, listaDecise: decise, listaBallo: inballo };
+C.spesa = function (reaz, scen) {
+  const st = C.stato(reaz), S = C.SCEN[scen] || null, inc = S ? S.include : [];
+  let dec = 0, ballo = 0; const decise = [], inballo = [];
+  C.ATT.forEach((a) => { if (inc.includes(a.id)) return; const c = C.COSTO[a.id] || 0; if (st[a.id].s === "si") { dec += c; decise.push([a, c]); } else if (st[a.id].s === "quasi") { ballo += c; inballo.push([a, c]); } });
+  const sc = S ? S.logistica : 0;
+  return { sicuri: C.SICURI, scen: sc, decise: dec, ballo, tot: C.SICURI + sc + dec, max: C.SICURI + sc + dec + ballo, listaDecise: decise, listaBallo: inballo };
 };
+/* lo scenario del gruppo: il più votato in sondaggi (domanda "scenario"); a parità vince quello che costa meno; nessun voto = A */
+C.scenGruppo = function (sond) {
+  const v = { A: 0, B: 0, C: 0, D: 0 };
+  (sond || []).forEach((r) => { if (r.domanda === "scenario" && v[r.scelta] !== undefined) v[r.scelta]++; });
+  const max = Math.max(...Object.values(v));
+  if (!max) return { pick: "A", v, voted: false };
+  const top = Object.keys(v).filter((k) => v[k] === max).sort((a, b) => C.SCEN[a].logistica - C.SCEN[b].logistica);
+  return { pick: top[0], v, voted: true };
+};
+
+/* ---------- La mappa: punti d'interesse ---------- */
+/* Coordinate approssimate: per arrivarci si usa il tasto «Portami qui», che cerca il nome su Google Maps. */
+C.POICAT = {
+  sorca:     { e: "💃", n: "Sorca: probabilità alta", c: "#d70015" },
+  zero:      { e: "🧊", n: "Sorca: zero assoluto", c: "#8e8e93" },
+  tossico:   { e: "🌿", n: "Zona tossici", c: "#1d8a3a" },
+  capodanno: { e: "🎆", n: "Capodanno", c: "#8e44ad" },
+  surf:      { e: "🏄", n: "Surf", c: "#0071e3" },
+  mangiare:  { e: "🍢", n: "Mangiare", c: "#bf4800" },
+  foto:      { e: "📸", n: "Foto da profilo", c: "#5e5ce6" },
+  occhio:    { e: "⚠️", n: "Occhio", c: "#b25000" }
+};
+C.POI = [
+  // sorca: dove forse sì
+  { id: "theatro", cat: "sorca", n: "Theatro", dove: "Hivernage, Marrakech", lat: 31.6237, lng: -8.0075, q: "Theatro Marrakech",
+    x: "Il club più famoso della città, dentro il resort Es Saadi. Dress code: niente scarpe da trekking.", j: "Probabilità 75%. Il restante 25% è Davide al telefono fuori dal locale." },
+  { id: "555", cat: "sorca", n: "555 Famous Club", dove: "Boulevard Mohamed VI, Marrakech", lat: 31.6151, lng: -8.0190, q: "555 Famous Club Marrakech",
+    x: "Terrazza grande, house e hit. Caro.", j: "Ti costa un rene entrare. L'altro rene ti serve per il drink. Suave." },
+  { id: "equity", cat: "sorca", n: "Equity Point Hostel", dove: "Medina, Marrakech", lat: 31.6298, lng: -7.9902, q: "Equity Point Hostel Marrakech",
+    x: "Ostello sociale con bar sul tetto. Il 31 fa cena e festa a €25, solo per chi dorme lì.", j: "Ostello pieno di ventenni del nord Europa. Voi avete 25 anni e la schiena di 50." },
+  { id: "azoul", cat: "sorca", n: "Azoul Hostel", dove: "Taghazout", lat: 30.5437, lng: -9.7083, q: "Azoul Hostel Taghazout",
+    x: "Falò sul tetto, poker, cene di gruppo, niente coprifuoco. Da €13.", j: "Qui le surfiste ci sono. Alle 22 dormono. Voi alle 22 avete appena aperto la terza birra." },
+  { id: "papagayo", cat: "sorca", n: "Papagayo", dove: "Lungomare, Agadir", lat: 30.4045, lng: -9.6005, q: "Papagayo Agadir",
+    x: "Club sulla spiaggia, DJ e musica commerciale. Mezz'ora di taxi da Taghazout.", j: "Il ritorno in taxi fissatelo prima. Alle 4 il tassista vi chiede il doppio e ha ragione lui." },
+  { id: "lechill", cat: "sorca", n: "Le Chill", dove: "Rabat", lat: 34.0090, lng: -6.8345, q: "Le Chill Rabat",
+    x: "Bar pieno di ragazzi dopo il lavoro, musica internazionale.", j: "Il 30 sera. Una birra e a letto, che domani si guida. Sì, come no." },
+  // sorca: zero
+  { id: "erg", cat: "zero", n: "Campo nelle dune", dove: "Erg Chebbi, Merzouga", lat: 31.1300, lng: -3.9800, q: "Erg Chebbi Merzouga",
+    x: "Notte sotto le stelle, falò, tamburi.", j: "Uniche presenze femminili: una cammella di nome Fatima e una tedesca di 60 anni con la frontale." },
+  { id: "fesnotte", cat: "zero", n: "Fes dopo le 22", dove: "Medina di Fes", lat: 34.0640, lng: -4.9760, q: "Fes el Bali",
+    x: "La medina chiude presto e di notte è buia.", j: "Alle 22 chiude la medina. Pure voi. Talìa che vita." },
+  { id: "tamraght", cat: "zero", n: "Tamraght", dove: "5 km da Taghazout", lat: 30.5120, lng: -9.6800, q: "Tamraght",
+    x: "Paese di surfisti, bellissimo e tranquillo.", j: "Zero bar. Il massimo della vita notturna è un cane che abbaia alle 23." },
+  { id: "tichka", cat: "zero", n: "Passo del Tizi n'Tichka", dove: "Alto Atlante, 2.260 m", lat: 31.2870, lng: -7.3800, q: "Tizi n'Tichka",
+    x: "Il passo di montagna sulla strada per il deserto.", j: "A 2.260 metri a gennaio l'unica cosa calda è il motore della Dacia." },
+  // tossici
+  { id: "ketama", cat: "tossico", n: "Valle di Ketama", dove: "Rif, 4 ore a nord di Fes", lat: 34.9170, lng: -4.5670, q: "Ketama Morocco",
+    x: "La valle più famosa del Rif. Non è sul giro, e ci resta fuori.", j: "Guarda questo tossico: ha messo Ketama sul navigatore. No. Ripeto: no. Il giro va a sud.",
+    serio: "Fuori dagli usi medici e industriali, in Marocco la cannabis è illegale e si rischia il carcere, anche da turisti. Sulle strade del Rif ci sono posti di blocco, e le auto a noleggio vengono fermate e perquisite." },
+  { id: "chefchaouen", cat: "tossico", n: "Chefchaouen", dove: "La città blu, 4 ore da Fes", lat: 35.1688, lng: -5.2636, q: "Chefchaouen",
+    x: "La città blu delle foto di Instagram. Bellissima, ma non è sul giro.", j: "Ti offrono roba ogni 40 metri. Tu rispondi «la, shukran» e cammini. Come con le ragazze, ma al contrario." },
+  { id: "fesguide", cat: "tossico", n: "Le guide «amiche» di Fes", dove: "Porte della medina, Fes", lat: 34.0617, lng: -4.9836, q: "Bab Boujloud Fes",
+    x: "Ragazzi che si offrono di accompagnarvi e poi propongono di tutto.", j: "«Amico, la strada è chiusa». Non è chiusa. Non è mai chiusa. Bora, si cammina." },
+  // capodanno
+  { id: "elfenn", cat: "capodanno", n: "El Fenn, rooftop", dove: "Medina, Marrakech", lat: 31.6296, lng: -7.9940, q: "El Fenn Marrakech",
+    x: "Festa sul tetto il 31. L'anno scorso: dalle 21 all'1:30, €50. Il programma esce a dicembre.", j: "Il posto più fico per mezzanotte. Ci si va vestiti bene, non con la felpa dell'Erasmus." },
+  { id: "darna", cat: "capodanno", n: "Comptoir Darna", dove: "Hivernage, Marrakech", lat: 31.6219, lng: -8.0112, q: "Comptoir Darna Marrakech",
+    x: "Cena-spettacolo con DJ, 3.500 dirham a testa. Cancellabile fino al 24 dicembre.", j: "€320 a testa. Il saluzzese è già svenuto. Esageruma nen." },
+  { id: "agafay", cat: "capodanno", n: "Deserto di Agafay", dove: "40 minuti da Marrakech", lat: 31.4700, lng: -8.1700, q: "Agafay Desert",
+    x: "Campi nel deserto di pietra con cena, DJ e falò il 31, transfer compreso.", j: "Mezzanotte sotto le stelle. Romantico. Peccato siate voi tre." },
+  { id: "jemaa", cat: "capodanno", n: "Piazza Jemaa el-Fna", dove: "Marrakech", lat: 31.6258, lng: -7.9891, q: "Jemaa el-Fna",
+    x: "La piazza più famosa del Marocco: bancarelle, musica, incantatori di serpenti. Gratis.", j: "Il piano B gratis. Il serpente ti guarda. Tu guardi il portafoglio." },
+  // surf
+  { id: "anchor", cat: "surf", n: "Anchor Point", dove: "Taghazout", lat: 30.5530, lng: -9.7190, q: "Anchor Point Taghazout",
+    x: "L'onda più famosa del paese. Per esperti. Dalle scogliere sopra c'è il tramonto più bello.", j: "Voi la guardate dalla scogliera con una birra. È il vostro livello. Ed è giusto così." },
+  { id: "imsouane", cat: "surf", n: "La baia di Imsouane", dove: "1 ora a nord di Taghazout", lat: 30.8406, lng: -9.8227, q: "Imsouane Bay",
+    x: "Onda lunghissima e lenta: la migliore per imparare.", j: "Due secondi in piedi sulla tavola. Venti minuti a raccontarli. Caralho." },
+  { id: "banana", cat: "surf", n: "Banana Point", dove: "Aourir, vicino a Tamraght", lat: 30.4910, lng: -9.6720, q: "Banana Point Aourir",
+    x: "Spot per principianti con le scuole di surf.", j: "Il nome dice già tutto. Le battute fatevele da soli." },
+  // mangiare
+  { id: "bancarelle", cat: "mangiare", n: "Bancarelle di Jemaa el-Fna", dove: "Marrakech", lat: 31.6252, lng: -7.9880, q: "Jemaa el-Fna food stalls",
+    x: "Cena sulle panche, spiedini, lumache, teste di pecora. Scegliete i banchi pieni di marocchini.", j: "Chi ordina la testa di pecora paga il giro. Regola della casa." },
+  { id: "mechoui", cat: "mangiare", n: "Vicolo del mechoui", dove: "Souk Ablueh, Marrakech", lat: 31.6268, lng: -7.9877, q: "Mechoui Alley Marrakech",
+    x: "Agnello cotto per ore sottoterra, venduto a peso col pane e il cumino.", j: "Mezzo chilo a testa. Il palermitano ne chiede un chilo e chiama tutto «stigghiola»." },
+  { id: "bissara", cat: "mangiare", n: "Bissara a Talaa Kebira", dove: "Medina di Fes", lat: 34.0623, lng: -4.9790, q: "Talaa Kebira Fes",
+    x: "Zuppa di fave con olio e cumino, la colazione di Fes. Meno di un euro.", j: "Costa 7 dirham. Il saluzzese chiede lo sconto lo stesso." },
+  { id: "porto", cat: "mangiare", n: "Pesce al porto", dove: "Porto di Agadir", lat: 30.4250, lng: -9.6260, q: "Agadir fish market port",
+    x: "Scegli il pesce dal banco e te lo grigliano lì. Circa €15 a testa.", j: "Il palermitano dirà che a Mondello è meglio. Ignoratelo." },
+  // foto
+  { id: "chouara", cat: "foto", n: "Concerie Chouara", dove: "Medina di Fes", lat: 34.0663, lng: -4.9708, q: "Chouara Tannery",
+    x: "Le vasche colorate dove conciano le pelli. Si vedono dalle terrazze dei negozi, ti danno la menta da annusare.", j: "La menta serve per l'odore. Lo stesso odore della Dacia il quinto giorno." },
+  { id: "benhaddou", cat: "foto", n: "Aït Benhaddou", dove: "Vicino a Ouarzazate", lat: 31.0470, lng: -7.1320, q: "Ait Benhaddou",
+    x: "Il villaggio di terra del Gladiatore e del Trono di spade.", j: "Foto in posa da gladiatore. Il risultato: un tossico in ciabatte." },
+  { id: "dune", cat: "foto", n: "Dune all'alba", dove: "Erg Chebbi", lat: 31.1500, lng: -3.9700, q: "Erg Chebbi dunes",
+    x: "Sveglia alle 6, salita sulla duna grande, il sole che esce dal deserto.", j: "La foto profilo per i prossimi tre anni. Unica condizione: nessuno di voi tre fa pipì sullo sfondo." },
+  { id: "majorelle", cat: "foto", n: "Jardin Majorelle", dove: "Marrakech", lat: 31.6417, lng: -8.0033, q: "Jardin Majorelle",
+    x: "Il giardino blu di Yves Saint Laurent. Ingresso circa €17, prenotate online.", j: "Pieno di influencer. Statisticamente, l'unico posto dove c'è più sorca che a Theatro." },
+  { id: "oudayas", cat: "foto", n: "Kasbah degli Oudayas", dove: "Rabat", lat: 34.0315, lng: -6.8360, q: "Kasbah of the Udayas",
+    x: "Vicoli bianchi e blu sull'oceano. Gratis.", j: "La Chefchaouen dei poveri. E dei non tossici." },
+  // occhio
+  { id: "fesair", cat: "occhio", n: "Aeroporto di Fes, mezzanotte", dove: "Fes-Saïss", lat: 33.9273, lng: -4.9779, q: "Fes Saiss Airport",
+    x: "Si arriva il 28 a mezzanotte: niente bus. Taxi grande a prezzo da fissare prima, o transfer del riad.", j: "Tre tossici all'uscita alle 00:30 senza transfer. Il tassista vi vede e sorride. Prenotate." },
+  { id: "tichkaneve", cat: "occhio", n: "Neve sul Tichka", dove: "Alto Atlante", lat: 31.2700, lng: -7.3500, q: "Tizi n'Tichka road",
+    x: "A gennaio può nevicare e chiudono la strada per qualche ora. Controllate la mattina stessa.", j: "Chi guida qui non è quello che ha fatto serata il 31. Ce lo diciamo adesso." },
+  { id: "agadirair", cat: "occhio", n: "Aeroporto di Agadir", dove: "Agadir Al Massira", lat: 30.3250, lng: -9.4131, q: "Agadir Al Massira Airport",
+    x: "L'8 si riparte: Agadir → Londra → Roma. Dacia da riconsegnare qui con il pieno.", j: "Niente regalini del Rif in valigia: a Londra i cani all'arrivo fanno il loro lavoro. Benissimo." }
+];

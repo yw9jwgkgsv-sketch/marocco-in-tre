@@ -4,58 +4,47 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Esplora · Marocco in tre</title>
-<meta name="theme-color" content="#1A2272">
+<meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="pagehead zellige">
+<header class="pagehead">
   <div class="wrap">
     <div class="topline"><span class="eyebrow">Esplora</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Cosa <em>fare</em></h1>
-    <p class="lead" id="lead">Idee da tranquille a «lo racconteremo ai nipoti». Votatele tutte: quando tutti e tre dite «Ci sto», è un match.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
-      <button class="btn yellow" type="button" id="surprise">Sorprendimi</button>
-      <a class="btn ghost" href="sifa.html" style="color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Cosa si fa</a>
-      <span class="sticker rosa">Le tacche misurano la follia</span>
-    </div>
+    <span class="sticker" id="stk">49 idee. Ne farete sei. Forse.</span>
+    <p class="lead">Tutto quello che si può fare nel giro, diviso per tema. Votate: quello che piace a tutti e tre si fa davvero.</p>
   </div>
 </header>
 
 <main class="wrap">
-  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per votare le attività: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per votare: su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
   <div id="roast" class="roastbar" hidden aria-live="polite"></div>
 
-  <section class="sec" aria-label="Filtri" style="gap:10px">
-    <div class="hscroll" id="cats" role="group" aria-label="Categorie"></div>
-    <div class="chips" role="group" aria-label="Filtri">
-      <label class="chip"><input type="checkbox" id="f-locale">Solo fuori dai giri</label>
-      <label class="chip"><input type="checkbox" id="f-match">Solo i match</label>
-      <label class="chip"><input type="checkbox" id="f-mie">Non ancora votate da me</label>
-    </div>
-    <div class="grid g2" style="gap:8px">
-      <input type="text" id="q" placeholder="Cerca: surf, Fes, moto, gratis…" aria-label="Cerca">
-      <select id="sort" aria-label="Ordina">
-        <option value="viaggio">Nell'ordine del viaggio</option>
-        <option value="volute">Le più volute</option>
-        <option value="folli">Le più folli</option>
-        <option value="economiche">Le meno care</option>
-      </select>
-    </div>
-    <p class="muted" id="count" style="font-size:14px"></p>
+  <section class="how" aria-labelledby="h-how">
+    <h2 id="h-how" style="font-size:26px">Come funziona</h2>
+    <ol>
+      <li>Scegli un tema qui sotto: Capodanno, deserto, surf…</li>
+      <li>Su ogni idea premi 🔥 se ci stai, 🤔 se forse, 💀 se neanche morto.</li>
+      <li>Se tutti e tre premete 🔥, si fa: va in «Si fa» e il costo finisce nei soldi.</li>
+    </ol>
+    <p class="joke">Chi vota tutto 🤔 diventa ufficialmente il Bogia Nen del viaggio. Neh.</p>
   </section>
 
-  <section class="sec" id="match" aria-label="Attività">
-    <div class="grid g3" id="grid"></div>
+  <section class="sec" aria-labelledby="h-meter">
+    <div class="sec-head"><h2 id="h-meter">Chi ha votato</h2><p id="meter-sub">Su 49 idee. Il sito vede tutto.</p></div>
+    <div class="meter" id="meter"></div>
   </section>
 
-  <footer class="foot">Prezzi a testa e tempi sono stime al 7 novembre 2026, da verificare quando prenotate.</footer>
+  <div class="hscroll" role="tablist" aria-label="Temi" id="cats"></div>
+  <section class="sec catblock" id="cat" aria-live="polite"></section>
+
+  <a class="nextlink" href="sifa.html">Cosa si fa davvero ›</a>
+  <footer class="foot">Il prezzo accanto a ogni idea è quanto aggiunge a testa, oltre a dormire e mangiare. Stime all'8 novembre 2026.</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -65,106 +54,102 @@
 <script src="roast.js"></script>
 <script>
 (function () {
-  const { el, db, icon } = M;
+  const { el, db, eur } = M;
   M.start("esplora");
-
-  const S = { cat: "tutte", reaz: [], crew: [] };
+  const JOKE = {
+    capodanno: "Una notte sola e tre budget diversi. Il saluzzese ha già scelto «Niente di speciale».",
+    moto: "Prima domanda: chi ha la patente A? Ecco. Ne riparliamo.",
+    deserto: "Freddo, sabbia, stelle e zero sorca. Bellissimo lo stesso.",
+    montagna: "Gole, kasbah e curve. Chi soffre la macchina sta davanti e si lamenta lo stesso.",
+    oceano: "Due secondi in piedi sulla tavola, venti minuti a raccontarlo. Caralho.",
+    citta: "Medine, souk e guide «amiche». No, la strada non è chiusa.",
+    cibo: "L'unico tema dove siete tutti d'accordo. Ovviamente.",
+    sfide: "Le sfide tra voi tre. Chi perde paga il giro, chi vince lo racconta per un anno."
+  };
   const VOTI = [["si", "🔥", "Ci sto"], ["forse", "🤔", "Forse"], ["no", "💀", "Neanche morto"]];
-  const ORD = { "29 dic": 1, "30 dic": 2, "31 dic": 3, "1 gen": 4, "2 gen": 5, "3 gen": 6, "4 gen": 7, "5 gen": 8, "6 gen": 9, "7 gen": 10, "8 gen": 11 };
-  function ordine(a) { for (const k in ORD) if (a.quando.indexOf(k) === 0) return ORD[k]; const m = a.quando.match(/^(\d+)[–-]\d+ (dic|gen)/); if (m) return ORD[m[1] + " " + m[2]] || 50; return 60; }
-  function prezzoMin(a) { if (/gratis/i.test(a.prezzo)) return 0; const m = a.prezzo.replace(/\./g, "").match(/\d+/); return m ? Number(m[0]) : 999; }
+  let reaz = [], cat = "capodanno";
+  document.getElementById("stk").textContent = C.ATT.length + " idee. Ne farete sei. Forse.";
 
-  document.getElementById("lead").textContent = C.ATT.length + " idee, da tranquille a «lo racconteremo ai nipoti». Votatele tutte: quando tutti e tre dite «Ci sto», è un match.";
-
-  const cats = document.getElementById("cats");
-  function catChip(key, label) {
-    const b = el("button", { type: "button", class: "chip", "aria-pressed": String(S.cat === key), onclick: () => { S.cat = key; [...cats.children].forEach((c) => c.setAttribute("aria-pressed", String(c === b))); render(); } }, label);
-    return b;
+  const cb = document.getElementById("cats");
+  function tabs() {
+    cb.textContent = "";
+    const st = C.stato(reaz);
+    Object.keys(C.CATS).forEach((k) => {
+      const n = C.ATT.filter((a) => a.cat === k && st[a.id].s === "si").length;
+      cb.appendChild(el("button", { type: "button", class: "chip", "aria-pressed": String(cat === k), onclick: () => { cat = k; tabs(); show(); } }, C.CATS[k].nome + (n ? " · " + n + " ✓" : "")));
+    });
   }
-  cats.appendChild(catChip("tutte", "Tutte"));
-  Object.keys(C.CATS).forEach((k) => cats.appendChild(catChip(k, C.CATS[k].nome)));
 
-  function byAtt() {
-    const by = {};
-    S.reaz.forEach((r) => { const o = (by[r.attivita] = by[r.attivita] || { si: [], forse: [], no: [] }); if (o[r.voto]) o[r.voto].push(r.nome); });
-    return by;
+  function meter() {
+    const box = document.getElementById("meter"); box.textContent = "";
+    const n = {}; C.CREW.forEach((c) => (n[c] = 0));
+    reaz.forEach((r) => { if (r.nome in n) n[r.nome]++; });
+    C.CREW.forEach((c) => {
+      const p = Math.round((n[c] / C.ATT.length) * 100);
+      box.appendChild(el("div", { class: "meter-row" }, el("span", { style: "display:flex;gap:8px;align-items:center" }, M.avatar(c), c), el("div", { class: "bar" }, el("i", { style: "width:" + Math.max(p, 2) + "%;background:" + M.colorFor(c) })), el("b", { class: "mono", text: String(n[c]) })));
+    });
+    const lazy = C.CREW.slice().sort((a, b) => n[a] - n[b])[0];
+    document.getElementById("meter-sub").textContent = n[lazy] === 0 ? lazy + " non ha votato niente. Era al telefono."
+      : n[lazy] < C.ATT.length ? lazy + " è l'ultimo: " + n[lazy] + " su " + C.ATT.length + ". " + R.TOX[n[lazy] % R.TOX.length]
+      : "Avete votato tutto. Chi siete e cosa avete fatto ai miei tossici?";
   }
-  function isMatch(v) { const n = Math.min(Math.max(S.crew.length, 2), M.GROUP); return v && v.si.length >= n; }
 
-  async function vote(id, voto) {
+  function costo(a) { const c = C.COSTO[a.id] || 0; return c ? "+" + eur(c) + " a testa" : "niente in più"; }
+  function stato(v) {
+    if (v.no.length) return ["ko", "Bocciata da " + v.no.join(" e ")];
+    if (C.CREW.every((n) => v.si.includes(n))) return ["ok", "Si fa ✓"];
+    if (v.si.length) return ["", "Manca " + C.CREW.filter((n) => !v.si.includes(n)).join(" e ")];
+    return ["", "Nessuno ha ancora votato"];
+  }
+
+  function row(a, v) {
+    const me = M.me(), mine = reaz.find((r) => r.nome === me && r.attivita === a.id);
+    const [cls, txt] = stato(v);
+    return el("article", { class: "erow" + (cls === "ok" ? " matched" : ""), id: a.id },
+      el("div", { class: "erow-top" },
+        el("div", null, el("h3", { text: a.t }), el("div", { class: "meta" }, el("span", { text: a.dove }), el("span", { text: a.quando }), el("b", { text: costo(a) }))),
+        el("div", { class: "vote3", role: "group", "aria-label": "Il tuo voto" }, VOTI.map(([k, e, lab]) =>
+          el("button", { type: "button", title: lab, "aria-label": lab, "aria-pressed": String(!!mine && mine.voto === k), onclick: () => vote(a, k) }, e)))),
+      el("p", { class: "muted", style: "font-size:15px", text: a.desc }),
+      el("p", { class: "joke", text: a.joke }),
+      el("div", { class: "erow-foot" },
+        el("span", { class: "who" }, VOTI.map(([k, e]) => v[k].length ? el("span", { style: "display:inline-flex;gap:4px;align-items:center" }, e, el("span", { class: "avs" }, v[k].map((n) => M.avatar(n)))) : null)),
+        el("b", { style: "font-size:14px;color:" + (cls === "ok" ? "var(--green)" : cls === "ko" ? "var(--red)" : "var(--muted)"), text: txt })));
+  }
+
+  function show() {
+    const box = document.getElementById("cat"); box.textContent = "";
+    const st = C.stato(reaz), list = C.ATT.filter((a) => a.cat === cat);
+    box.append(
+      el("h2", { style: "--cat:" + C.CATS[cat].colore }, el("i"), C.CATS[cat].nome),
+      el("p", { class: "joke", style: "margin-bottom:4px", text: JOKE[cat] || "" }),
+      el("div", null, list.map((a) => row(a, st[a.id].v))));
+  }
+
+  async function vote(a, voto) {
     const me = M.me(); if (!me) return M.askWho();
-    const mine = S.reaz.find((r) => r.nome === me && r.attivita === id);
+    const mine = reaz.find((r) => r.nome === me && r.attivita === a.id);
     try {
-      if (mine && mine.voto === voto) await db.remove("reazioni", { nome: me, attivita: id });
-      else { await db.upsert("reazioni", { nome: me, attivita: id, voto }, "nome,attivita"); const a = C.ATT.find((x) => x.id === id); M.roast(voto === "si" && a && a.follia >= 4 ? "si_folle" : voto); }
+      if (mine && mine.voto === voto) await db.remove("reazioni", { nome: me, attivita: a.id });
+      else {
+        await db.upsert("reazioni", { nome: me, attivita: a.id, voto }, "nome,attivita");
+        const all = voto === "si" && C.CREW.filter((n) => n !== me).every((n) => reaz.some((r) => r.nome === n && r.attivita === a.id && r.voto === "si"));
+        if (all) M.toast("Si fa: " + a.t + ". Ora qualcuno lo prenota. Daje.");
+        else M.roast(voto === "si" && a.follia >= 4 ? "si_folle" : voto);
+      }
       await load();
     } catch (e) { M.err(e); }
   }
 
-  function card(a, v) {
-    const me = M.me();
-    const mine = S.reaz.find((r) => r.nome === me && r.attivita === a.id);
-    const fol = el("span", { class: "follia", title: "Follia " + a.follia + " su 5", "aria-label": "Follia " + a.follia + " su 5" });
-    for (let i = 1; i <= 5; i++) fol.appendChild(el("i", { class: i <= a.follia ? "on" : "" }));
-    const top = el("div", { class: "att-top", style: "--cat:" + C.CATS[a.cat].colore },
-      isMatch(v) ? el("span", { class: "match", text: "Match" }) : null,
-      el("div", { class: "row" }, el("span", { class: "cat", text: C.CATS[a.cat].nome }), icon(a.cat, "ic")),
-      el("div", { style: "display:grid;gap:8px;position:relative;z-index:1" }, el("h3", { text: a.t }), fol));
-    const react = el("div", { class: "react" }, VOTI.map(([k, e, lab]) => el("div", { style: "display:grid;gap:4px" },
-      el("button", { type: "button", "aria-pressed": String(!!mine && mine.voto === k), onclick: () => vote(a.id, k) }, el("span", { class: "e", text: e }), lab),
-      el("div", { class: "who" }, el("span", { class: "avs" }, (v ? v[k] : []).map((n) => M.avatar(n)))))));
-    return el("article", { class: "att", id: a.id },
-      top,
-      el("div", { class: "att-body" },
-        el("div", { class: "meta" }, el("span", null, el("b", { text: a.dove })), el("span", { text: a.quando }), el("span", null, el("b", { class: "mono", text: a.prezzo })), el("span", { text: a.durata })),
-        el("div", null, el("span", { class: "tipo " + a.tipo, text: C.TIPI[a.tipo] })),
-        el("p", { text: a.desc }),
-        el("p", { class: "joke", text: a.joke }),
-        react));
-  }
+  function render() { tabs(); meter(); const y = window.scrollY; show(); window.scrollTo(0, y); }
+  async function load() { const d = await db.many(["reazioni", "persone"]); reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":")); render(); R.bar("esplora", d, M.me()); }
 
-  function render() {
-    const by = byAtt();
-    const q = document.getElementById("q").value.trim().toLowerCase();
-    const fl = document.getElementById("f-locale").checked, fm = document.getElementById("f-match").checked, fmie = document.getElementById("f-mie").checked;
-    const me = M.me();
-    let list = C.ATT.filter((a) => (S.cat === "tutte" || a.cat === S.cat)
-      && (!fl || a.tipo === "locale")
-      && (!fm || isMatch(by[a.id]))
-      && (!fmie || !S.reaz.some((r) => r.nome === me && r.attivita === a.id))
-      && (!q || (a.t + " " + a.dove + " " + a.desc + " " + a.prezzo + " " + C.CATS[a.cat].nome).toLowerCase().includes(q)));
-    const s = document.getElementById("sort").value;
-    const cnt = (a) => (by[a.id] ? by[a.id].si.length * 2 + by[a.id].forse.length - by[a.id].no.length * 2 : 0);
-    list.sort(s === "volute" ? (a, b) => cnt(b) - cnt(a) : s === "folli" ? (a, b) => b.follia - a.follia : s === "economiche" ? (a, b) => prezzoMin(a) - prezzoMin(b) : (a, b) => ordine(a) - ordine(b));
-    const g = document.getElementById("grid"); g.textContent = "";
-    list.forEach((a) => g.appendChild(card(a, by[a.id])));
-    const matches = C.ATT.filter((a) => isMatch(by[a.id])).length;
-    const votedByMe = me ? S.reaz.filter((r) => r.nome === me).length : 0;
-    document.getElementById("count").textContent = list.length + " idee · " + matches + " match di gruppo" + (me ? " · ne hai votate " + votedByMe + " su " + C.ATT.length : "");
-    if (!list.length) g.appendChild(el("p", { class: "empty", text: fm ? "Nessun match per ora. Servono tre «Ci sto» sulla stessa idea." : "Niente con questi filtri." }));
-  }
-
-  ["q", "sort", "f-locale", "f-match", "f-mie"].forEach((id) => document.getElementById(id).addEventListener(id === "q" ? "input" : "change", render));
-  document.getElementById("surprise").addEventListener("click", () => {
-    S.cat = "tutte"; [...cats.children].forEach((c, i) => c.setAttribute("aria-pressed", String(i === 0)));
-    ["f-locale", "f-match", "f-mie"].forEach((id) => (document.getElementById(id).checked = false)); document.getElementById("q").value = "";
-    render();
-    const a = C.ATT[Math.floor(Math.random() * C.ATT.length)];
-    const node = document.getElementById(a.id); if (node) { node.scrollIntoView({ block: "center" }); node.style.outline = "3px solid var(--giallo)"; setTimeout(() => (node.style.outline = ""), 2200); }
-  });
-
-  async function load() {
-    const d = await db.many(["reazioni", "persone"]);
-    S.reaz = d.reazioni.filter((r) => !String(r.attivita).startsWith("chiama:")); S.crew = d.persone.map((p) => p.nome); R.bar("esplora", d, M.me());
-    const y = window.scrollY; render(); window.scrollTo(0, y);
-  }
+  const h = decodeURIComponent(location.hash.slice(1));
+  const target = C.ATT.find((a) => a.id === h);
+  if (target) cat = target.cat;
   M.onMe(render);
   render();
-  load().then(() => {
-    const h = decodeURIComponent(location.hash.slice(1));
-    if (h === "match") { document.getElementById("f-match").checked = true; render(); }
-    else if (h) { const n = document.getElementById(h); if (n) { n.scrollIntoView({ block: "start" }); n.style.outline = "3px solid var(--giallo)"; setTimeout(() => (n.style.outline = ""), 2200); } }
-  });
+  load().then(() => { if (target) { const n = document.getElementById(target.id); if (n) n.scrollIntoView({ block: "center" }); } });
   db.subscribe(["reazioni", "persone"], load);
 })();
 </script>

@@ -3,50 +3,63 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Budget · Marocco in tre</title>
-<meta name="theme-color" content="#1A2272">
+<title>Soldi · Marocco in tre</title>
+<meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="pagehead zellige">
+<header class="pagehead">
   <div class="wrap">
-    <div class="topline"><span class="eyebrow">Budget</span><span class="me-chip" id="me-chip"></span></div>
+    <div class="topline"><span class="eyebrow">Soldi</span><span class="me-chip" id="me-chip"></span></div>
     <h1>Per una volta <em>siamo seri</em></h1>
-    <span class="sticker ">Quanto spendete, a testa</span>
-    <p class="lead">Spese sicure più le esperienze che avete deciso. Si aggiorna da solo quando votate.</p>
+    <span class="sticker">Quanto spendete, a testa. Senza battute. Quasi.</span>
+    <p class="lead">Spese sicure, più lo scenario, più le esperienze che avete deciso. Si aggiorna da solo quando votate.</p>
   </div>
 </header>
 
 <main class="wrap">
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
   <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+
+  <section class="sec" aria-labelledby="h-cmp">
+    <div class="sec-head"><h2 id="h-cmp">Quanto costa ogni scenario</h2><p>Con le esperienze decise finora. Tocca per vedere il dettaglio.</p></div>
+    <div class="meter" id="cmp"></div>
+  </section>
+
   <section class="sec money" aria-live="polite">
-    <span class="lab">Spesa prevista a testa</span>
-    <b class="money-n mono" id="tot">€960</b>
-    <div class="mbar" aria-hidden="true"><i class="m-s" id="b-s"></i><i class="m-d" id="b-d"></i><i class="m-b" id="b-b"></i></div>
-    <div class="mleg"><span><i class="m-s"></i>Sicure <b class="mono" id="l-s"></b></span><span><i class="m-d"></i>Esperienze decise <b class="mono" id="l-d"></b></span><span><i class="m-b"></i>In ballo <b class="mono" id="l-b"></b></span></div>
-    <p class="muted" id="note" style="font-size:14px"></p>
+    <span class="lab" id="lab">Spesa prevista a testa</span>
+    <b class="money-n" id="tot">€0</b>
+    <div class="mbar" aria-hidden="true"><i class="m-s" id="b-s"></i><i class="m-sc" id="b-sc"></i><i class="m-d" id="b-d"></i><i class="m-b" id="b-b"></i></div>
+    <div class="mleg">
+      <span><i style="background:var(--ink)"></i>Sicure <b id="l-s"></b></span>
+      <span><i style="background:var(--accent)"></i>Scenario <b id="l-sc"></b></span>
+      <span><i style="background:var(--green)"></i>Esperienze <b id="l-d"></b></span>
+      <span><i style="background:var(--muted)"></i>In ballo <b id="l-b"></b></span>
+    </div>
+    <p class="muted" id="note" style="font-size:15px"></p>
   </section>
 
   <section class="sec" aria-labelledby="h-dec">
-    <div class="sec-head"><h2 id="h-dec">Esperienze decise</h2><a class="btn ghost small" href="esplora.html">Vota le altre</a></div>
+    <div class="sec-head"><h2 id="h-dec">Esperienze decise</h2><a class="more" href="esplora.html">Vota le altre ›</a></div>
     <ul class="list mlist" id="dec"></ul>
   </section>
 
-  <section class="sec" aria-labelledby="h-sic">
-    <div class="sec-head"><h2 id="h-sic">Spese sicure</h2><span class="mono" id="sic-tot"></span></div>
-    <ul class="list mlist" id="sic"></ul>
-    <p class="muted" style="font-size:13px">Stime all'8 novembre 2026, andata esclusa perché già pagata.</p>
+  <section class="sec" aria-labelledby="h-scen">
+    <div class="sec-head"><h2 id="h-scen">Lo scenario</h2><a class="more" id="scen-link" href="scenari.html">Il giro completo ›</a></div>
+    <ul class="list mlist" id="scen"></ul>
   </section>
 
-  <a class="nextlink" href="organizza.html">Ora prenditi una prenotazione →</a>
+  <section class="sec" aria-labelledby="h-sic">
+    <div class="sec-head"><h2 id="h-sic">Spese sicure</h2><p>Ci sono in qualsiasi scenario.</p></div>
+    <ul class="list mlist" id="sic"></ul>
+    <p class="muted" style="font-size:14px">Stime all'8 novembre 2026. I voli sono esclusi perché già pagati: andata su Fes, ritorno Agadir → Londra → Roma.</p>
+  </section>
+
+  <a class="nextlink" href="organizza.html">Ora prenditi una prenotazione ›</a>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -58,24 +71,47 @@
 (function () {
   const { el, db, eur } = M;
   M.start("budget");
+  const K = Object.keys(C.SCEN);
+  let reaz = [], sond = [], sel = null;
+  const li = (t, n, v, cls) => el("li", { class: cls || null }, el("div", { style: "min-width:0" }, el("b", { text: t }), n ? el("div", { class: "muted", style: "font-size:14px", text: n }) : null), el("b", { class: "mono", text: v }));
+
   const sic = document.getElementById("sic");
-  C.BUDGET.fissi.forEach((f) => sic.appendChild(el("li", null, el("div", { style: "min-width:0" }, el("b", { text: f.t }), el("div", { class: "muted", style: "font-size:13.5px", text: f.nota })), el("b", { class: "mono", text: eur(f.e) }))));
-  document.getElementById("sic-tot").textContent = eur(C.SICURI);
-  function render(reaz) {
-    const s = C.spesa(reaz), max = Math.max(s.max, 1);
+  C.BUDGET.fissi.forEach((f) => sic.appendChild(li(f.t, f.nota, eur(f.e))));
+  sic.appendChild(li("Totale", "", eur(C.SICURI)));
+
+  function render() {
+    const g = C.scenGruppo(sond); const k = sel || g.pick; const S = C.SCEN[k];
+    const all = K.map((x) => [x, C.spesa(reaz, x)]), top = Math.max(...all.map(([, s]) => s.tot), 1);
+    const cmp = document.getElementById("cmp"); cmp.textContent = "";
+    all.forEach(([x, s]) => cmp.appendChild(el("button", { type: "button", class: "meter-row", style: "border:0;background:none;padding:0;text-align:left;cursor:pointer;color:var(--ink)" + (x === k ? ";font-weight:700" : ";opacity:.75"), onclick: () => { sel = x; render(); } },
+      el("span", { text: C.SCEN[x].emoji + " " + C.SCEN[x].nome + (g.voted && g.pick === x ? " ✓" : "") }),
+      el("div", { class: "bar" }, el("i", { style: "width:" + (s.tot / top) * 100 + "%;background:" + (x === k ? "var(--accent)" : "var(--ink)") })),
+      el("b", { class: "mono", text: eur(s.tot) }))));
+
+    const s = C.spesa(reaz, k), max = Math.max(s.max, 1), w = (id, n) => (document.getElementById(id).style.width = (n / max) * 100 + "%");
+    document.getElementById("lab").textContent = "Scenario " + k + ", " + S.nome + (g.voted && g.pick === k ? ", quello votato" : g.voted ? ", non è quello votato" : "") + ": a testa";
     document.getElementById("tot").textContent = eur(s.tot);
-    document.getElementById("b-s").style.width = (s.sicuri / max) * 100 + "%";
-    document.getElementById("b-d").style.width = (s.decise / max) * 100 + "%";
-    document.getElementById("b-b").style.width = (s.ballo / max) * 100 + "%";
-    document.getElementById("l-s").textContent = eur(s.sicuri); document.getElementById("l-d").textContent = eur(s.decise); document.getElementById("l-b").textContent = eur(s.ballo);
-    document.getElementById("note").textContent = s.ballo ? "Se dite sì anche a quelle in ballo, si arriva a " + eur(s.max) + ". In tre: " + eur(s.tot * 3) + " oggi." : "In tre: " + eur(s.tot * 3) + ".";
+    w("b-s", s.sicuri); w("b-sc", s.scen); w("b-d", s.decise); w("b-b", s.ballo);
+    document.getElementById("l-s").textContent = eur(s.sicuri); document.getElementById("l-sc").textContent = eur(s.scen);
+    document.getElementById("l-d").textContent = eur(s.decise); document.getElementById("l-b").textContent = eur(s.ballo);
+    document.getElementById("note").textContent = (s.ballo ? "Se dite sì anche a quelle in ballo, si arriva a " + eur(s.max) + " a testa. " : "") + "In tre fa " + eur(s.tot * 3) + ".";
+
     const dec = document.getElementById("dec"); dec.textContent = "";
     if (!s.listaDecise.length && !s.listaBallo.length) dec.appendChild(el("li", { class: "empty", text: "Ancora niente di deciso. Su Esplora, tre 🔥 sulla stessa cosa e il costo arriva qui." }));
-    s.listaDecise.forEach(([a, c]) => dec.appendChild(el("li", null, el("div", { style: "min-width:0" }, el("b", { text: a.t }), el("div", { class: "muted", style: "font-size:13.5px", text: a.quando })), el("b", { class: "mono", text: c ? "+" + eur(c) : "gratis" }))));
-    s.listaBallo.forEach(([a, c]) => dec.appendChild(el("li", { class: "ballo" }, el("div", { style: "min-width:0" }, el("b", { text: a.t }), el("div", { class: "muted", style: "font-size:13.5px", text: "In ballo: manca un sì" })), el("b", { class: "mono muted", text: c ? "+" + eur(c) : "gratis" }))));
+    s.listaDecise.forEach(([a, c]) => dec.appendChild(li(a.t, a.quando, c ? "+" + eur(c) : "gratis")));
+    s.listaBallo.forEach(([a, c]) => dec.appendChild(li(a.t, "In ballo: manca un sì", c ? "+" + eur(c) : "gratis", "ballo")));
+
+    const sc = document.getElementById("scen"); sc.textContent = "";
+    S.costi.forEach(([t, e, n]) => sc.appendChild(li(t, n, eur(e))));
+    sc.appendChild(li("Totale scenario", S.include.length ? "Dentro c'è già: " + S.include.map((id) => (C.ATT.find((a) => a.id === id) || {}).t).filter(Boolean).join(", ") : "", eur(S.logistica)));
+    document.getElementById("scen-link").href = "scenari.html#" + k;
   }
-  async function load() { const d = await db.many(["reazioni", "persone"]); render(d.reazioni); R.bar("budget", { persone: [] }, M.me()); }
-  render([]); load(); db.subscribe(["reazioni"], load);
+  async function load() {
+    const d = await db.many(["reazioni", "sondaggi", "persone"]);
+    reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":")); sond = d.sondaggi;
+    render(); R.bar("budget", { persone: [] }, M.me());
+  }
+  render(); load(); db.subscribe(["reazioni", "sondaggi"], load);
 })();
 </script>
 </body>

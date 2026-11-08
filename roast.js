@@ -204,6 +204,8 @@ window.R = (function () {
     if (page === "budget") return pick(["Per una volta siamo seri. Una.", "I numeri sono stime: quelli veri li vedete quando prenotate. Seriamente.", "Ogni tre 🔥 su Esplora, qui sale il conto. Votate con il portafoglio."], seed);
     if (page === "cuori") return pick(["Tre single in Marocco. L'unica che vi guarda negli occhi è la cammella.", "Le statistiche sono chiare: tornerete single, ma abbronzati.", "Probabilità di rimorchiare nel deserto: zero. Probabilità di innamorarsi del cammello: alta.", "Tinder in Marocco: unico match, la guida del deserto, 54 anni, baffi. Suave."], seed);
     if (page === "tribunale") return fill("Il tribunale è aperto. Le quote danno colpevole {X} su tutto. {END}", seed);
+    if (page === "mappa") return pick(["Ketama è segnata sulla mappa solo per dirvi di no. Tossici avvisati.", "La sorca più vicina ve la dice il tasto «Dove sono io?». Il risultato vi offenderà.", "Ogni pallino è un posto vero. Gli unici finti siete voi tre quando dite «domani prenotiamo»."], seed);
+    if (page === "scenari") return fill(pick(["Quattro scenari, tre tossici, zero decisioni. {X}, vota e non rompere. {END}", "Il più votato vince. Se non votate, decide {X} da solo. Pensateci. {END}", "Scenario B: chi ha la patente A? {X} ha detto «più o meno». {TOX}"], seed), seed);
     if (page === "giro") return fill("Il giro è deciso. Resta da capire chi lo rovinerà per primo: le quote danno favorito {X}. {END}", seed);
     return fill(pick(FILL, seed), seed);
   }
@@ -229,8 +231,10 @@ window.R = (function () {
 
   /* -------- il tasto «non ho capito un cazzo» -------- */
   const SPIEGA = {
-    home: "Questa è la pagina iniziale: conto alla rovescia, a che punto siete e chi vi sta facendo fare brutta figura. Tocca le tessere colorate per andare nelle altre pagine.",
-    esplora: "Ci sono tutte le cose che si possono fare. Su ognuna premi Ci sto, Forse o Neanche morto. Se tutti e tre dite Ci sto, è un match: la trovi in «Cosa si fa».",
+    home: "Scorri: ogni blocco spiega una parte del sito, con un link per entrarci. In basso c'è la barra con le pagine principali.",
+    mappa: "Sopra scegli cosa vedere: sorca, surf, mangiare… Tocca un pallino per sapere cos'è e premere «Portami qui». «Dove sono io?» ti dice cosa hai vicino. Sotto la mappa puoi accendere il giro di uno scenario.",
+    scenari: "In alto vedi chi ha votato cosa. Tocca uno scenario: c'è quanto costa, come vi muovete, dove dormite e il giro giorno per giorno. Premi «Voto questo»: vince il più votato.",
+    esplora: "Tocca un tema, poi su ogni idea premi 🔥 se ci stai, 🤔 se forse, 💀 se neanche morto. Quando tutti e tre premete 🔥, sotto compare «Si fa» e il costo va nei soldi.",
     giro: "In alto scegli lo scenario: A, B, C o D. Sotto vedi la mappa e cosa si fa ogni giorno, dove si dorme e quante ore si guida.",
     crew: "Compila il tuo profilo: budget, patente, fuoristrada e scenario preferito. Lo scenario del viaggio si decide da solo. Più sotto c'è il tribunale: si vota chi è più probabile che faccia una figura di merda.",
     organizza: "Prenotazioni: premi Me ne occupo io su quello che prenoti tu, e Fatto quando hai finito. Cassa: segna quello che paghi per tutti, il sito calcola chi deve dare soldi a chi.",
@@ -238,7 +242,7 @@ window.R = (function () {
     muro: "Scrivi quello che vuoi: frasi celebri, voti ai tagine, figure di merda. Lo vedono tutti.",
     vota: "Ti esce una carta alla volta. Premi 🔥 se ci stai, 🤔 se forse, 💀 se neanche morto. Oppure trascina la carta. Quando tutti e tre dite 🔥, esce MATCH e si fa.",
     sifa: "Qui vedi il risultato dei voti. «Si fa»: tutti e tre 🔥, si prenota. «Manca uno»: due 🔥, il terzo deve decidere. «Bocciate»: qualcuno ha detto 💀.",
-    budget: "Sopra c'è il totale a testa. Le spese sicure sono già dentro. Sotto accendi e spegni le cose che volete fare: il totale cambia da solo.",
+    budget: "In alto il costo di ogni scenario: toccane uno. Sotto il totale a testa: spese sicure, più lo scenario, più le esperienze con tre 🔥. Cambia da solo quando votate.",
     cuori: "Il registro: premi il tasto quando prendi un due di picche. Sotto: dove forse sì e dove sicuramente no.",
     tribunale: "Per ogni domanda tocca il nome del colpevole. Chi prende più voti si becca l'adesivo.",
     notte: "In alto le probabilità di serata. Poi tocchi una città e vedi locali, feste e ostelli veri. Sotto c'è il registro dei due di picche: premi il tasto quando ne prendi uno.",

@@ -155,6 +155,8 @@ window.M = (function () {
   const P = {
     home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
     esplora: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+    mappa: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+    scenari: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
     giro: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
     crew: '<circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M2.5 20c.5-3.5 3-5.5 5.5-5.5S13 16.5 13.5 20M14 14.8c2.8-.4 6 1 7 5.2"/>',
     organizza: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8l1.5 1.5L12 7M8 13l1.5 1.5L12 12M8 18h.01M14 8h3M14 13h3M14 18h3"/>',
@@ -213,7 +215,7 @@ window.M = (function () {
   }
 
   /* ---------------- barra in basso ---------------- */
-  const NAV = [["index.html", "home", "Home"], ["esplora.html", "esplora", "Esplora"], ["notte.html", "notte", "Notte"], ["budget.html", "budget", "Budget"], ["organizza.html", "organizza", "Organizza"], ["kit.html", "kit", "Kit"]];
+  const NAV = [["index.html", "home", "Home"], ["esplora.html", "esplora", "Esplora"], ["mappa.html", "mappa", "Mappa"], ["notte.html", "notte", "Notte"], ["scenari.html", "scenari", "Scenari"], ["kit.html", "kit", "Kit"]];
   function nav(active) {
     const ul = el("ul");
     NAV.forEach(([href, ic, lab]) => ul.appendChild(el("li", null, el("a", { href, "aria-current": ic === active ? "page" : null }, icon(ic), lab))));
@@ -247,6 +249,29 @@ window.M = (function () {
     return res;
   }
 
+  /* ---------------- comparsa delle sezioni, come su apple.com ---------------- */
+  const SEL = "main.wrap > *, .lsec, .catblock, .scard, .tl, .place, .tile, .erow, .post";
+  let io = null;
+  function revealScan(root, first) {
+    if (!("IntersectionObserver" in window) || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+    if (!io) io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
+    const vh = window.innerHeight;
+    (root || document).querySelectorAll(SEL).forEach((n) => {
+      if (n.dataset.rv) return; n.dataset.rv = "1";
+      if (n.closest(".overlay,.loader,.bottomnav")) return;
+      const top = n.getBoundingClientRect().top;
+      if (top < vh * 0.92 && !first) return;   // già sullo schermo dopo un aggiornamento: niente animazione
+      if (top < vh * 0.92) return;              // già visibile all'apertura: resta fermo
+      n.classList.add("rv"); io.observe(n);
+    });
+  }
+  function reveal() {
+    revealScan(document, true);
+    let t = null;
+    const mo = new MutationObserver(() => { clearTimeout(t); t = setTimeout(() => revealScan(document, false), 60); });
+    const main = document.querySelector("main"); if (main) mo.observe(main, { childList: true, subtree: true });
+  }
+
   /* ---------------- testata comune ---------------- */
   function start(active) {
     nav(active);
@@ -255,6 +280,7 @@ window.M = (function () {
     if (up && !LIVE) { up.hidden = false; up.innerHTML = "<b>Modalità prova</b>I dati restano solo su questo dispositivo finché il sito non è collegato al database."; }
     if (!me && !window.INTRO_ACTIVE) setTimeout(askWho, 300);
     if (window.R) R.mountHelp(active || "home");
+    setTimeout(reveal, 30);
     // «ultimo avvistamento»: se la colonna manca si ignora in silenzio, senza avviso
     if (me && LIVE) sb.from("persone").update({ visto: new Date().toISOString() }).eq("nome", me).then(() => {}, () => {});
   }

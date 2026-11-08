@@ -4,85 +4,103 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Marocco in tre</title>
-<meta name="description" content="Fes, Capodanno a Marrakech, deserto in moto e surf. Tre amici, undici giorni.">
+<meta name="description" content="Fes, Capodanno a Marrakech, deserto e surf. Tre amici, undici giorni.">
 <meta property="og:title" content="Marocco in tre · 29/12 → 8/1">
 <meta property="og:description" content="Tre tossici, undici giorni, un sito che vi prende per il culo.">
-<meta name="theme-color" content="#1A2272">
+<meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Marocco">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="pagehead zellige hero">
-  <div class="wrap" style="gap:16px">
-    <div class="topline"><span class="eyebrow">29 dic → 8 gen · in tre</span><span class="me-chip" id="me-chip"></span></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="sticker" id="countdown-sticker">Partenza tra — giorni</span><span class="sticker rosa">Guarda questi tossici</span></div>
-    <h1 style="font-size:clamp(52px,13vw,112px)">Marocco <em>in tre</em></h1>
-    <p class="lead">Er romano, il saluzzese e er palermitano, ex Erasmus a San Paolo. Undici giorni in Marocco. Il sito vede tutto e ve lo rinfaccia.</p>
-    <div class="grid g4" aria-label="Conto alla rovescia">
-      <div class="kpi"><b id="cd-d">—</b><span>giorni</span></div>
-      <div class="kpi"><b id="cd-h">—</b><span>ore</span></div>
-      <div class="kpi"><b id="cd-m">—</b><span>minuti</span></div>
-      <div class="kpi"><b id="cd-cap">—</b><span>giorni a Capodanno</span></div>
-    </div>
-    <div class="route" aria-label="Percorso">
-      <div class="stops">
-        <div class="stop"><div class="dot"></div><span class="d">29 · 30</span><b>Fes</b><p>Medina, Volubilis, notte a Rabat</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">31 · 1</span><b>Marrakech</b><p>Capodanno all'Hivernage</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">2</span><b>Atlante</b><p>Tizi n'Tichka, Aït Benhaddou</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">2 · 3</span><b>Valli</b><p>Dadès e Todra</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">3 · 4</span><b>Deserto</b><p>Dune, moto, tenda</p></div>
-        <div class="stop"><div class="dot"></div><span class="d">5 → 8</span><b>Oceano</b><p>Imsouane, Taghazout, Agadir</p></div>
-      </div>
-    </div>
-    <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:var(--hero-ink);border-color:rgba(255,255,255,.3)">Rivedi il caricamento</button>
-  </div>
-</header>
+<main class="wrap" style="gap:12px;padding-top:0">
+  <div class="topline" style="padding-top:calc(env(safe-area-inset-top,0px) + 14px)"><span class="eyebrow">Da Ale, per due tossici</span><span class="me-chip" id="me-chip"></span></div>
 
-<main class="wrap">
+  <section class="lhero">
+    <span class="eyebrow">29 dicembre → 8 gennaio</span>
+    <h1>Marocco<br>in tre.</h1>
+    <p class="lead">Il sito che organizza il viaggio. E vi prende per il culo mentre lo fa.</p>
+    <div class="count" aria-label="Conto alla rovescia alla partenza">
+      <div><b id="cd-d">—</b><span>giorni</span></div>
+      <div><b id="cd-h">—</b><span>ore</span></div>
+      <div><b id="cd-m">—</b><span>minuti</span></div>
+    </div>
+    <p class="muted" style="font-size:15px;margin-top:6px">Fes · Marrakech · deserto · oceano · Agadir → Londra → Roma</p>
+  </section>
+
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
 
-  <section class="sec" aria-labelledby="h-giudica">
-    <div class="feed-card">
-      <span class="roast-lab">Il sito vi giudica</span>
-      <h3 id="h-giudica">Guarda questi tossici</h3>
-      <ul class="feed" id="feed"></ul>
-      <button class="btn yellow" type="button" id="feed-more" style="justify-self:start">Prendimi per il culo</button>
-    </div>
+  <section class="lsec" style="--cat:var(--c-moto)">
+    <span class="eyebrow">Esplora</span>
+    <h2 id="h-esp">49 cose da fare.<br>Ne farete sei.</h2>
+    <p class="sub">Ogni idea del viaggio, divisa per tema. Premete 🔥, 🤔 o 💀. Se dite tutti e tre 🔥, si fa.</p>
+    <a class="more" href="esplora.html">Vota le idee</a>
+    <div class="demo card" id="demo-esp"></div>
   </section>
 
-  <a class="card money-mini" href="budget.html" aria-label="Spesa prevista, vai al budget">
-    <div class="row-between"><span class="lab">Spesa prevista a testa</span><b class="mono" id="mm-tot">€960</b></div>
-    <div class="mbar" aria-hidden="true"><i class="m-s" id="mm-s"></i><i class="m-d" id="mm-d"></i><i class="m-b" id="mm-b"></i></div>
-    <span class="muted" id="mm-note" style="font-size:13.5px">Spese sicure. Le esperienze decise si aggiungono da sole.</span>
-  </a>
-
-  <section class="sec" aria-label="Pagine">
-    <div class="grid g2 tiles" id="tiles"></div>
+  <section class="lsec dark">
+    <span class="eyebrow" style="color:#ff6482">Mappa</span>
+    <h2>Dove c'è la sorca.<br>E dove c'è Ketama.</h2>
+    <p class="sub">Locali, surf, tagine e posti da foto, tutti su una mappa. Un tasto vi dice la sorca più vicina. Ketama è segnata per dirvi di no.</p>
+    <a class="more" href="mappa.html">Apri la mappa</a>
+    <div class="demo" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center" id="demo-map"></div>
   </section>
 
-  <section class="sec" aria-labelledby="h-call">
-    <div class="card callbox">
-      <span class="eyebrow" style="color:var(--rosa)">Contatore ufficiale</span>
-      <b class="call-n mono" id="call-n">600.000</b>
-      <h3 id="h-call" style="font-size:20px">chiamate WhatsApp di Davide per organizzare il viaggio</h3>
-      <button class="btn" type="button" id="call-btn" style="justify-self:start;background:var(--rosa);color:#fff">Ha chiamato di nuovo</button>
-      <p class="muted" id="call-last" style="font-size:13px"></p>
-    </div>
+  <section class="lsec" style="--cat:var(--c-capodanno)">
+    <span class="eyebrow">La notte</span>
+    <h2>Serata: 75%.<br>Rimorchio: non chiedete.</h2>
+    <p class="sub">Club, feste di Capodanno e ostelli veri, città per città. E il registro ufficiale dei due di picche.</p>
+    <a class="more" href="notte.html">Dove si va stasera</a>
+    <div class="demo card meter" id="demo-notte"></div>
   </section>
 
-  <section class="sec" aria-labelledby="h-pagella">
-    <div class="sec-head"><h2 id="h-pagella">La pagella</h2><p>Titoli assegnati in base a quello che fate. Non si contestano.</p></div>
-    <div class="grid g3" id="pagella"></div>
+  <section class="lsec" style="--cat:var(--c-oceano)">
+    <span class="eyebrow">Scenari</span>
+    <h2>Dacia, moto,<br>treno o zaino.</h2>
+    <p class="sub">Quattro modi di fare lo stesso giro: percorso, dove dormite, quanto si guida e quanto costa. Votate, vince il più votato.</p>
+    <a class="more" href="scenari.html">Scegli lo scenario</a>
+    <div class="demo ltiles" id="demo-scen"></div>
   </section>
 
-  <footer class="foot">Prezzi e tempi sono stime al 8 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br><span class="mono">Versione 12 · 8 nov 2026</span></footer>
+  <section class="lsec" style="--cat:var(--c-citta)">
+    <span class="eyebrow">Soldi</span>
+    <h2 id="h-soldi">€830 a testa.<br>Per ora.</h2>
+    <p class="sub">Spese sicure, più lo scenario, più le esperienze che votate. Si aggiorna da solo. Il saluzzese l'ha già letto tre volte.</p>
+    <a class="more" href="budget.html">Guarda i conti</a>
+    <a class="demo card money-mini" href="budget.html" aria-label="Spesa prevista">
+      <div class="mbar" aria-hidden="true"><i class="m-s" id="mm-s"></i><i class="m-sc" id="mm-sc"></i><i class="m-d" id="mm-d"></i><i class="m-b" id="mm-b"></i></div>
+      <span class="muted" id="mm-note" style="font-size:15px"></span>
+    </a>
+  </section>
+
+  <section class="lsec dark">
+    <span class="eyebrow" style="color:#ff6482">Contatore ufficiale</span>
+    <h2 id="call-n" style="font-variant-numeric:tabular-nums">600.000</h2>
+    <p class="sub">chiamate WhatsApp di Davide per organizzare il viaggio. L'avvocato non si ferma mai.</p>
+    <button class="btn" type="button" id="call-btn" style="background:#2997ff;color:#000">Ha chiamato di nuovo</button>
+    <p class="muted" id="call-last" style="font-size:14px"></p>
+  </section>
+
+  <section class="lsec">
+    <span class="eyebrow">Il sito vi giudica</span>
+    <h2>Guarda questi tossici.</h2>
+    <p class="sub">Legge quello che fate e ve lo rinfaccia. In romano, saluzzese, palermitano e brasiliano.</p>
+    <div class="demo feed-card"><ul class="feed" id="feed"></ul><button class="btn" type="button" id="feed-more">Prendimi per il culo</button></div>
+    <div class="demo grid" id="pagella" style="gap:10px"></div>
+  </section>
+
+  <section class="lsec">
+    <span class="eyebrow">E poi</span>
+    <h2>Il resto.</h2>
+    <p class="sub">Per non restare a terra, non fare figure de merda e non litigare su chi paga il tè.</p>
+    <div class="ltiles" id="tiles"></div>
+  </section>
+
+  <button type="button" id="replay" class="btn ghost small" style="justify-self:center">Rivedi il caricamento</button>
+  <footer class="foot" style="text-align:center">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto, la carta d'identità non basta.<br>Versione 13 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -93,59 +111,76 @@
 <script src="intro.js"></script>
 <script>
 (function () {
-  const { el, db, icon } = M;
+  const { el, db, icon, eur } = M;
   const intro = Intro.shouldShow();
   if (intro) window.INTRO_ACTIVE = true;
   M.start("home");
   if (intro) Intro.show();
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
 
-  const dep = new Date(2026, 11, 28, 23, 30, 0), cap = new Date(2026, 11, 31, 23, 0, 0);
+  const dep = new Date(2026, 11, 28, 23, 30, 0);
   function tick() {
     let s = Math.max(0, Math.floor((dep - new Date()) / 1000));
     const d = Math.floor(s / 86400); s -= d * 86400; const h = Math.floor(s / 3600); s -= h * 3600;
     document.getElementById("cd-d").textContent = d; document.getElementById("cd-h").textContent = h; document.getElementById("cd-m").textContent = Math.floor(s / 60);
-    document.getElementById("cd-cap").textContent = Math.max(0, Math.ceil((cap - new Date()) / 86400000));
-    document.getElementById("countdown-sticker").textContent = d > 0 ? "Partenza tra " + d + " giorni" : "Siamo in Marocco!";
   }
   tick(); setInterval(tick, 30000);
+  document.getElementById("h-esp").innerHTML = C.ATT.length + " cose da fare.<br>Ne farete sei.";
 
-  /* le pagine, ognuna con il suo «per non...» */
+  /* demo: un'idea a caso da votare */
+  const folli = C.ATT.filter((a) => a.follia >= 4), pickA = folli[Math.floor(Math.random() * folli.length)];
+  document.getElementById("demo-esp").append(
+    el("span", { class: "lab", text: C.CATS[pickA.cat].nome + " · " + pickA.dove }),
+    el("div", { class: "erow-top", style: "margin-top:4px" }, el("h3", { style: "font-size:20px", text: pickA.t }),
+      el("a", { class: "vote3", href: "esplora.html#" + pickA.id, "aria-label": "Vota questa idea", style: "text-decoration:none" }, ["🔥", "🤔", "💀"].map((e) => el("span", { style: "width:42px;height:42px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:20px", text: e })))),
+    el("p", { class: "joke", style: "margin-top:8px", text: pickA.joke }));
+
+  /* demo: i pallini della mappa */
+  const dm = document.getElementById("demo-map");
+  Object.keys(C.POICAT).forEach((k) => dm.appendChild(el("a", { class: "chip", href: "mappa.html", style: "background:#1c1c1e;color:#f5f5f7" }, C.POICAT[k].e + " " + C.POICAT[k].n)));
+
+  /* demo: le probabilità di serata */
+  const dn = document.getElementById("demo-notte");
+  [["Marrakech, 31 dicembre", 75], ["Ostelli di Taghazout", 55], ["Campo nel deserto", 0]].forEach(([t, p]) =>
+    dn.appendChild(el("div", { class: "meter-row" }, el("span", { text: t }), el("div", { class: "bar" }, el("i", { style: "width:" + Math.max(p, 2) + "%;background:var(--c-capodanno)" })), el("b", { class: "mono", text: p + "%" }))));
+
+  /* demo: gli scenari */
+  function scenTiles(g) {
+    const ds = document.getElementById("demo-scen"); ds.textContent = "";
+    Object.keys(C.SCEN).forEach((k) => ds.appendChild(el("a", { class: "tile", href: "scenari.html#" + k },
+      el("span", { style: "font-size:28px", text: C.SCEN[k].emoji }), el("b", { text: C.SCEN[k].nome }), el("span", { text: "da " + eur(C.SCEN[k].costo) + (g && g.voted && g.pick === k ? " · votato ✓" : "") }))));
+  }
+  scenTiles(null);
+
+  /* le altre pagine */
   const TILES = [
-    ["esplora.html", "esplora", "Esplora", "Per non passare 11 giorni in riad", "var(--c-moto)"],
-    ["sifa.html", "sifa", "Si fa", "Per non discutere tre ore al bar", "var(--c-montagna)"],
-    ["notte.html", "notte", "La notte", "Dove forse c'è la sorca", "var(--c-capodanno)"],
-    ["budget.html", "budget", "Budget", "Per una volta siamo seri", "var(--c-citta)"],
-    ["organizza.html", "organizza", "Organizza", "Per non restare a terra", "var(--c-deserto)"],
-    ["ruota.html", "ruota", "La ruota", "Per non litigare su chi paga il tè", "var(--c-oceano)"],
-    ["tribunale.html", "crew", "Tribunale", "Chi è il più tossico", "var(--c-cibo)"],
-    ["giro.html", "giro", "Il giro", "Per non perdervi", "var(--c-sfide)"],
-    ["kit.html", "kit", "Kit", "Per non fare figure de merda", "var(--c-montagna)"],
-    ["muro.html", "muro", "Il muro", "Per non dimenticarle, le figure de merda", "var(--c-moto)"]
+    ["organizza.html", "organizza", "Organizza", "Per non restare a terra"],
+    ["kit.html", "kit", "Kit", "Per non fare figure de merda"],
+    ["ruota.html", "ruota", "La ruota", "Per non litigare su chi paga il tè"],
+    ["tribunale.html", "crew", "Tribunale", "Chi è il più tossico"],
+    ["sifa.html", "sifa", "Si fa", "Quello che avete deciso"],
+    ["muro.html", "muro", "Il muro", "Le figure de merda, per sempre"]
   ];
   const tiles = document.getElementById("tiles");
-  TILES.forEach(([href, ic, t, sub, col]) => tiles.appendChild(el("a", { class: "tile", href, style: "--cat:" + col }, icon(ic), el("b", { text: t }), el("span", { text: sub }))));
+  TILES.forEach(([href, ic, t, sub]) => tiles.appendChild(el("a", { class: "tile", href }, icon(ic), el("b", { text: t }), el("span", { text: sub }))));
 
   let lastD = { persone: [], reazioni: [], todo: [], valigia: [] };
   function renderRoast(d) {
     const f = document.getElementById("feed"); f.textContent = "";
-    R.feed(d, 4).forEach((t) => f.appendChild(el("li", { text: t })));
+    R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t })));
     const pg = document.getElementById("pagella"); pg.textContent = "";
-    const T = R.titles(d);
-    if (!T.length) pg.appendChild(el("div", { class: "pagella" }, el("span", { class: "tit", text: "Tutti uguali" }), el("p", { text: "Per ora siete tutti ugualmente inutili." })));
-    T.slice(0, 6).forEach((t) => pg.appendChild(el("article", { class: "pagella" },
-      el("div", { style: "display:flex;gap:10px;align-items:center" }, M.avatar(t.n), el("b", { style: "font-size:17px", text: t.n })),
-      el("span", { class: "tit", text: t.t }), el("p", { class: "muted", style: "font-size:14px", text: t.f }))));
+    R.titles(d).slice(0, 3).forEach((t) => pg.appendChild(el("article", { class: "pagella" },
+      el("div", { style: "display:flex;gap:10px;align-items:center" }, M.avatar(t.n), el("span", { class: "tit", text: t.t })),
+      el("p", { class: "muted", style: "font-size:15px", text: t.f }))));
   }
   document.getElementById("feed-more").addEventListener("click", () => {
     const f = document.getElementById("feed");
-    f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:700" }), f.firstChild);
-    while (f.children.length > 5) f.removeChild(f.lastChild);
+    f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:600" }), f.firstChild);
+    while (f.children.length > 4) f.removeChild(f.lastChild);
   });
 
   function renderCalls(calls) {
-    const n = 600000 + calls.length;
-    document.getElementById("call-n").textContent = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    document.getElementById("call-n").textContent = String(600000 + calls.length).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     const last = calls.slice().sort((a, b) => String(b.aggiornato || "").localeCompare(String(a.aggiornato || "")))[0];
     document.getElementById("call-last").textContent = last ? "L'ultima l'ha segnata " + last.nome + ", " + M.ago(last.aggiornato) + "." : "";
   }
@@ -158,17 +193,22 @@
     } catch (e) { M.err(e); }
   });
 
+  function money(d) {
+    const g = C.scenGruppo(d.sondaggi), reaz = (d.reazioni || []).filter((r) => !String(r.attivita).includes(":"));
+    const s = C.spesa(reaz, g.pick), max = Math.max(s.max, 1), w = (id, n) => (document.getElementById(id).style.width = (n / max) * 100 + "%");
+    document.getElementById("h-soldi").innerHTML = eur(s.tot) + " a testa.<br>Per ora.";
+    w("mm-s", s.sicuri); w("mm-sc", s.scen); w("mm-d", s.decise); w("mm-b", s.ballo);
+    document.getElementById("mm-note").textContent = eur(s.sicuri) + " sicure + " + eur(s.scen) + " di scenario " + g.pick + (g.voted ? "" : " (nessuno l'ha ancora votato)") + (s.decise ? " + " + eur(s.decise) + " di esperienze" : "") + (s.ballo ? " · in ballo altri " + eur(s.ballo) : "") + ".";
+    scenTiles(g);
+  }
+
   async function load() {
     const d = await db.many(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"]);
     lastD = d;
     renderCalls(d.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")));
-    renderRoast(d);
-    const s = C.spesa(d.reazioni), max = Math.max(s.max, 1);
-    document.getElementById("mm-tot").textContent = M.eur(s.tot);
-    document.getElementById("mm-s").style.width = (s.sicuri / max) * 100 + "%"; document.getElementById("mm-d").style.width = (s.decise / max) * 100 + "%"; document.getElementById("mm-b").style.width = (s.ballo / max) * 100 + "%";
-    document.getElementById("mm-note").textContent = M.eur(s.sicuri) + " sicure" + (s.decise ? " + " + M.eur(s.decise) + " di esperienze decise" : "") + (s.ballo ? " · in ballo altri " + M.eur(s.ballo) : "") + ".";
+    renderRoast(d); money(d);
   }
-  renderRoast(lastD);
+  renderRoast(lastD); money({ sondaggi: [], reazioni: [] });
   load();
   db.subscribe(["persone", "todo", "spese", "reazioni", "muro", "sondaggi", "valigia"], load);
 })();

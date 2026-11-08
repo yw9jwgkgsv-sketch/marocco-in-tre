@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Scenari · Marocco in tre</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Scenari</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Come ci <em>muoviamo</em></h1>
+    <span class="sticker">Quattro modi di fare lo stesso viaggio. Uno solo vi lascia amici.</span>
+    <p class="lead">Tocca uno scenario: il giro, dove dormite, quanto si guida e quanto costa. Poi votate.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
+  <div id="roast" class="roastbar" hidden aria-live="polite"></div>
+
+  <section class="sec" aria-labelledby="h-meter">
+    <div class="sec-head"><h2 id="h-meter">Chi vuole cosa</h2><p id="meter-sub">Vince lo scenario più votato.</p></div>
+    <div class="meter" id="meter"></div>
+  </section>
+
+  <div class="hscroll" role="tablist" aria-label="Scenari" id="tabs"></div>
+  <div id="detail" style="display:grid;gap:44px" aria-live="polite"></div>
+
+  <a class="nextlink" href="budget.html">I soldi nel dettaglio ›</a>
+  <footer class="foot">Prezzi a testa, stime all'8 novembre 2026. Voli di andata e ritorno già pagati, non sono nel conto. Ore di guida da controllare su Maps.</footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db, eur } = M;
+  M.start("scenari");
+  const K = Object.keys(C.SCEN);
+  const ATT = {}; C.ATT.forEach((a) => (ATT[a.id] = a));
+  let sond = [], reaz = [], sel = null;
+
+  function votes() { const v = {}; K.forEach((k) => (v[k] = [])); sond.forEach((r) => { if (r.domanda === "scenario" && v[r.scelta]) v[r.scelta].push(r.nome); }); return v; }
+
+  function meter() {
+    const v = votes(), box = document.getElementById("meter"); box.textContent = "";
+    K.forEach((k) => box.appendChild(el("div", { class: "meter-row" },
+      el("span", { text: C.SCEN[k].emoji + " " + C.SCEN[k].nome }),
+      el("div", { class: "bar" }, el("i", { style: "width:" + Math.max((v[k].length / 3) * 100, 2) + "%" })),
+      el("span", { class: "avs" }, v[k].map((n) => M.avatar(n))))));
+    const voted = new Set(sond.filter((r) => r.domanda === "scenario").map((r) => r.nome));
+    const miss = C.CREW.filter((n) => !voted.has(n));
+    const g = C.scenGruppo(sond);
+    document.getElementById("meter-sub").textContent = !g.voted ? "Nessuno ha votato. Tre adulti che non sanno scegliere come muoversi. Minchia."
+      : miss.length ? "Per ora vince " + C.SCEN[g.pick].nome + ". Manca il voto di " + miss.join(" e ") + ". " + R.TOX[miss[0].length % R.TOX.length]
+      : "Avete votato tutti. Vince " + C.SCEN[g.pick].nome + ". Ora non si torna indietro.";
+  }
+
+  function tabs() {
+    const tb = document.getElementById("tabs"); tb.textContent = "";
+    const g = C.scenGruppo(sond);
+    K.forEach((k) => tb.appendChild(el("button", { type: "button", class: "chip", role: "tab", "aria-pressed": String(sel === k), onclick: () => { sel = k; chosen = true; history.replaceState(null, "", "#" + k); render(); window.scrollTo({ top: document.getElementById("tabs").offsetTop - 12, behavior: "smooth" }); } },
+      C.SCEN[k].emoji + " " + k + " · " + C.SCEN[k].nome + (g.voted && g.pick === k ? " ✓" : ""))));
+  }
+
+  async function vote(k) {
+    const me = M.me(); if (!me) return M.askWho();
+    const mine = sond.find((r) => r.nome === me && r.domanda === "scenario");
+    try {
+      if (mine && mine.scelta === k) { await db.remove("sondaggi", { nome: me, domanda: "scenario" }); M.toast("Voto tolto. Indeciso come sempre."); }
+      else { await db.upsert("sondaggi", { nome: me, domanda: "scenario", scelta: k }, "nome,domanda"); M.toast({ A: "Dacia. Chi guida il 2 gennaio? Non guardate me.", B: "Moto. Avvisiamo le mamme.", C: "Treno e tour. Comodo, pensionato.", D: "Zaino. Come in Erasmus, ma con la schiena di adesso." }[k]); }
+      await load();
+    } catch (e) { M.err(e); }
+  }
+
+  function detail() {
+    const S = C.SCEN[sel], box = document.getElementById("detail"); box.textContent = "";
+    const sp = C.spesa(reaz, sel), me = M.me();
+    const mine = sond.find((r) => r.nome === me && r.domanda === "scenario");
+    const v = votes()[sel];
+    const tot = sp.tot, scale = Math.max(sp.max, 1);
+
+    box.appendChild(el("section", { class: "shero" },
+      el("span", { class: "eyebrow", text: "Scenario " + sel + " · " + S.emoji }),
+      el("h1", { text: S.nome }),
+      el("p", { class: "lead", style: "max-width:none", text: S.motto }),
+      el("div", { class: "money", style: "display:grid;margin-top:8px" },
+        el("span", { class: "lab", text: "A testa, con le esperienze già decise" }),
+        el("b", { class: "money-n", text: eur(tot) }),
+        el("div", { class: "mbar", "aria-hidden": "true" },
+          el("i", { class: "m-s", style: "width:" + (sp.sicuri / scale) * 100 + "%" }),
+          el("i", { class: "m-sc", style: "width:" + (sp.scen / scale) * 100 + "%" }),
+          el("i", { class: "m-d", style: "width:" + (sp.decise / scale) * 100 + "%" }),
+          el("i", { class: "m-b", style: "width:" + (sp.ballo / scale) * 100 + "%" })),
+        el("div", { class: "mleg" },
+          el("span", null, el("i", { style: "background:var(--ink)" }), "Sicure ", el("b", { text: eur(sp.sicuri) })),
+          el("span", null, el("i", { style: "background:var(--accent)" }), "Scenario ", el("b", { text: eur(sp.scen) })),
+          el("span", null, el("i", { style: "background:var(--green)" }), "Esperienze ", el("b", { text: eur(sp.decise) })),
+          sp.ballo ? el("span", null, el("i", { style: "background:var(--muted)" }), "In ballo ", el("b", { text: "+" + eur(sp.ballo) })) : null)),
+      el("p", { class: "joke", text: S.joke }),
+      el("div", { class: "vote-scen" },
+        el("button", { class: "btn", type: "button", onclick: () => vote(sel) }, mine && mine.scelta === sel ? "Hai votato questo ✓" : "Voto questo"),
+        v.length ? el("span", { class: "muted", style: "display:inline-flex;gap:8px;align-items:center" }, el("span", { class: "avs" }, v.map((n) => M.avatar(n))), v.length === 3 ? "tutti e tre" : v.join(" e ")) : el("span", { class: "muted", text: "Nessuno l'ha ancora votato." }))));
+
+    box.appendChild(el("section", { class: "sec" },
+      el("div", { class: "sec-head" }, el("h2", { text: "In breve" })),
+      el("div", { class: "facts" },
+        [["Come vi muovete", S.muovete], ["Dove dormite", S.dormite], ["Quanto si guida", S.guida], ["Per chi è", S.perchi], ["Il prezzo da pagare", S.prezzo]].map(([a, b]) => el("div", null, el("b", { text: a }), el("span", { text: b }))))));
+
+    box.appendChild(el("section", { class: "sec" },
+      el("div", { class: "sec-head" }, el("h2", { text: "Cosa pagate" }), el("p", { text: "A testa. Le spese sicure ci sono in ogni scenario." })),
+      el("ul", { class: "list mlist" },
+        S.costi.map(([t, e, n]) => el("li", null, el("div", null, el("b", { text: t }), n ? el("p", { class: "muted", style: "font-size:14px", text: n }) : null), el("b", { class: "mono", text: eur(e) }))),
+        el("li", null, el("div", null, el("b", { text: "Spese sicure" }), el("p", { class: "muted", style: "font-size:14px", text: "Mangiare, varie e assicurazione." })), el("b", { class: "mono", text: eur(C.SICURI) })),
+        el("li", null, el("b", { text: "Totale senza esperienze" }), el("b", { class: "mono", text: eur(C.SICURI + S.logistica) }))),
+      S.include.length ? el("p", { class: "muted", style: "font-size:15px", text: "Già dentro il prezzo: " + S.include.filter((id) => ATT[id]).map((id) => ATT[id].t).join(", ") + "." }) : null));
+
+    const tl = el("div", { class: "timeline" });
+    C.DAYS.forEach((d) => {
+      const x = C.dayFor(d, sel), p = d.lab.split(" ");
+      const ore = x.ore ? "guida " + (x.ore < 1 ? Math.round(x.ore * 60) + " min" : String(x.ore).replace(".", ",") + " ore") : "niente volante";
+      tl.appendChild(el("div", { class: "tl" },
+        el("div", { class: "d" }, p[1] + " " + p[2], el("span", { text: p[0] })),
+        el("div", { style: "display:grid;gap:4px" },
+          el("b", { text: x.t }),
+          el("p", { text: "Dormite: " + x.dorme + " · " + ore }),
+          x.att && x.att.length ? el("div", { class: "chips", style: "margin-top:4px" }, x.att.filter((id) => ATT[id]).slice(0, 4).map((id) => el("a", { class: "mini", href: "esplora.html#" + id, style: "--cat:" + C.CATS[ATT[id].cat].colore }, ATT[id].t))) : null,
+          el("p", { class: "joke", style: "font-size:15px", text: "Rischio del giorno: " + x.rischio.charAt(0).toLowerCase() + x.rischio.slice(1) }))));
+    });
+    box.appendChild(el("section", { class: "sec" },
+      el("div", { class: "sec-head" }, el("h2", { text: "Giorno per giorno" }), el("a", { href: "mappa.html?giro=" + sel, class: "more", text: "Vedi il giro sulla mappa ›" })),
+      tl));
+  }
+
+  function render() { meter(); tabs(); detail(); }
+  async function load() {
+    const d = await db.many(["sondaggi", "reazioni", "persone"]);
+    sond = d.sondaggi; reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":"));
+    if (!chosen) { sel = C.scenGruppo(sond).pick; chosen = true; }
+    render(); R.bar("scenari", d, M.me());
+  }
+  const h = location.hash.slice(1).toUpperCase(); let chosen = !!C.SCEN[h];
+  sel = chosen ? h : "A"; render();
+  load(); db.subscribe(["sondaggi", "reazioni"], load);
+  M.onMe(render);
+})();
+</script>
+</body>
+</html>
