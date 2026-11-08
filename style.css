@@ -406,3 +406,71 @@ details summary{cursor:pointer;color:var(--accent);font-weight:600}
 .hjudge{display:grid;gap:12px;justify-items:start}
 .hjudge h2{font-size:28px}
 .hmore{font-size:16px;color:var(--muted)}
+
+/* ====================================================================
+   Tema blu Majorelle per tutto il sito (versione 15): sfondo blu col disegno
+   marocchino, testo bianco, contenuti su schede bianche. Niente bianco di sfondo, niente nero.
+   ==================================================================== */
+:root{
+  --blue:#2438C6;
+  --bg:#2438C6; --bg2:rgba(255,255,255,.14); --surface:#fff; --surface-2:#f2f2f7;
+  --ink:#ffffff; --muted:rgba(255,255,255,.82); --line:rgba(255,255,255,.24);
+  --accent:#ffffff; --accent-ink:#2438C6; --accent-soft:rgba(255,255,255,.16);
+  --green:#7CF0B0; --red:#FFB0BB; --amber:#FFD27A; --green-soft:rgba(124,240,176,.18); --red-soft:rgba(255,176,187,.18); --amber-soft:rgba(255,210,122,.18);
+}
+body{background-color:#2438C6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1.5'%3E%3Cpath d='M32 6l7.5 18.5L58 32l-18.5 7.5L32 58l-7.5-18.5L6 32l18.5-7.5z'/%3E%3Crect x='20' y='20' width='24' height='24' transform='rotate(45 32 32)'/%3E%3Ccircle cx='32' cy='32' r='5'/%3E%3C/g%3E%3C/svg%3E");background-attachment:fixed}
+.pagehead{background:transparent}
+/* le schede: bianche, testo scuro */
+.card,.banner,.kpi,.roastbar,.feed-card,.list,.tbl-wrap,.overlay .card,.tile,.pagella,.post,.task,.sf-row,.money,.how,.scard,.facts,.hlist,.hcall,.nextlink,.bottomnav,.ntf,.toast,.pmap-me{
+  --bg:#fff; --bg2:#f2f2f7; --ink:#1d1d1f; --muted:#6e6e73; --line:#e5e5ea;
+  --accent:#2438C6; --accent-ink:#fff; --accent-soft:#e9ecfb;
+  --green:#1d8a3a; --red:#d70015; --amber:#b25000; --green-soft:#e7f5ea; --red-soft:#fdeaec; --amber-soft:#fff4e5;
+  color:var(--ink)}
+.card,.banner,.kpi,.roastbar,.feed-card,.list,.tbl-wrap,.overlay .card,.tile,.pagella,.post,.task,.money,.how,.scard,.facts,.hlist,.hcall,.nextlink{background:#fff!important;box-shadow:0 6px 24px rgba(10,20,90,.18)}
+.sf-row{background:#fff}.sf-row.ok{background:#e7f5ea}
+.banner{background:#fff4e5!important}
+.toast{background:#fff;color:#2438C6}
+.bottomnav{background:rgba(255,255,255,.92);border-top:0}
+.pagehead h1 em{color:rgba(255,255,255,.7)}
+.chip{background:rgba(255,255,255,.16);color:#fff}
+.chip:has(input:checked),.chip[aria-pressed="true"]{background:#fff;color:#2438C6}
+.card .chip,.list .chip,.money .chip{background:#f2f2f7;color:#1d1d1f}
+.tabs{background:rgba(255,255,255,.16)}
+.tabs button{color:#fff}
+.tabs button[aria-selected="true"]{background:#fff;color:#2438C6}
+.vote3 button{background:rgba(255,255,255,.18)}
+.vote3 button[aria-pressed="true"]{background:#fff}
+.btn{background:#fff;color:#2438C6}
+.card .btn,.how .btn,.money .btn,.hcall .btn,.overlay .btn,.roastbar .btn,.feed-card .btn{background:#2438C6;color:#fff}
+.btn.ghost,.btn.danger{background:transparent!important;color:var(--accent)}
+.av{border-color:transparent}
+.mini{background:rgba(255,255,255,.16);color:#fff!important}
+.lsec.dark{background:rgba(255,255,255,.1)}
+#pmap{box-shadow:0 6px 24px rgba(10,20,90,.25)}
+.how li::before{background:#2438C6;color:#fff}
+
+/* ---------- notifiche, come quelle del telefono ---------- */
+.ntf{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:58;width:min(420px,calc(100% - 20px));transform:translate(-50%,-150%);
+  display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;padding:12px 14px;border-radius:22px;
+  background:rgba(255,255,255,.94);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  box-shadow:0 10px 40px rgba(0,0,0,.28);cursor:pointer;text-decoration:none!important;transition:transform .5s cubic-bezier(.2,.9,.25,1.12),opacity .3s}
+.ntf.in{transform:translate(-50%,0)}
+.ntf.out{transform:translate(-50%,-150%);opacity:0}
+.ntf .ic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:22px;background:#2438C6;color:#fff;font-weight:700}
+.ntf .ic.av{border-radius:50%;width:40px;height:40px;font-size:16px}
+.ntf .hd{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:#6e6e73}
+.ntf b{display:block;font-size:16px;color:#1d1d1f;letter-spacing:-.01em}
+.ntf p{font-size:16px;line-height:1.3;color:#1d1d1f}
+.nstack{display:grid;gap:10px}
+.nstack .ntf{position:static;transform:none;width:100%;box-shadow:0 6px 24px rgba(10,20,90,.25)}
+.nhead{display:flex;justify-content:space-between;align-items:baseline}
+.nhead h2{font-size:26px}
+.nhead button{border:0;background:rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:6px 12px;font-weight:600;font-size:14px;cursor:pointer}
+/* Home a schermata di blocco */
+.lock{display:grid;justify-items:center;text-align:center;gap:4px;padding-top:18px}
+.lock .date{font-size:19px;font-weight:600;color:rgba(255,255,255,.9)}
+.lock .big{font-size:clamp(96px,30vw,150px);font-weight:700;letter-spacing:-.05em;line-height:.9;font-variant-numeric:tabular-nums}
+.lock .lab{font-size:17px;color:rgba(255,255,255,.85)}
+.dquote{display:grid;gap:8px;text-align:center;justify-items:center;padding:8px 6px}
+.dquote b{font-size:clamp(30px,8.5vw,46px);letter-spacing:-.03em;line-height:1.08}
+.dquote span{font-size:16px;color:rgba(255,255,255,.85)}

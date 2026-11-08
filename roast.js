@@ -229,6 +229,31 @@ window.R = (function () {
   };
   function react(kind) { return rnd(REACT[kind] || ["Fatto."]); }
 
+  /* -------- le notifiche: la prima è sempre quella di Davide -------- */
+  function notifs(d, page, me) {
+    d = d || {};
+    const giorni = Math.max(0, Math.ceil((new Date(2026, 11, 28, 23, 30) - new Date()) / 86400000));
+    const L = [
+      { chi: "Davide", app: "Gruppo «Marocco in tre»", t: "Davide", x: "Ragazzi quando prendiamo i voli?", href: "organizza.html" },
+      { chi: "Davide", app: "Gruppo «Marocco in tre»", t: "Davide", x: "Ragazzi quando prendiamo i voli? 🙏", href: "organizza.html" },
+      { ic: "📞", col: "#30b94d", app: "Telefono", t: "Chiamata persa", x: "Davide (3)", quando: "2 min fa", href: "index.html" },
+      { chi: "Davide", app: "Gruppo «Marocco in tre»", t: "Davide", x: "Ok i voli li abbiamo presi. Ragazzi quando prenotiamo il riad?", href: "organizza.html" },
+      { chi: "Davide", app: "Gruppo «Marocco in tre»", t: "Davide", x: "Stasera vi chiamo per il transfer da Fes. Solo 5 minuti.", href: "organizza.html" },
+      { ic: "🐪", app: "Gruppo «Marocco in tre»", t: "Marocco in tre", x: "Davide ha cambiato il nome del gruppo in «Ragazzi quando prendiamo i voli»", href: "index.html" },
+      { chi: "Augusto", app: "Gruppo «Marocco in tre»", t: "Augusto", x: "Tranquilo, suave. Domani voto tutto.", href: "esplora.html" },
+      { chi: "Alessandro", app: "Gruppo «Marocco in tre»", t: "Alessandro", x: "Ho fatto un sito intero. Votate, tossici.", href: "esplora.html" },
+      { ic: "🥶", col: "#0F6FB8", app: "Meteo", t: "Merzouga, stanotte", x: "-2°. Il piumino l'hai preso? No. Lo sapevo.", href: "kit.html" },
+      { ic: "💃", col: "#d70015", app: "Mappa", t: "Sorca nelle vicinanze", x: "Nessun risultato nel raggio di 2.000 km. Mancano " + giorni + " giorni.", href: "mappa.html" },
+      { ic: "🌿", col: "#1d8a3a", app: "Mappa", t: "Ketama", x: "Hai cercato Ketama. Il giro va a sud, tossico.", href: "mappa.html#ketama" },
+      { ic: "💸", col: "#B35A00", app: "Banca", t: "Il saluzzese", x: "Ha controllato il conto del viaggio per la terza volta oggi. Esageruma nen.", href: "budget.html" },
+      { ic: "🔥", col: "#D6345A", app: "Esplora", t: "Votazione aperta", x: "Capodanno nel deserto aspetta il tuo voto. Il deserto no, quello aspetta da sempre.", href: "esplora.html#cap-agafay" },
+      { ic: "⚖️", col: "#6E2BC2", app: "Tribunale", t: "Avv. Davide", x: "Ha fatto ricorso contro il titolo di Tossico Supremo. Respinto.", href: "tribunale.html" }
+    ];
+    titles(d).slice(0, 3).forEach((x) => L.push({ chi: x.n, app: "Pagella", t: x.n + " è " + x.t, x: x.f, href: "index.html" }));
+    feed(d, 3).forEach((x) => L.push({ ic: "🐪", app: "Il sito", t: "Guarda questo tossico", x, href: "index.html" }));
+    return L;
+  }
+
   /* -------- il tasto «non ho capito un cazzo» -------- */
   const SPIEGA = {
     home: "Scorri: ogni blocco spiega una parte del sito, con un link per entrarci. In basso c'è la barra con le pagine principali.",
@@ -278,5 +303,5 @@ window.R = (function () {
     box.append(lab, txt, more);
   }
 
-  return { titles, feed, random, line, react, bar, mountHelp, fill, stats, CREW, TOX };
+  return { notifs, titles, feed, random, line, react, bar, mountHelp, fill, stats, CREW, TOX };
 })();

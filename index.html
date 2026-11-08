@@ -7,7 +7,7 @@
 <meta name="description" content="Fes, Capodanno a Marrakech, deserto e surf. Tre amici, undici giorni.">
 <meta property="og:title" content="Marocco in tre · 29/12 → 8/1">
 <meta property="og:description" content="Tre tossici, undici giorni, un sito che vi prende per il culo.">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#2438C6">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -19,15 +19,25 @@
 <main class="wrap" style="gap:28px;padding-top:0">
   <div class="topline" style="padding-top:calc(env(safe-area-inset-top,0px) + 14px)"><span class="eyebrow">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
 
-  <section class="hhero">
-    <h1>Ahó, tossici.</h1>
-    <p class="lead">Il sito per organizzare il Marocco. E per prendervi per il culo.</p>
-    <p class="hcount"><b id="cd-d">—</b> giorni alla partenza</p>
+  <section class="lock">
+    <span class="date" id="oggi">—</span>
+    <b class="big" id="cd-d">—</b>
+    <span class="lab">giorni alla partenza per il Marocco</span>
+  </section>
+
+  <section class="dquote">
+    <b>«Ragazzi, quando prendiamo i voli?»</b>
+    <span>Davide, tutti i giorni, finché non li abbiamo presi</span>
   </section>
 
   <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Su Supabase apri SQL Editor, incolla il file schema_v2.sql del repository e premi Run.</div>
 
-  <section class="hquote" id="quote" aria-label="Citazione del giorno"></section>
+  <section class="sec" style="gap:10px">
+    <div class="nhead"><h2>Notifiche</h2><button type="button" id="clear">Cancella tutto</button></div>
+    <div class="nstack" id="nstack"></div>
+  </section>
+
+  <section class="hquote" id="quote" aria-label="Frase del giorno"></section>
 
   <nav class="hlist" aria-label="Cosa c'è nel sito" id="list"></nav>
 
@@ -49,7 +59,7 @@
   <p class="hmore">Anche: <a href="ruota.html">la ruota</a> · <a href="tribunale.html">il tribunale</a> · <a href="muro.html">il muro</a> · <a href="sifa.html">cosa si fa</a> · <a href="organizza.html">organizza</a></p>
 
   <button type="button" id="replay" class="btn ghost small" style="justify-self:start">Rivedi l'intro</button>
-  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 14 · 8 nov 2026</footer>
+  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 15 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -68,7 +78,8 @@
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
 
   const dep = new Date(2026, 11, 28, 23, 30, 0);
-  function tick() { document.getElementById("cd-d").textContent = Math.max(0, Math.ceil((dep - new Date()) / 86400000)); }
+  const GG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"], MM = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+  function tick() { const n = new Date(); document.getElementById("oggi").textContent = GG[n.getDay()] + " " + n.getDate() + " " + MM[n.getMonth()]; document.getElementById("cd-d").textContent = Math.max(0, Math.ceil((dep - n) / 86400000)); }
   tick(); setInterval(tick, 60000);
 
   /* la citazione del giorno */
@@ -88,7 +99,17 @@
   LIST.forEach(([href, ic, t, sub]) => list.appendChild(el("a", { href }, icon(ic), el("span", null, el("b", { text: t }), el("span", { text: sub })), el("i", { text: "›" }))));
 
   let lastD = { persone: [], reazioni: [], todo: [], valigia: [] };
-  function renderRoast(d) { const f = document.getElementById("feed"); f.textContent = ""; R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t }))); }
+  /* le notifiche in Home: le ultime quattro, si toccano per andare alla pagina */
+  const WHEN = ["ora", "3 min fa", "12 min fa", "1 ora fa"];
+  function renderStack(d) {
+    const st = document.getElementById("nstack"); st.textContent = "";
+    const p = R.notifs(d, "home", M.me()), seed = Math.floor(Date.now() / 3600000);
+    const pick = [p[0]].concat(p.slice(1).map((n, i) => [((i + 1) * 7919 + seed * 104729) % 1000, n]).sort((a, b) => a[0] - b[0]).slice(0, 3).map((x) => x[1]));
+    pick.forEach((n, i) => st.appendChild(M.ntfNode(Object.assign({}, n, { quando: WHEN[i] }))));
+  }
+  document.getElementById("clear").addEventListener("click", () => M.toast("Non si cancellano. Come le chiamate di Davide."));
+  function renderRoast(d) {
+    renderStack(d); const f = document.getElementById("feed"); f.textContent = ""; R.feed(d, 3).forEach((t) => f.appendChild(el("li", { text: t }))); }
   document.getElementById("feed-more").addEventListener("click", () => {
     const f = document.getElementById("feed");
     f.insertBefore(el("li", { text: R.random(lastD), style: "font-weight:600" }), f.firstChild);

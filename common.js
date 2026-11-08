@@ -123,7 +123,7 @@ window.M = (function () {
     return e;
   }
   const COLORS = ["#2438C6", "#0F8A68", "#E04C66", "#8B3FD9", "#E08A00", "#1683D1", "#C2471B"];
-  const FIXED = { Alessandro: "#2438C6", Augusto: "#0F8A68", Davide: "#E04C66" };
+  const FIXED = { Alessandro: "#FF7A45", Augusto: "#0F8A68", Davide: "#E04C66" };
   function colorFor(name) { if (FIXED[name]) return FIXED[name]; let h = 7; for (const c of String(name)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return COLORS[h % COLORS.length]; }
   function initials(name) {
     const n = String(name || "?").trim(); const f = (n[0] || "?").toUpperCase();
@@ -272,6 +272,45 @@ window.M = (function () {
     const main = document.querySelector("main"); if (main) mo.observe(main, { childList: true, subtree: true });
   }
 
+  /* ---------------- notifiche finte, come quelle del telefono ---------------- */
+  /* n = { ic: emoji, chi: nome per l'avatar, app, t: titolo, x: testo, href } */
+  function ntfNode(n, live) {
+    const ic = n.chi ? avatar(n.chi, "ic") : el("span", { class: "ic", style: n.col ? "background:" + n.col : null, text: n.ic || "🐪" });
+    return el(n.href ? "a" : "div", { class: "ntf", href: n.href || null, role: live ? "status" : null },
+      ic, el("div", null, el("div", { class: "hd" }, el("span", { text: n.app || "Marocco in tre" }), el("span", { text: n.quando || "ora" })), el("b", { text: n.t }), el("p", { text: n.x })));
+  }
+  let ntfT = null;
+  function notify(n) {
+    if (document.getElementById("intro") || document.querySelector(".overlay")) return false;
+    const old = document.getElementById("ntf-live"); if (old) old.remove();
+    const node = ntfNode(n, true); node.id = "ntf-live";
+    let y0 = null;
+    node.addEventListener("touchstart", (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+    node.addEventListener("touchmove", (e) => { if (y0 !== null && e.touches[0].clientY - y0 < -25) hide(); }, { passive: true });
+    function hide() { node.classList.add("out"); setTimeout(() => node.remove(), 400); }
+    document.body.appendChild(node);
+    requestAnimationFrame(() => requestAnimationFrame(() => node.classList.add("in")));
+    clearTimeout(ntfT); ntfT = setTimeout(hide, 6500);
+    return true;
+  }
+  /* ogni tanto ne arriva una: la prima dopo pochi secondi, poi ogni 40-70 secondi, al massimo 5 per pagina */
+  function ntfLoop(page) {
+    if (!window.R || !R.notifs) return;
+    let data = null, shown = 0;
+    const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
+    async function next() {
+      if (shown >= 5) return;
+      if (document.hidden || window.INTRO_ACTIVE) return setTimeout(next, 4000);
+      if (!data) { try { data = await db.many(["persone", "reazioni", "todo", "valigia", "sondaggi", "spese", "muro"]); } catch (e) { data = {}; } }
+      const pool = R.notifs(data, page, me);
+      let k = Number(ss.get("marocco_ntf_i") || 0);
+      const n = k === 0 ? pool[0] : pool[1 + ((k - 1) % (pool.length - 1))];
+      if (notify(n)) { ss.set("marocco_ntf_i", String(k + 1)); shown++; }
+      setTimeout(next, 40000 + Math.random() * 30000);
+    }
+    setTimeout(next, 4500);
+  }
+
   /* ---------------- testata comune ---------------- */
   function start(active) {
     nav(active);
@@ -281,11 +320,12 @@ window.M = (function () {
     if (!me && !window.INTRO_ACTIVE) setTimeout(askWho, 300);
     if (window.R) R.mountHelp(active || "home");
     setTimeout(reveal, 30);
+    ntfLoop(active || "home");
     // «ultimo avvistamento»: se la colonna manca si ignora in silenzio, senza avviso
     if (me && LIVE) sb.from("persone").update({ visto: new Date().toISOString() }).eq("nome", me).then(() => {}, () => {});
   }
   function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
 
-  return { db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
+  return { notify, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
     me: () => me, setMe, onMe: (f) => meListeners.push(f), askWho, store, isMissing };
 })();
