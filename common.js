@@ -20,7 +20,7 @@ window.M = (function () {
   function demoRead() {
     const raw = store.get(DEMO_KEY);
     if (raw) { try { return JSON.parse(raw); } catch (e) {} }
-    return { persone: [], spese: [], reazioni: [], sondaggi: [], valigia: [], muro: [],
+    return { persone: [], spese: [], reazioni: [], sondaggi: [], valigia: [], muro: [], proposte: [], documenti: [], files: {},
       todo: (window.C ? C.SEED_TODO : []).map(([titolo, entro], i) => ({ id: "t" + (i + 1), titolo, entro, ordine: i + 1, fatto: false, chi: null })) };
   }
   let demo = LIVE ? null : demoRead();
@@ -86,6 +86,24 @@ window.M = (function () {
       Object.keys(match).forEach((k) => (q = q.eq(k, match[k])));
       return chk(await q);
     },
+    /* i file dei documenti: nello spazio «documenti» di Supabase; in prova restano sul telefono */
+    async upload(path, file) {
+      if (!LIVE) {
+        if (file.size > 1.5e6) throw new Error("In prova si caricano solo file sotto 1,5 MB.");
+        const url = await new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = ko; r.readAsDataURL(file); });
+        demo.files = demo.files || {}; demo.files[path] = url; demoSave(); return path;
+      }
+      const r = await sb.storage.from("documenti").upload(path, file, { contentType: file.type || "application/octet-stream", upsert: false });
+      if (r.error) throw r.error; return path;
+    },
+    fileUrl(path) {
+      if (!LIVE) return (demo.files || {})[path] || "#";
+      return sb.storage.from("documenti").getPublicUrl(path).data.publicUrl;
+    },
+    async removeFile(path) {
+      if (!LIVE) { if (demo.files) delete demo.files[path]; demoSave(); return; }
+      const r = await sb.storage.from("documenti").remove([path]); if (r.error) throw r.error;
+    },
     /* carica più tabelle; una tabella mancante torna [] e accende l'avviso */
     async many(tables) {
       const out = {};
@@ -131,7 +149,15 @@ window.M = (function () {
     const clash = crew.some((o) => o !== n && (o[0] || "").toUpperCase() === f);
     return clash ? f + (n[1] || "").toLowerCase() : f;
   }
-  function avatar(name, cls) { return el("span", { class: "av " + (cls || ""), style: "background:" + colorFor(name || "?"), title: name || "", text: initials(name) }); }
+  let PROF = {}; try { PROF = JSON.parse(store.get("marocco_profili") || "{}"); } catch (e) { PROF = {}; }
+  function setProfiles(rows) {
+    const p = {}; (rows || []).forEach((r) => { if (r && r.nome) p[r.nome] = { colore: r.colore || null, emoji: r.emoji || null, soprannome: r.soprannome || null, tormentone: r.tormentone || null }; });
+    PROF = p; store.set("marocco_profili", JSON.stringify(p));
+  }
+  function avatar(name, cls) {
+    const pr = PROF[name] || {};
+    return el("span", { class: "av " + (cls || "") + (pr.emoji ? " av-emo" : ""), style: "background:" + (pr.colore || colorFor(name || "?")), title: name || "", text: pr.emoji || initials(name) });
+  }
   const eur = (n) => "€" + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   const eur2 = (n) => { const neg = n < 0; const [i, d] = Math.abs(n).toFixed(2).split("."); return (neg ? "-" : "") + "€" + i.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "," + d; };
   const MESI = ["gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic"];
@@ -213,7 +239,7 @@ window.M = (function () {
     const box = document.getElementById("me-chip"); if (!box) return;
     box.textContent = "";
     if (!me) { box.appendChild(el("button", { type: "button", onclick: askWho }, "Chi sei?")); return; }
-    box.append(avatar(me), el("span", { text: me }), el("button", { type: "button", onclick: askWho }, "Cambia"));
+    box.append(el("a", { href: "profilo.html", class: "me-link", title: "Il tuo profilo" }, avatar(me), el("span", { text: me })), el("button", { type: "button", onclick: askWho }, "Cambia"));
   }
 
   /* ---------------- barra in basso ---------------- */
@@ -358,11 +384,12 @@ window.M = (function () {
     if (window.R) R.mountHelp(active || "home");
     setTimeout(reveal, 30);
     ntfLoop(active || "home");
+    db.list("persone").then((rows) => { const before = JSON.stringify(PROF); setProfiles(rows); if (JSON.stringify(PROF) !== before) renderMeChip(); }, () => {});
     // «ultimo avvistamento»: se la colonna manca si ignora in silenzio, senza avviso
     if (me && LIVE) sb.from("persone").update({ visto: new Date().toISOString() }).eq("nome", me).then(() => {}, () => {});
   }
   function roast(kind) { toast(window.R ? R.react(kind) : "Fatto."); }
 
-  return { notify, popup, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
+  return { setProfiles, profile: (n) => PROF[n] || {}, notify, popup, ntfNode, db, el, avatar, colorFor, eur, eur2, fmtDate, todayStr, daysBetween, ago, toast, roast, err, icon, nav, start, decide, GROUP,
     me: () => me, setMe, onMe: (f) => meListeners.push(f), askWho, store, isMissing };
 })();

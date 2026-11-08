@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Il tuo profilo · Marocco in tre</title>
+<meta name="theme-color" content="#2438C6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Il tuo profilo</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Fatti <em>riconoscere</em></h1>
+    <p class="lead" style="color:#fff">Scegli faccia, colore, soprannome e tormentone. Il tormentone arriva agli altri come notifica.</p>
+  </div>
+</header>
+
+<main class="wrap" style="gap:22px">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per salvare il profilo: su Supabase apri SQL Editor, incolla il file schema_v3.sql del repository e premi Run.</div>
+
+  <section class="pf-prev" aria-live="polite">
+    <div class="pf-big" id="big"></div>
+    <div class="nstack" id="prev"></div>
+  </section>
+
+  <form class="card pf-form" id="form">
+    <div class="field"><span class="lab">La tua faccia</span><div class="pf-emo" id="emo" role="group" aria-label="Emoji"></div></div>
+    <div class="field"><span class="lab">Il tuo colore</span><div class="pf-col" id="col" role="group" aria-label="Colore"></div></div>
+    <div class="field"><label for="sop">Soprannome</label><input type="text" id="sop" maxlength="24" placeholder="Il Tossico Supremo, L'Avvocato, Er Saluzzese…"></div>
+    <div class="field"><label for="tor">Il tuo tormentone</label><input type="text" id="tor" maxlength="90" placeholder="La frase che dici sempre"><div class="chips" id="sugg"></div></div>
+    <div class="field"><label for="sup">Il tuo superpotere nel viaggio</label><input type="text" id="sup" maxlength="60" placeholder="Trattare nel souk, guidare 6 ore, trovare la sorca (no)"></div>
+    <button class="btn" type="submit">Salva il profilo</button>
+  </form>
+
+  <section class="sec" aria-labelledby="h-altri">
+    <div class="sec-head"><h2 id="h-altri">Gli altri due</h2><p>Come si sono conciati.</p></div>
+    <div id="altri" style="display:grid;gap:10px"></div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("profilo");
+  const EMO = ["🐪", "🌿", "🏄", "🏍️", "😎", "🤙", "🦂", "🐐", "🍋", "🍝", "🧀", "🎆", "🌶️", "👑", "🦁", "🥷", "🧔", "⚖️", "📞", "🍷"];
+  const COL = ["#FF7A45", "#0F8A68", "#E04C66", "#8B3FD9", "#E08A00", "#0F6FB8", "#C2255C", "#1d1d6b"];
+  const SUGG = ["Ragazzi quando prendiamo i voli?", "Daje!", "Dio fa!", "Talìa!", "Bora!", "Esageruma nen.", "Amunì, picciotti.", "Tranquilo, suave."];
+  let pers = [], f = { emoji: null, colore: null };
+
+  function mine() { return pers.find((p) => p.nome === M.me()) || {}; }
+  function fillForm() {
+    const p = mine();
+    f.emoji = p.emoji || null; f.colore = p.colore || null;
+    document.getElementById("sop").value = p.soprannome || "";
+    document.getElementById("tor").value = p.tormentone || "";
+    document.getElementById("sup").value = p.superpotere || "";
+    pickers(); preview();
+  }
+  function pickers() {
+    const e = document.getElementById("emo"); e.textContent = "";
+    e.appendChild(el("button", { type: "button", "aria-pressed": String(!f.emoji), onclick: () => { f.emoji = null; pickers(); preview(); } }, "Aa"));
+    EMO.forEach((x) => e.appendChild(el("button", { type: "button", "aria-pressed": String(f.emoji === x), onclick: () => { f.emoji = x; pickers(); preview(); } }, x)));
+    const c = document.getElementById("col"); c.textContent = "";
+    COL.forEach((x) => c.appendChild(el("button", { type: "button", "aria-label": "Colore", "aria-pressed": String(f.colore === x), style: "background:" + x, onclick: () => { f.colore = x; pickers(); preview(); } })));
+    const s = document.getElementById("sugg"); s.textContent = "";
+    SUGG.forEach((x) => s.appendChild(el("button", { type: "button", class: "chip", style: "background:#f2f2f7;color:#1d1d1f;font-size:13.5px;padding:6px 11px", onclick: () => { document.getElementById("tor").value = x; preview(); } }, x)));
+  }
+  function preview() {
+    const me = M.me() || "Tu", sop = document.getElementById("sop").value.trim(), tor = document.getElementById("tor").value.trim();
+    const av = el("span", { class: "av pf-av", style: "background:" + (f.colore || M.colorFor(me)), text: f.emoji || me.slice(0, 2) });
+    document.getElementById("big").replaceChildren(av, el("div", null, el("b", { text: me }), el("span", { text: sop ? "«" + sop + "»" : "Ancora senza soprannome. Triste." })));
+    const n = M.ntfNode({ ic: f.emoji || "🐪", col: f.colore || M.colorFor(me), app: "I 4 tossici", t: me + (sop ? " «" + sop + "»" : ""), x: tor || "Scrivi un tormentone: lo riceveranno gli altri.", quando: "ora" });
+    document.getElementById("prev").replaceChildren(n);
+  }
+  ["sop", "tor"].forEach((id) => document.getElementById(id).addEventListener("input", preview));
+
+  document.getElementById("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const me = M.me(); if (!me) return M.askWho();
+    const row = Object.assign({}, mine(), { nome: me, emoji: f.emoji, colore: f.colore, soprannome: document.getElementById("sop").value.trim() || null, tormentone: document.getElementById("tor").value.trim() || null, superpotere: document.getElementById("sup").value.trim() || null, aggiornato: new Date().toISOString() });
+    try { await db.upsert("persone", row, "nome"); M.toast("Salvato. Ora gli altri ti riconoscono. Purtroppo."); await load(); } catch (er) { M.err(er); }
+  });
+
+  function altri() {
+    const box = document.getElementById("altri"); box.textContent = "";
+    C.CREW.filter((n) => n !== M.me()).forEach((n) => {
+      const p = pers.find((x) => x.nome === n) || {};
+      box.appendChild(el("article", { class: "card", style: "display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center" },
+        M.avatar(n, "pf-av-s"),
+        el("div", { style: "display:grid;gap:2px" }, el("b", { text: n + (p.soprannome ? " «" + p.soprannome + "»" : "") }),
+          el("span", { class: "muted", style: "font-size:15px", text: p.tormentone ? "«" + p.tormentone + "»" : "Non ha ancora scritto niente. Bogia nen." }),
+          p.superpotere ? el("span", { class: "muted", style: "font-size:14px", text: "Superpotere: " + p.superpotere }) : null)));
+    });
+  }
+
+  async function load() { const d = await db.many(["persone"]); pers = d.persone || []; M.setProfiles(pers); fillForm(); altri(); }
+  pickers(); preview(); load();
+  M.onMe(() => { fillForm(); altri(); });
+})();
+</script>
+</body>
+</html>

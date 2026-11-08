@@ -263,6 +263,8 @@ window.R = (function () {
       { ic: "🏄", col: "#0071e3", app: "Surf school Taghazout", t: "Prenotazione", x: "Il maestro ha visto le vostre foto. Ha chiesto un supplemento.", href: "must.html#surf" },
       { ic: "🍷", col: "#8e44ad", app: "Capodanno", t: "31 dicembre", x: fill("Ultimo sondaggio: {X} crolla prima di mezzanotte. Quota 1,20.", "cap" + giorni), href: "notte.html" }
     ];
+    /* i tormentoni che ognuno scrive nel suo profilo diventano notifiche */
+    (d.persone || []).forEach((p) => { if (p.tormentone) L.splice(2, 0, { chi: p.nome, app: "I 4 tossici", t: p.soprannome ? p.nome + " «" + p.soprannome + "»" : p.nome, x: p.tormentone, href: "profilo.html" }); });
     titles(d).slice(0, 3).forEach((x) => L.push({ chi: x.n, app: "Pagella", t: x.n + " è " + x.t, x: x.f, href: "index.html" }));
     feed(d, 3).forEach((x) => L.push({ ic: "🐪", app: "Il sito", t: "Guarda questo tossico", x, href: "index.html" }));
     return L;
@@ -286,6 +288,8 @@ window.R = (function () {
   /* -------- il tasto «non ho capito un cazzo» -------- */
   const SPIEGA = {
     viaggio: "Il Marocco è diviso in 7 zone. Tocca una zona, sulla mappa o nei riquadri. Sotto vedi le cose da fare lì: puoi filtrarle per tipo e votarle con 🔥, 🤔 o 💀.",
+    documenti: "Tocca «Carica qui» e scegli un PDF o una foto dal telefono. Poi dici che documento è (voli, dormire, auto…) e premi Carica. Lo vedono tutti e tre. Sotto c'è cosa manca ancora.",
+    profilo: "Scegli un'emoji come faccia, un colore, un soprannome e il tuo tormentone. Premi Salva: il tormentone arriva agli altri come notifica.",
     must: "Valli, surf, moto e deserto si fanno per forza. Per ognuno tocca il modo che preferisci: vince quello scelto da più persone. In fondo, gli altri must da votare.",
     home: "Scorri: ogni blocco spiega una parte del sito, con un link per entrarci. In basso c'è la barra con le pagine principali.",
     mappa: "Sopra scegli cosa vedere: sorca, surf, mangiare… Tocca un pallino per sapere cos'è e premere «Portami qui». «Dove sono io?» ti dice cosa hai vicino. Sotto la mappa puoi accendere il giro di uno scenario.",

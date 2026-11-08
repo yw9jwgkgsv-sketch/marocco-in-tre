@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Documenti · Marocco in tre</title>
+<meta name="theme-color" content="#2438C6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="pagehead">
+  <div class="wrap">
+    <div class="topline"><span class="eyebrow">Documenti</span><span class="me-chip" id="me-chip"></span></div>
+    <h1>Carica <em>qui</em></h1>
+    <p class="lead" style="color:#fff">Biglietti, prenotazioni, assicurazione: tutto in un posto, per tutti e tre. Basta «me lo rimandi?» alle 2 di notte.</p>
+  </div>
+</header>
+
+<main class="wrap" style="gap:22px">
+  <div id="upgrade" class="banner" hidden><b>Manca un aggiornamento del database</b>Per caricare i documenti: su Supabase apri SQL Editor, incolla il file schema_v3.sql del repository e premi Run.</div>
+
+  <form class="dz-card" id="form">
+    <label class="dz" id="dz">
+      <input type="file" id="file" accept="application/pdf,image/*" multiple>
+      <span class="dz-i">📎</span>
+      <b>Carica qui</b>
+      <span id="dz-t">Tocca per scegliere un PDF o una foto, anche più di uno. Massimo 10 MB a file.</span>
+    </label>
+    <div class="field" id="f-title" hidden><label for="titolo">Come lo chiamiamo</label><input type="text" id="titolo" maxlength="80" placeholder="Volo di ritorno, Riad Fes, Assicurazione…"></div>
+    <div class="field"><span class="lab">Che documento è</span><div class="chips" id="cats" role="group" aria-label="Tipo di documento"></div></div>
+    <button class="btn" type="submit" id="go" disabled>Carica</button>
+  </form>
+
+  <section class="sec" aria-labelledby="h-manca">
+    <div class="sec-head"><h2 id="h-manca">Cosa manca</h2><p id="manca-sub"></p></div>
+    <div class="dz-check" id="check"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-list">
+    <div class="sec-head"><h2 id="h-list">Caricati</h2></div>
+    <div id="list" style="display:grid;gap:18px"></div>
+  </section>
+
+  <section class="card" style="display:grid;gap:8px">
+    <b style="font-size:19px">Cosa non caricare</b>
+    <p class="muted">Il sito non ha password: chi ha il link vede i file. Sì a biglietti, prenotazioni, assicurazione e itinerari. No a passaporti, carte d'identità e carte di credito.</p>
+    <p class="muted">Occhio al codice di prenotazione dei voli: con codice e cognome chiunque può cambiare o cancellare il volo. Copritelo prima di caricare, o tenetelo solo nella mail.</p>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="common.js"></script>
+<script src="roast.js"></script>
+<script>
+(function () {
+  const { el, db } = M;
+  M.start("documenti");
+  const CATS = { voli: ["✈️", "Voli"], dormire: ["🛏️", "Dormire"], auto: ["🚗", "Auto"], assicurazione: ["🛡️", "Assicurazione"], capodanno: ["🎆", "Capodanno"], altro: ["📎", "Altro"] };
+  const SERVE = [["voli", "Volo di andata"], ["voli", "Volo di ritorno"], ["assicurazione", "Assicurazione"], ["dormire", "Riad di Fes"], ["auto", "Auto a noleggio"], ["capodanno", "Biglietti di Capodanno"]];
+  let cat = "voli", docs = [], files = [];
+
+  const cb = document.getElementById("cats");
+  function chips() { cb.textContent = ""; Object.keys(CATS).forEach((k) => cb.appendChild(el("button", { type: "button", class: "chip", "aria-pressed": String(cat === k), onclick: () => { cat = k; chips(); } }, CATS[k][0] + " " + CATS[k][1]))); }
+  chips();
+
+  const inp = document.getElementById("file"), go = document.getElementById("go"), tit = document.getElementById("titolo");
+  inp.addEventListener("change", () => {
+    files = [...inp.files];
+    const big = files.filter((f) => f.size > 10 * 1024 * 1024);
+    if (big.length) { M.toast(big[0].name + " supera 10 MB. Comprimilo o fai una foto."); files = files.filter((f) => f.size <= 10 * 1024 * 1024); }
+    document.getElementById("dz-t").textContent = files.length ? files.map((f) => f.name).join(", ") : "Tocca per scegliere un PDF o una foto, anche più di uno. Massimo 10 MB a file.";
+    document.getElementById("dz").classList.toggle("on", !!files.length);
+    document.getElementById("f-title").hidden = files.length !== 1;
+    if (files.length === 1) tit.value = files[0].name.replace(/\.[a-z0-9]+$/i, "").replace(/[_-]+/g, " ").slice(0, 80);
+    go.disabled = !files.length;
+  });
+
+  document.getElementById("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const me = M.me(); if (!me) return M.askWho();
+    if (!files.length) return;
+    go.disabled = true; go.textContent = "Carico…";
+    let ok = 0;
+    for (const f of files) {
+      const ext = (f.name.match(/\.[a-z0-9]+$/i) || [""])[0].toLowerCase();
+      const path = cat + "/" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + ext;
+      try {
+        await db.upload(path, f);
+        await db.insert("documenti", { nome: me, titolo: (files.length === 1 && tit.value.trim()) || f.name.replace(/\.[a-z0-9]+$/i, "").slice(0, 80), categoria: cat, path, file: f.name, tipo: f.type, size: f.size });
+        ok++;
+      } catch (er) { M.err(er); if (er && er.message && !M.isMissing(er)) M.toast(er.message); break; }
+    }
+    go.textContent = "Carica";
+    if (ok) {
+      M.toast(ok === 1 ? "Caricato. Davide ora non ha più scuse." : ok + " file caricati. Il saluzzese è commosso.");
+      inp.value = ""; files = []; document.getElementById("dz").classList.remove("on"); document.getElementById("f-title").hidden = true;
+      document.getElementById("dz-t").textContent = "Tocca per scegliere un PDF o una foto, anche più di uno. Massimo 10 MB a file.";
+      load();
+    } else go.disabled = false;
+  });
+
+  function size(n) { return !n ? "" : n < 1048576 ? Math.round(n / 1024) + " KB" : (n / 1048576).toFixed(1).replace(".", ",") + " MB"; }
+
+  function render() {
+    const ch = document.getElementById("check"); ch.textContent = "";
+    let manca = 0;
+    SERVE.forEach(([k, t]) => {
+      const has = docs.some((d) => d.categoria === k && (k !== "voli" || new RegExp(t.includes("ritorno") ? "ritorn|agadir|londra|london|roma" : "andata|fes|fez", "i").test(d.titolo + " " + d.file)));
+      if (!has) manca++;
+      ch.appendChild(el("button", { type: "button", class: "dz-ck" + (has ? " ok" : ""), onclick: () => { cat = k; chips(); tit.value = t; window.scrollTo({ top: 0, behavior: "smooth" }); inp.click(); } }, el("i", { text: has ? "✓" : CATS[k][0] }), el("span", { text: t })));
+    });
+    document.getElementById("manca-sub").textContent = manca ? "Ne mancano " + manca + ". Tocca quello che hai e caricalo. Non domani." : "C'è tutto. Chi siete e cosa avete fatto ai miei tossici?";
+
+    const box = document.getElementById("list"); box.textContent = "";
+    if (!docs.length) { box.appendChild(el("p", { class: "muted", style: "color:rgba(255,255,255,.85)", text: "Ancora niente. Il primo che carica il biglietto vince il rispetto eterno di Davide." })); return; }
+    Object.keys(CATS).forEach((k) => {
+      const ds = docs.filter((d) => d.categoria === k).sort((a, b) => String(b.creato).localeCompare(String(a.creato)));
+      if (!ds.length) return;
+      box.appendChild(el("div", { style: "display:grid;gap:8px" }, el("h3", { style: "font-size:20px", text: CATS[k][0] + " " + CATS[k][1] }),
+        el("ul", { class: "list" }, ds.map((d) => {
+          const del = el("button", { type: "button", class: "btn danger small", onclick: async () => {
+            if (!del.dataset.sure) { del.dataset.sure = "1"; del.textContent = "Sicuro?"; setTimeout(() => { del.dataset.sure = ""; del.textContent = "Elimina"; }, 3000); return; }
+            try { await db.removeFile(d.path).catch(() => {}); await db.remove("documenti", { id: d.id }); M.toast("Eliminato."); load(); } catch (er) { M.err(er); }
+          } }, "Elimina");
+          return el("li", { class: "doc-row" },
+            el("span", { class: "doc-ic", text: /pdf/.test(d.tipo || d.file || "") ? "📄" : "🖼️" }),
+            el("div", { style: "min-width:0;display:grid;gap:2px" }, el("b", { text: d.titolo }), el("span", { class: "muted", style: "font-size:13.5px", text: "Caricato da " + d.nome + ", " + M.ago(d.creato) + (d.size ? ", " + size(d.size) : "") })),
+            el("div", { class: "doc-act" }, el("a", { class: "btn small", href: db.fileUrl(d.path), target: "_blank", rel: "noopener", download: d.file || null }, "Apri"), del));
+        }))));
+    });
+  }
+
+  async function load() { const d = await db.many(["documenti"]); docs = d.documenti || []; render(); }
+  render(); load(); db.subscribe(["documenti"], load);
+})();
+</script>
+</body>
+</html>

@@ -48,7 +48,7 @@
   const TIPO = { tutto: "Tutto", capodanno: "🎆 Capodanno", moto: "🏍️ Moto", deserto: "🐪 Deserto", montagna: "⛰️ Valli", oceano: "🏄 Surf", citta: "🕌 Città", cibo: "🍢 Mangiare", sfide: "🏆 Sfide" };
   const EMO = { capodanno: "🎆", moto: "🏍️", deserto: "🐪", montagna: "⛰️", oceano: "🏄", citta: "🕌", cibo: "🍢", sfide: "🏆" };
   const VOTI = [["si", "🔥", "Ci sto"], ["forse", "🤔", "Forse"], ["no", "💀", "No"]];
-  let reaz = [], sond = [], zona = "fes", tipo = "tutto", first = true;
+  let reaz = [], sond = [], prop = [], zona = "fes", tipo = "tutto", first = true;
 
   /* dall'indirizzo: #zona oppure #id-attività (i vecchi link di Esplora) */
   const h = decodeURIComponent(location.hash.slice(1));
@@ -132,10 +132,42 @@
         return el("button", { type: "button", class: "chip", "aria-pressed": String(tipo === k), onclick: () => { tipo = k; render(false); } }, TIPO[k] + " · " + n);
       })));
     ids.filter((id) => tipo === "tutto" || ATT[id].cat === tipo).forEach((id) => box.appendChild(row(ATT[id], st[id].v)));
+    /* le idee proposte da voi in questa zona */
+    if (tipo === "tutto") prop.filter((p) => p.zona === z.id).forEach((p) => box.appendChild(propRow(p)));
+    box.appendChild(el("button", { type: "button", class: "prop-add", onclick: () => proponi(z) }, el("b", { text: "＋ Proponi un'idea in questa zona" }), el("span", { text: "Manca qualcosa? Scrivila tu: gli altri la votano." })));
     const nx = C.AREE[(i + 1) % C.AREE.length];
     box.appendChild(el("div", { class: "row-between", style: "gap:10px;margin-top:6px" },
       el("a", { class: "btn ghost", href: "mappa.html?area=" + z.id, style: "color:#fff;padding-inline:0" }, "📍 I posti della zona sulla mappa"),
       el("button", { type: "button", class: "btn", onclick: () => { zona = nx.id; tipo = "tutto"; render(true); } }, "Zona dopo ›")));
+  }
+
+  function votesOf(id) { const v = { si: [], forse: [], no: [] }; reaz.forEach((r) => { if (r.attivita === id && v[r.voto]) v[r.voto].push(r.nome); }); return v; }
+  function propRow(p) {
+    const a = { id: "prop-" + p.id, t: p.titolo, quando: "proposta da " + p.nome, dove: "", durata: "", desc: "", joke: p.battuta || "Nessuna battuta. Si vede che l'ha proposta " + p.nome + ".", cat: "sfide", follia: 3 };
+    C.COSTO[a.id] = Number(p.prezzo) || 0;
+    const r = row(a, votesOf(a.id)); r.classList.add("arow-prop");
+    const d = r.querySelector("details"); if (d) d.remove();
+    const img = r.querySelector(".arow-emo"); if (img) img.replaceWith(M.avatar(p.nome, "arow-pav"));
+    return r;
+  }
+  function proponi(z) {
+    const me = M.me(); if (!me) return M.askWho();
+    const t = el("input", { type: "text", maxlength: "80", placeholder: "Es. Hammam a Fes alle 7 di mattina", id: "p-t" });
+    const pr = el("input", { type: "number", min: "0", max: "2000", inputmode: "numeric", placeholder: "0", id: "p-p" });
+    const b = el("input", { type: "text", maxlength: "200", placeholder: "La battuta che convince gli altri", id: "p-b" });
+    const ov = el("div", { class: "overlay", role: "dialog", "aria-modal": "true" });
+    const form = el("form", { class: "card" },
+      el("h2", { style: "font-size:26px", text: "Proponi in " + z.n }),
+      el("div", { class: "field" }, el("label", { for: "p-t", text: "Cosa" }), t),
+      el("div", { class: "field" }, el("label", { for: "p-p", text: "Quanto costa a testa, in euro" }), pr),
+      el("div", { class: "field" }, el("label", { for: "p-b", text: "Perché si deve fare" }), b),
+      el("div", { class: "row-between" }, el("button", { type: "button", class: "btn ghost", style: "color:#2438C6", onclick: () => ov.remove() }, "Annulla"), el("button", { class: "btn", type: "submit" }, "Proponi")));
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault(); if (!t.value.trim()) return t.focus();
+      try { await db.insert("proposte", { nome: me, titolo: t.value.trim(), zona: z.id, prezzo: Math.max(0, Math.round(Number(pr.value) || 0)), battuta: b.value.trim() || null }); ov.remove(); M.toast("Proposta. Ora convinci gli altri due. Auguri."); load(); } catch (er) { M.err(er); }
+    });
+    ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
+    ov.appendChild(form); document.body.appendChild(ov); t.focus();
   }
 
   async function vote(a, voto) {
@@ -159,13 +191,13 @@
     if (moveMap) { drawMap(true); document.getElementById("zones").scrollIntoView({ behavior: "smooth", block: "start" }); } else window.scrollTo(0, y);
   }
   async function load() {
-    const d = await db.many(["reazioni", "sondaggi", "persone"]);
-    reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":")); sond = d.sondaggi;
+    const d = await db.many(["reazioni", "sondaggi", "persone", "proposte"]);
+    reaz = d.reazioni.filter((r) => !String(r.attivita).includes(":")); sond = d.sondaggi; prop = d.proposte || [];
     const y = window.scrollY; zones(); zonePanel(); drawMap(false); window.scrollTo(0, y);
   }
   initMap(); zones(); zonePanel(); drawMap(false);
   load().then(() => { if (target) { const n = document.getElementById(target); if (n) n.scrollIntoView({ block: "center" }); } });
-  db.subscribe(["reazioni", "sondaggi"], load);
+  db.subscribe(["reazioni", "sondaggi", "proposte"], load);
   M.onMe(() => { zones(); zonePanel(); });
 })();
 </script>
