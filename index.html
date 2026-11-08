@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Marocco in tre</title>
-<meta name="description" content="Fes, Capodanno a Marrakech, deserto e surf. Tre amici, undici giorni.">
+<meta name="description" content="Fes, Capodanno, deserto e surf. Tre amici, undici giorni.">
 <meta property="og:title" content="Marocco in tre · 29/12 → 8/1">
 <meta property="og:description" content="Tre tossici, undici giorni, un sito che vi prende per il culo.">
 <meta name="theme-color" content="#2438C6">
@@ -16,43 +16,41 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="wrap h4">
+<main class="wrap h4 h5">
   <div class="topline hm-top"><span class="eyebrow" id="oggi">Marocco in tre</span><span class="me-chip" id="me-chip"></span></div>
 
-  <header class="h4-head">
-    <h1>Marocco in tre</h1>
-    <p>Il sito del viaggio. Qui decidiamo cosa fare, quanto si spende e chi porta cosa.</p>
-    <button type="button" class="h4-how" data-i="home"><i class="h4-i" aria-hidden="true">i</i>Come funziona</button>
+  <header class="h5-head">
+    <p class="h5-cd"><b id="cd-d">0</b><span>giorni a Fes.</span></p>
+    <p class="h5-sub">Il sito del viaggio: qui decidiamo cosa fare, quanto si spende e chi porta cosa.</p>
+    <div class="h5-hrow">
+      <button type="button" class="h4-how" data-i="home"><i class="h4-i" aria-hidden="true">i</i>Come funziona</button>
+    </div>
   </header>
 
   <div id="upgrade" class="banner" hidden></div>
 
-  <section class="h4-wid" aria-label="In breve">
-    <div class="h4-wb"><div class="h4-w h4-cd"><b id="cd-d">0</b><span>giorni a Fes</span><small>Lunedì 28 dicembre, 23:30</small></div>
-      <button type="button" class="h4-i h4-wi" data-i="giorni" aria-label="A cosa serve: giorni a Fes">i</button></div>
-    <div class="h4-wb"><button type="button" class="h4-w h4-call" id="call-btn" aria-label="Davide ha richiamato: aggiungi una chiamata">
-      <span class="h4-ph">📞</span><b id="call-n">600.000</b><span>chiamate di Davide</span><small>Tocca se ha richiamato</small>
-    </button><button type="button" class="h4-i h4-wi" data-i="davide" aria-label="A cosa serve: chiamate di Davide">i</button></div>
+  <section class="h5-feat" aria-labelledby="h-dk">
+    <div class="h4-stack h5-stack" id="stack"></div>
+    <button type="button" class="h5-ans" id="ans-btn">Le risposte di tutti e tre ›</button>
   </section>
 
-  <section class="h4-deck" aria-labelledby="h-dk">
-    <div class="h4-dh"><b id="h-dk">Domande veloci</b><button type="button" class="h4-i" data-i="domande" aria-label="A cosa servono le domande veloci">i</button><span id="dk-n"></span></div>
-    <div class="h4-stack" id="stack"></div>
-    <div class="h4-btns" id="btns">
-      <button type="button" class="h4-no" id="b-no"><span aria-hidden="true">💀</span> No</button>
-      <button type="button" class="h4-si" id="b-si"><span aria-hidden="true">🔥</span> Sì</button>
-    </div>
-    <details class="h4-ans" id="ans-box"><summary>Le risposte di tutti e tre</summary><ul id="ans"></ul></details>
+  <section class="h5-sec" aria-labelledby="h-dec">
+    <div class="h5-sh"><h2 id="h-dec">Per decidere</h2><p>Le tre cose da votare. Parti da qui.</p></div>
+    <div class="h5-bigs" id="g-dec"></div>
   </section>
 
-  <section class="h4-apps" aria-labelledby="h-apps">
-    <div class="h4-dh"><b id="h-apps">Le app del viaggio</b><button type="button" class="h4-pill" data-i="apps"><i class="h4-i" aria-hidden="true">i</i>A cosa serve ognuna</button></div>
-    <nav class="h4-grid" id="apps"></nav>
-    <p class="h4-hint">Il pallino rosso è una cosa che ti manca.</p>
+  <section class="h5-sec" aria-labelledby="h-org">
+    <div class="h5-sh"><h2 id="h-org">Per organizzarvi</h2><p>Soldi, compiti, biglietti, posti.</p></div>
+    <div class="h5-mids" id="g-org"></div>
+  </section>
+
+  <section class="h5-sec" aria-labelledby="h-rid">
+    <div class="h5-sh"><h2 id="h-rid">Per ridere</h2><p>Scorri di lato.</p></div>
+    <div class="h5-strip" id="g-rid"></div>
   </section>
 
   <button type="button" id="replay" class="btn ghost small" style="justify-self:start;color:#fff">Rivedi l'intro</button>
-  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 23 · 8 nov 2026</footer>
+  <footer class="foot">Prezzi e tempi sono stime all'8 novembre 2026. Serve il passaporto.<br>Versione 24 · 8 nov 2026</footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
@@ -63,36 +61,14 @@
 <script src="intro.js"></script>
 <script>
 (function () {
-  const { el, db } = M;
+  const { el, db, eur } = M;
   M.start("home");
   document.getElementById("replay").addEventListener("click", () => { window.INTRO_ACTIVE = true; Intro.show(); });
-  let D = {}, busy = false;
+  let D = {}, busy = false, calls = "600.000";
+  const ph = (k) => { const u = C.foto(k, "960px"); return u ? "background-image:linear-gradient(180deg,rgba(8,14,70,.6) 0%,rgba(8,14,70,0) 28%,rgba(8,14,70,0) 42%,rgba(8,14,70,.92) 100%),url('" + u + "')" : null; };
+  const lower = (t) => t.charAt(0).toLowerCase() + t.slice(1);
 
-  /* ---------- le app del sito, come sulla schermata del telefono ---------- */
-  const APPS = [
-    ["viaggio", "viaggio.html", "🧭", "#D6345A", "Viaggio"], ["must", "must.html", "⭐", "#0B7A5C", "I must"], ["scenari", "scenari.html", "🚗", "#1d1d6b", "Scenari"], ["soldi", "budget.html", "💸", "#1d8a3a", "Soldi"],
-    ["sifa", "sifa.html", "🔥", "#E8590C", "Cosa si fa"], ["organizza", "organizza.html", "✅", "#FF7A45", "Organizza"], ["documenti", "documenti.html", "📎", "#B35A00", "Documenti"], ["mappa", "mappa.html", "📍", "#0F6FB8", "Mappa"],
-    ["notte", "notte.html", "🌙", "#6E2BC2", "Notte"], ["kit", "kit.html", "🎒", "#8B5A2B", "Kit"], ["profilo", "profilo.html", "😎", "#C2255C", "Profilo"], ["tribunale", "tribunale.html", "⚖️", "#5B2BA8", "Tribunale"],
-    ["ruota", "ruota.html", "🎡", "#D6345A", "Ruota"], ["muro", "muro.html", "🧱", "#7A4A1E", "Muro"]
-  ];
-  function badges(d) {
-    const me = M.me(), b = {}; if (!me) return b;
-    const miss = d._miss || [];
-    const mine = (d.reazioni || []).filter((r) => r.nome === me && !String(r.attivita).includes(":"));
-    b.viaggio = Object.values(C.AREA_ATT).filter((ids) => !ids.some((id) => mine.some((r) => r.attivita === id))).length;
-    b.must = C.MUST.filter((m) => !(d.sondaggi || []).some((r) => r.nome === me && r.domanda === "must-" + m.id)).length;
-    b.scenari = (d.sondaggi || []).some((r) => r.nome === me && r.domanda === "scenario") ? 0 : 1;
-    if (!miss.includes("documenti")) b.documenti = (d.documenti || []).some((x) => x.nome === me) ? 0 : 1;
-    return b;
-  }
-  function apps(d) {
-    const g = document.getElementById("apps"), b = badges(d); g.textContent = "";
-    APPS.forEach(([k, href, e, c, t]) => g.appendChild(el("a", { href, class: "h4-app" },
-      el("span", { class: "h4-ic", style: "background:" + c }, e, b[k] ? el("i", { class: "h4-bdg", text: String(b[k]), "aria-label": b[k] + " da fare" }) : null),
-      el("span", { class: "h4-lab", text: t }))));
-  }
-
-  /* ---------- le ⓘ: cosa fa ogni cosa ---------- */
+  /* ---------- ogni app, con quello che c'è dentro adesso ---------- */
   const COSA = {
     viaggio: ["Tutto quello che si può fare in Marocco, diviso per zona, con la mappa.", "Apri una zona e vota ogni idea: 🔥 ci sto, 🤔 forse, 💀 no. Puoi proporne di nuove."],
     must: ["Le quattro cose che si fanno per forza: valli del Rif, surf, moto, deserto.", "Per ognuna scegli come farla. Vince il modo più votato."],
@@ -103,27 +79,94 @@
     documenti: ["Biglietti, prenotazioni e assicurazione, in un posto per tutti e tre.", "Carica i tuoi PDF o le foto. Niente passaporti."],
     mappa: ["Tutti i posti: sorca, surf, cibo, foto, e quelli dove stare attenti.", "Tocca un pallino, leggi, poi «Portami qui» apre Google Maps."],
     notte: ["Club, Capodanno e posti per uscire, con le prese in giro.", "Leggi e scegli dove si va la sera."],
-    kit: ["Valigia, parole in darija, prezzi giusti nel souk, numeri utili.", "Spunta cosa hai messo in valigia. Durante il viaggio ti dice cosa si fa oggi."],
+    kit: ["Valigia, parole in darija, prezzi giusti nel souk, numeri utili.", "Spunta cosa hai messo in valigia."],
     profilo: ["La tua faccia, il colore, il soprannome e il tormentone.", "Sceglili una volta: il tormentone arriva agli altri come notifica."],
-    tribunale: ["Chi è il più tossico, chi si perde, chi cade dalla moto: si vota.", "Vota. Il verdetto è definitivo, purtroppo per Davide."],
+    tribunale: ["Chi è il più tossico, chi si perde, chi cade dalla moto: si vota.", "Vota. Il verdetto è definitivo."],
     ruota: ["Quando non decidete, gira la ruota.", "Girala per chi paga il tè, chi guida, chi chiama il riad."],
     muro: ["Le figure di merda del viaggio, per sempre.", "Scrivine una. Anonimato non garantito."]
   };
+  const APP = {
+    viaggio: ["viaggio.html", "🧭", "#D6345A", "Viaggio"], must: ["must.html", "⭐", "#0B7A5C", "I must"], scenari: ["scenari.html", "🚗", "#1d1d6b", "Scenari"],
+    soldi: ["budget.html", "💸", "#1d8a3a", "Soldi"], sifa: ["sifa.html", "🔥", "#E8590C", "Cosa si fa"], organizza: ["organizza.html", "✅", "#FF7A45", "Organizza"],
+    documenti: ["documenti.html", "📎", "#B35A00", "Documenti"], mappa: ["mappa.html", "📍", "#0F6FB8", "Mappa"], kit: ["kit.html", "🎒", "#8B5A2B", "Kit"],
+    notte: ["notte.html", "🌙", "#6E2BC2", "Notte"], tribunale: ["tribunale.html", "⚖️", "#5B2BA8", "Tribunale"], ruota: ["ruota.html", "🎡", "#D6345A", "Ruota"],
+    muro: ["muro.html", "🧱", "#7A4A1E", "Muro"], profilo: ["profilo.html", "😎", "#C2255C", "Profilo"]
+  };
+  const ic = (k, cls) => el("span", { class: "h5-ic" + (cls ? " " + cls : ""), style: "background:" + APP[k][2], text: APP[k][1] });
+
+  function stats(d) {
+    const me = M.me(), miss = d._miss || [];
+    const mine = (d.reazioni || []).filter((r) => r.nome === me && !String(r.attivita).includes(":"));
+    const zone = Object.values(C.AREA_ATT).filter((ids) => !ids.some((id) => mine.some((r) => r.attivita === id))).length;
+    const must = C.MUST.filter((m) => !(d.sondaggi || []).some((r) => r.nome === me && r.domanda === "must-" + m.id)).length;
+    const votato = (d.sondaggi || []).some((r) => r.nome === me && r.domanda === "scenario");
+    const g = C.scenGruppo(d.sondaggi), S = C.SCEN[g.pick];
+    const st = C.stato(d.reazioni || []), decise = C.ATT.filter((a) => st[a.id].s === "si").length;
+    const tot = C.spesa(d.reazioni || [], g.pick).tot;
+    const todo = (d.todo || []).filter((t) => !t.fatto), liberi = todo.filter((t) => !t.chi).length;
+    const docs = miss.includes("documenti") ? null : (d.documenti || []);
+    const io = (d.persone || []).find((p) => p.nome === me) || {};
+    return { me, zone, must, votato, g, S, decise, tot, todo: todo.length, liberi, docs, mieiDocs: docs ? docs.filter((x) => x.nome === me).length : 0, muro: (d.muro || []).length, io };
+  }
+
+  function big(k, foto, head, line, todo, cta) {
+    const [href] = APP[k];
+    return el("a", { href, class: "h5-big", style: ph(foto) },
+      el("div", { class: "h5-top" }, ic(k), el("b", { text: APP[k][3] }), todo ? el("span", { class: "h5-todo", text: todo }) : el("span", { class: "h5-ok", text: "✓ fatto" })),
+      el("div", { class: "h5-bot" }, el("h3", { text: head }), el("p", { text: line }), el("span", { class: "h5-cta", text: cta + " ›" })));
+  }
+  function mid(k, num, unit, line, todo) {
+    const [href] = APP[k];
+    return el("a", { href, class: "h5-mid" + (todo ? " due" : "") },
+      el("div", { class: "h5-top" }, ic(k, "sm"), el("b", { text: APP[k][3] })),
+      el("p", { class: "h5-num" }, el("b", { text: num }), unit ? el("span", { text: " " + unit }) : null),
+      el("p", { class: "h5-line", text: line }),
+      todo ? el("span", { class: "h5-todo", text: todo }) : null);
+  }
+  function small(k, line) {
+    const [href] = APP[k];
+    return el("a", { href, class: "h5-sm", style: "background:" + APP[k][2] }, el("span", { class: "h5-emo", text: APP[k][1] }), el("b", { text: APP[k][3] }), el("span", { text: line }));
+  }
+
+  function render(d) {
+    const s = stats(d);
+    const dec = document.getElementById("g-dec"); dec.textContent = "";
+    dec.append(
+      big("viaggio", "Chefchaouen", "Cosa si fa, zona per zona", "Sette zone, " + C.ATT.length + " idee, dal Rif all'oceano. Su ognuna: 🔥, 🤔 o 💀.", s.me && s.zone ? "Ti mancano " + s.zone + " zone" : null, "Vota le idee"),
+      big("must", "Imsouane", "Ketama, surf, moto, deserto", "Si fanno per forza. Voi scegliete come.", s.me && s.must ? "Ti mancano " + s.must : null, "Scegli come"),
+      big("scenari", "Dadès_Gorges", "Come vi muovete", "Cinque giri diversi. " + (s.g.voted ? "Per ora vince " + s.g.pick + ": " + s.S.nome + "." : "Nessuno ha ancora votato."), s.me && !s.votato ? "Manca il tuo voto" : null, "Vota il giro"));
+    const org = document.getElementById("g-org"); org.textContent = "";
+    org.append(
+      mid("soldi", eur(s.tot), "a testa", "Con lo scenario " + s.g.pick + " e le cose già decise."),
+      mid("sifa", String(s.decise), s.decise === 1 ? "idea decisa" : "idee decise", s.decise ? "Hanno avuto tre 🔥." : "Servono tre 🔥 sulla stessa idea."),
+      mid("documenti", s.docs ? String(s.docs.length) : "—", s.docs ? (s.docs.length === 1 ? "file" : "file") : "", s.docs ? "Biglietti e prenotazioni per tutti." : "Si attiva quando Ale aggiorna il sito.", s.docs && s.me && !s.mieiDocs ? "Carica i tuoi" : null),
+      mid("organizza", String(s.todo), "da fare", s.liberi ? s.liberi + " senza nessuno che se ne occupa." : "Ognuna ha qualcuno che se ne occupa.", s.liberi ? "Prendine una" : null),
+      mid("mappa", String(C.POI.length), "posti", "Sorca, surf, cibo, foto e dove stare attenti."),
+      mid("kit", String(C.DARIJA.length), "parole", "Valigia, darija e i prezzi giusti del souk."));
+    const rid = document.getElementById("g-rid"); rid.textContent = "";
+    rid.append(
+      small("notte", "Club e Capodanno"),
+      small("tribunale", C.SONDAGGI.length + " processi aperti"),
+      small("ruota", "Chi paga il tè"),
+      small("muro", s.muro ? s.muro + " figure di merda" : "Ancora pulito"),
+      small("profilo", s.io.soprannome ? "«" + s.io.soprannome + "»" : "Senza soprannome"),
+      el("button", { type: "button", class: "h5-sm h5-callc", onclick: call, "aria-label": "Davide ha richiamato: aggiungi una chiamata" },
+        el("span", { class: "h5-emo", text: "📞" }), el("b", { text: calls }), el("span", { text: "chiamate di Davide. Ha richiamato? Tocca ＋1" })));
+  }
+
+  /* ---------- le ⓘ ---------- */
   const INFO = {
-    home: { ic: "🐪", col: "#2438C6", t: "Come funziona", x: [["1.", "Rispondi alle domande veloci: sì o no, una alla volta."], ["2.", "Apri le app col pallino rosso: è quello che ti manca."], ["3.", "Se non capisci una cosa, tocca la i accanto."], "Tutto quello che fate si aggiorna da solo per tutti e tre."] },
-    giorni: { ic: "✈️", col: "#2438C6", t: "Giorni a Fes", x: ["Il conto alla rovescia per l'andata: si atterra a Fes lunedì 28 dicembre alle 23:30.", "Il ritorno è venerdì 8 gennaio da Agadir, passando da Londra. Tutti e due i voli sono già presi."] },
-    davide: { ic: "📞", col: "#ff3b30", t: "Le chiamate di Davide", x: ["Davide chiama per il viaggio in continuazione. Ogni volta che lo fa, toccate il riquadro: il numero sale per tutti e tre.", "A fine viaggio si legge il totale ad alta voce. Davanti a lui."] },
-    domande: { ic: "⚡", col: "#E8590C", t: "Domande veloci", x: [["Come:", "scorri la carta a destra per sì, a sinistra per no, oppure usa i due tasti."], ["Le idee", "con tre sì entrano nel viaggio e finiscono in «Cosa si fa»."], ["Le domande su di te", "servono a organizzare: chi guida, chi va in moto, chi ha il passaporto a posto."], "Sulla carta vedi cosa hanno risposto gli altri due."] }
+    home: { ic: "🐪", col: "#2438C6", t: "Come funziona", x: [["1.", "Rispondi alle domande veloci: sì o no, una alla volta."], ["2.", "Apri «Per decidere»: viaggio, must e giro. Dove c'è il rosso, manca il tuo voto."], ["3.", "Il resto serve quando c'è da organizzare, o da ridere."], "Tutto quello che fate si aggiorna da solo per tutti e tre."],
+      body: null }
   };
   function infoApps() {
-    const b = badges(D);
-    M.info({ ic: "📱", col: "#2438C6", t: "A cosa serve ogni app", x: ["Il pallino rosso dice quante cose ti mancano lì dentro."],
-      body: el("ul", { class: "sh-list" }, APPS.map(([k, href, e, c, t]) => el("li", null, el("a", { href },
-        el("span", { class: "h4-ic sm", style: "background:" + c }, e, b[k] ? el("i", { class: "h4-bdg", text: String(b[k]) }) : null),
-        el("span", null, el("b", { text: t }), el("span", { text: COSA[k][0] }), el("small", { text: "Tu: " + COSA[k][1].charAt(0).toLowerCase() + COSA[k][1].slice(1) })),
+    M.info({ ic: "📱", col: "#2438C6", t: "Tutte le app", x: ["Cosa c'è dentro ognuna e cosa devi fare tu."],
+      body: el("ul", { class: "sh-list" }, Object.keys(APP).map((k) => el("li", null, el("a", { href: APP[k][0] },
+        el("span", { class: "h4-ic sm", style: "background:" + APP[k][2] }, APP[k][1]),
+        el("span", null, el("b", { text: APP[k][3] }), el("span", { text: COSA[k][0] }), el("small", { text: "Tu: " + lower(COSA[k][1]) })),
         el("span", { class: "sh-chev", "aria-hidden": "true", text: "›" }))))) });
   }
-  document.querySelectorAll("[data-i]").forEach((x) => x.addEventListener("click", (e) => { e.stopPropagation(); const k = x.dataset.i; if (k === "apps") infoApps(); else M.info(INFO[k]); }));
+  document.querySelector("[data-i=home]").addEventListener("click", () => M.info(Object.assign({}, INFO.home, { body: el("button", { type: "button", class: "btn", style: "background:#f2f2f7;color:#2438C6", onclick: () => { document.querySelector(".sh-dim").remove(); infoApps(); } }, "Cosa fa ogni app ›") })));
 
   /* ---------- le domande veloci: una alla volta, sì o no ---------- */
   const Q = C.DOMANDE;
@@ -134,33 +177,34 @@
       return el("span", { class: "h4-wh" + (v ? " " + v : "") }, M.avatar(n), el("small", { text: v === "si" ? "sì" : v === "no" ? "no" : v ? "forse" : "deve rispondere" }));
     }));
   }
-  function card(q) {
-    const u = C.foto(q.f, "960px");
-    return el("article", { class: "h4-card", style: u ? "background-image:linear-gradient(180deg,rgba(8,14,70,.15) 20%,rgba(8,14,70,.92)),url('" + u + "')" : null },
-      el("span", { class: "h4-tag", text: q.tag }),
-      el("div", { class: "h4-q" }, el("h2", { text: q.t }), el("p", { text: q.x }), who(q)),
+  function head(n) { return el("div", { class: "h5-qh" }, el("span", { class: "h4-tag", id: "h-dk" }, "⚡ Domande veloci"), el("span", { class: "h5-qn", text: n })); }
+  function card(q, i) {
+    return el("article", { class: "h4-card", style: ph(q.f) },
+      head((i + 1) + " di " + Q.length),
+      el("div", { class: "h4-q" }, el("span", { class: "h5-qtag", text: q.tag }), el("h2", { text: q.t }), el("p", { text: q.x }), who(q),
+        el("div", { class: "h5-qb" },
+          el("button", { type: "button", class: "h4-no", onclick: () => pick(q, "no") }, "💀 No"),
+          el("button", { type: "button", class: "h4-si", onclick: () => pick(q, "si") }, "🔥 Sì"))),
       el("span", { class: "h4-stamp si", text: "SÌ" }), el("span", { class: "h4-stamp no", text: "NO" }));
   }
   function deck() {
     const st = document.getElementById("stack"), left = todo(), me = M.me(); st.textContent = "";
-    const done = Q.length - left.length;
-    document.getElementById("dk-n").textContent = me ? (left.length ? (done + 1) + " di " + Q.length : "fatte tutte") : "";
-    document.getElementById("btns").hidden = !me || !left.length;
     if (!me) {
-      st.appendChild(el("article", { class: "h4-card h4-plain" }, el("span", { class: "h4-tag", text: "🐪 Prima cosa" }),
-        el("div", { class: "h4-q" }, el("h2", { text: "Chi sei dei tre?" }), el("p", { text: "Tocca il tuo nome, una volta sola. Poi rispondi con sì o no." }),
+      st.appendChild(el("article", { class: "h4-card h4-plain" }, head(""),
+        el("div", { class: "h4-q" }, el("h2", { text: "Prima cosa: chi sei dei tre?" }), el("p", { text: "Tocca il tuo nome, una volta sola. Poi rispondi con sì o no." }),
           el("button", { type: "button", class: "btn", style: "background:#fff;color:#2438C6;justify-self:start", onclick: () => M.askWho() }, "Scegli il tuo nome"))));
       return;
     }
     if (!left.length) {
       const pending = C.CREW.filter((n) => n !== me && Q.some((q) => !M.answerOf(q, D, n)));
-      st.appendChild(el("article", { class: "h4-card h4-plain" }, el("span", { class: "h4-tag", text: "✅ Fatto" }),
+      st.appendChild(el("article", { class: "h4-card h4-plain" }, head("fatte tutte"),
         el("div", { class: "h4-q" }, el("h2", { text: "Hai risposto a tutto, " + me + "." }),
-          el("p", { text: pending.length ? "Mancano " + pending.join(" e ") + ". Mandagli il link. Davide lo chiami tu, per una volta." : "Avete risposto tutti e tre. Le risposte sono qui sotto." }))));
+          el("p", { text: pending.length ? "Mancano " + pending.join(" e ") + ". Mandagli il link." : "Avete risposto tutti e tre. Tocca «Le risposte di tutti e tre»." }))));
       return;
     }
-    if (left[1]) { const b = card(left[1]); b.classList.add("h4-back"); b.setAttribute("aria-hidden", "true"); st.appendChild(b); }
-    const c = card(left[0]); st.appendChild(c); drag(c, left[0]);
+    const idx = (q) => Q.indexOf(q);
+    if (left[1]) { const b = card(left[1], idx(left[1])); b.classList.add("h4-back"); b.setAttribute("aria-hidden", "true"); st.appendChild(b); }
+    const c = card(left[0], idx(left[0])); st.appendChild(c); drag(c, left[0]);
   }
   async function pick(q, v, c) {
     if (busy) return; busy = true;
@@ -171,7 +215,7 @@
       if (q.k === "att") D.reazioni = (D.reazioni || []).filter((r) => !(r.nome === M.me() && r.attivita === q.id)).concat([{ nome: M.me(), attivita: q.id, voto: v }]);
       else D.sondaggi = (D.sondaggi || []).filter((r) => !(r.nome === M.me() && r.domanda === "q-" + q.id)).concat([{ nome: M.me(), domanda: "q-" + q.id, scelta: v }]);
     } catch (e) { M.err(e); }
-    busy = false; deck(); list(); apps(D);
+    busy = false; deck(); render(D);
   }
   function drag(c, q) {
     let x0 = null, dx = 0;
@@ -180,14 +224,11 @@
     const up = () => { if (x0 === null) return; x0 = null; c.style.transition = ""; c.style.transform = ""; if (Math.abs(dx) > 90) pick(q, dx > 0 ? "si" : "no", c); else c.classList.remove("lean-si", "lean-no"); };
     c.addEventListener("pointerup", up); c.addEventListener("pointercancel", up);
   }
-  document.getElementById("b-si").addEventListener("click", () => { const q = todo()[0]; if (q) pick(q, "si"); });
-  document.getElementById("b-no").addEventListener("click", () => { const q = todo()[0]; if (q) pick(q, "no"); });
-
-  function list() {
-    const ul = document.getElementById("ans"); ul.textContent = "";
-    Q.forEach((q) => ul.appendChild(el("li", null, el("span", { text: q.t }),
-      el("span", { class: "h4-row" }, C.CREW.map((n) => { const v = M.answerOf(q, D, n); return el("span", { class: "h4-mini " + (v || "nd"), title: n }, M.avatar(n), el("i", { text: v === "si" ? "✓" : v === "no" ? "✕" : v ? "?" : "·" })); })))));
-  }
+  document.getElementById("ans-btn").addEventListener("click", () => {
+    M.info({ ic: "⚡", col: "#E8590C", t: "Le risposte di tutti e tre", x: ["✓ sì, ✕ no, · deve ancora rispondere."],
+      body: el("ul", { class: "h5-anslist" }, Q.map((q) => el("li", null, el("span", { text: q.t }),
+        el("span", { class: "h4-row" }, C.CREW.map((n) => { const v = M.answerOf(q, D, n); return el("span", { class: "h4-mini " + (v || "nd"), title: n }, M.avatar(n), el("i", { text: v === "si" ? "✓" : v === "no" ? "✕" : v ? "?" : "·" })); }))))) });
+  });
 
   /* ---------- i giorni: corrono una volta, quando l'intro si chiude ---------- */
   const GG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"], MM = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
@@ -201,25 +242,24 @@
   }
   (function wait() { if (window.INTRO_ACTIVE || document.getElementById("intro")) return setTimeout(wait, 300); run(); })();
 
-  document.getElementById("call-btn").addEventListener("click", async () => {
+  async function call() {
     const me = M.me(); if (!me) return M.askWho();
     try {
       await db.upsert("reazioni", { nome: me, attivita: "chiama:" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), voto: "si", aggiornato: new Date().toISOString() }, "nome,attivita");
       M.roast(me === "Davide" ? "chiamata_davide" : "chiamata");
       load();
     } catch (e) { M.err(e); }
-  });
+  }
 
   async function load() {
-    D = await db.many(["reazioni", "sondaggi", "documenti"]);
-    const calls = D.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")).length;
-    document.getElementById("call-n").textContent = String(600000 + calls).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    D = await db.many(["reazioni", "sondaggi", "documenti", "todo", "muro", "persone"]);
+    calls = String(600000 + D.reazioni.filter((r) => String(r.attivita).startsWith("chiama:")).length).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     if (!busy) deck();
-    list(); apps(D);
+    render(D);
   }
-  apps({}); deck(); load();
+  render({}); deck(); load();
   M.onMe(load);
-  db.subscribe(["reazioni", "sondaggi", "documenti"], () => { if (!busy) load(); });
+  db.subscribe(["reazioni", "sondaggi", "documenti", "todo", "muro"], () => { if (!busy) load(); });
 })();
 </script>
 </body>

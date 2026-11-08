@@ -519,7 +519,7 @@ C.spesa = function (reaz, scen) {
 };
 /* lo scenario del gruppo: il più votato in sondaggi (domanda "scenario"); a parità vince quello che costa meno; nessun voto = A */
 C.scenGruppo = function (sond) {
-  const v = { A: 0, B: 0, C: 0, D: 0 };
+  const v = {}; Object.keys(C.SCEN).forEach((k) => (v[k] = 0));
   (sond || []).forEach((r) => { if (r.domanda === "scenario" && v[r.scelta] !== undefined) v[r.scelta]++; });
   const max = Math.max(...Object.values(v));
   if (!max) return { pick: "A", v, voted: false };

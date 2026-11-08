@@ -924,3 +924,61 @@ html:has(body.home2){scroll-snap-type:y proximity}
 .h4-ic.sm{width:44px;height:44px;border-radius:12px;font-size:22px;box-shadow:none}
 .h4-ic.sm .h4-bdg{min-width:18px;height:18px;font-size:11px;top:-5px;right:-5px;border-color:#fff}
 @media (prefers-reduced-motion: reduce){ .sh,.sh-dim{transition:none} }
+
+/* ---------- Home 24: ogni app con il suo spazio ---------- */
+.h5{gap:30px!important}
+.h5-head{display:grid;gap:10px}
+.h5-cd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.h5-cd b{font-size:clamp(84px,26vw,120px);font-weight:800;letter-spacing:-.065em;line-height:.82;font-variant-numeric:tabular-nums;margin-left:-.03em}
+.h5-cd span{font-size:clamp(24px,7vw,32px);font-weight:800;letter-spacing:-.03em}
+.h5-sub{font-size:16.5px;line-height:1.35;opacity:.92;max-width:34ch}
+.h5-hrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.h5-hrow .h4-how{margin-top:0}
+.h5-call{display:inline-flex;align-items:center;gap:6px;border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:7px 8px 7px 13px;font:inherit;font-size:14px;cursor:pointer}
+.h5-call b{font-variant-numeric:tabular-nums}
+.h5-call span{background:#fff;color:#d70015;border-radius:999px;padding:3px 8px;font-weight:800;font-size:12.5px}
+.h5-feat{display:grid;gap:10px}
+.h5-stack{height:clamp(390px,calc(100svh - 380px),480px)}
+.h5-qh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.h5-qn{font-size:13.5px;font-weight:700;background:rgba(10,15,60,.45);border-radius:999px;padding:5px 11px}
+.h5-qtag{font-size:13.5px;font-weight:700;opacity:.9}
+.h5-qb{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.h5-qb button{height:54px;border-radius:999px;font:inherit;font-size:18px;font-weight:800;cursor:pointer;transition:transform .12s}
+.h5-qb button:active{transform:scale(.96)}
+.h5-ans{justify-self:start;background:none;border:0;color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer;padding:2px 0;opacity:.92}
+.h5-sec{display:grid;gap:14px}
+.h5-sh h2{font-size:clamp(28px,8vw,34px);letter-spacing:-.035em}
+.h5-sh p{font-size:15.5px;opacity:.85;margin-top:2px}
+.h5-bigs{display:grid;gap:14px}
+.h5-big{display:grid;align-content:space-between;min-height:280px;border-radius:26px;padding:16px;background-color:#1a2aa0;background-size:cover;background-position:center;color:#fff!important;text-decoration:none!important;box-shadow:0 16px 36px rgba(5,10,60,.38);transition:transform .15s}
+.h5-big:active,.h5-mid:active,.h5-sm:active{transform:scale(.98)}
+.h5-top{display:flex;align-items:center;gap:10px;min-width:0}
+.h5-top b{font-size:16px;font-weight:700}
+.h5-ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:21px;flex:none;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.h5-ic.sm{width:32px;height:32px;border-radius:9px;font-size:17px;box-shadow:none}
+.h5-todo{margin-left:auto;background:#ff3b30;color:#fff;font-size:12.5px;font-weight:800;border-radius:999px;padding:5px 10px;white-space:nowrap}
+.h5-ok{margin-left:auto;background:rgba(255,255,255,.92);color:#1d8a3a;font-size:12.5px;font-weight:800;border-radius:999px;padding:5px 10px}
+.h5-bot{display:grid;gap:6px}
+.h5-bot h3{font-size:clamp(27px,7.6vw,32px);font-weight:800;line-height:1.04;letter-spacing:-.03em;color:#fff}
+.h5-bot p{font-size:15px;line-height:1.35;opacity:.93;max-width:32ch}
+.h5-cta{justify-self:start;margin-top:6px;background:#fff;color:#2438C6;border-radius:999px;padding:9px 16px;font-size:15px;font-weight:800}
+.h5-mids{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.h5-mid{display:grid;align-content:start;gap:6px;background:#fff;color:#1d1d1f!important;text-decoration:none!important;border-radius:22px;padding:14px;min-height:172px;box-shadow:0 8px 24px rgba(5,10,60,.26);transition:transform .15s}
+.h5-mid .h5-top b{font-size:15px}
+.h5-num{margin-top:8px;line-height:1}
+.h5-num b{font-size:34px;font-weight:800;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.h5-num span{font-size:14px;color:#6e6e73;font-weight:600}
+.h5-line{font-size:13.5px;color:#6e6e73;line-height:1.3}
+.h5-mid .h5-todo{margin-left:0;justify-self:start;margin-top:auto}
+.h5-strip{display:grid;grid-auto-flow:column;grid-auto-columns:44%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:-20px;padding:2px 20px 10px;scrollbar-width:none}
+.h5-strip::-webkit-scrollbar{display:none}
+.h5-sm{position:relative;scroll-snap-align:start;border-radius:22px;padding:14px;min-height:176px;display:grid;align-content:end;gap:3px;color:#fff!important;text-decoration:none!important;box-shadow:0 8px 22px rgba(5,10,60,.3);transition:transform .15s}
+.h5-emo{position:absolute;top:12px;left:14px;font-size:40px}
+.h5-sm b{font-size:19px;letter-spacing:-.02em}
+.h5-sm span:last-child{font-size:13.5px;opacity:.92;line-height:1.25}
+.h5-anslist{list-style:none;margin:0;padding:0}
+.h5-anslist li{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid #ececf0;font-size:14.5px;line-height:1.3;color:#1d1d1f}
+.h5-anslist li:first-child{border-top:0}
+
+.h5-callc{border:0;font:inherit;text-align:left;cursor:pointer;background:#d70015}
+.h5-callc b{font-variant-numeric:tabular-nums}
